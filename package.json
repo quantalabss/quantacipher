@@ -5,7 +5,8 @@
   "workspaces": [
     "quantacipher-web",
     "quantacipher-gateway",
-    "quantacipher-sdk-js"
+    "quantacipher-sdk-js",
+    "quantacipher-wasm/pkg"
   ],
   "scripts": {
     "build": "npm run build --workspaces"
