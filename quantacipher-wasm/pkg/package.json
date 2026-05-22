@@ -1,0 +1,11 @@
+{
+  "name": "quantacipher-wasm",
+  "version": "0.1.0",
+  "files": [
+    "quantacipher_wasm_bg.wasm",
+    "quantacipher_wasm.js",
+    "quantacipher_wasm.d.ts"
+  ],
+  "main": "quantacipher_wasm.js",
+  "types": "quantacipher_wasm.d.ts"
+}
