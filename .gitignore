@@ -7,3 +7,4 @@ pkg
 .env.local
 .env.*.local
 !quantacipher-wasm/pkg/
+
