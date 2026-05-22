@@ -14,8 +14,8 @@ export default function Home() {
             <Hero />
             <TrustedBy />
             <WhyChooseUs />
-            <Pricing />
             <TechStack />
+            <Pricing />
             <CTA />
             <Footer />
         </main>

@@ -1,8 +1,7 @@
-﻿"use client";
+"use client";
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { ArrowRight, Shield, Zap, Lock } from "lucide-react";
 
 const badges = [
@@ -13,19 +12,12 @@ const badges = [
 
 export function Hero() {
     return (
-        <section className="relative pt-[128px] pb-24 overflow-hidden bg-white">
+        <section className="relative pt-[128px] pb-24 overflow-hidden bg-white border-b border-[#dadce0]">
             <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                     <div className="max-w-2xl">
-                        <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, ease: "easeOut" }}
-                            className="max-w-4xl"
-                        >
-
-
-                            <h1 className="text-[56px] sm:text-[72px] leading-[1.1] font-normal tracking-tight text-[#202124] mb-8">
+                        <div className="max-w-4xl">
+                            <h1 className="text-[56px] sm:text-[64px] leading-[1.1] font-bold tracking-tight text-[#202124] mb-8">
                                 Post-Quantum Security{" "}
                                 <span className="text-[#1a73e8]">in two lines of code.</span>
                             </h1>
@@ -43,113 +35,106 @@ export function Hero() {
                                     </div>
                                 ))}
                             </div>
-                        </motion.div>
+                        </div>
 
-                        <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: 0.4 }}
-                            className="flex flex-col sm:flex-row gap-4"
-                        >
-                            <Link href="/signin">
-                                <Button size="lg" className="bg-[#1a73e8] hover:bg-[#1967d2] hover:shadow-md text-white rounded-[4px] px-8 h-[48px] text-[16px] font-medium transition-all shadow-sm">
-                                    Get your free API Key
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <Link href="/demo">
+                                <Button size="lg" className="bg-[#1a73e8] hover:bg-[#1967d2] hover:shadow-md text-white rounded-[6px] px-8 h-[52px] text-[16px] font-medium transition-all shadow-sm">
+                                    Try Live Demo
                                     <ArrowRight className="ml-2 w-4 h-4" />
                                 </Button>
                             </Link>
-                            <Link href="#how-it-works">
-                                <Button size="lg" variant="outline" className="border-[#dadce0] text-[#3c4043] hover:bg-[#f8f9fa] rounded-[4px] px-8 h-[48px] text-[16px] font-medium transition-all">
-                                    See how it works
+                            <Link href="/documentation">
+                                <Button size="lg" variant="outline" className="border-[#dadce0] text-[#3c4043] hover:bg-[#f8f9fa] rounded-[6px] px-8 h-[52px] text-[16px] font-medium transition-all">
+                                    Read the Docs
                                 </Button>
                             </Link>
-                        </motion.div>
+                        </div>
                     </div>
 
-                    {/* Right side: Code snippet + animated visual */}
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.8, ease: "easeOut" }}
-                        className="relative hidden lg:block"
-                    >
-                        {/* Code card on top */}
-                        <div className="relative z-10 bg-[#202124] rounded-[16px] p-6 shadow-2xl mb-4 font-mono text-sm">
-                            <div className="flex items-center gap-2 mb-4">
-                                <div className="w-3 h-3 rounded-full bg-[#ea4335]" />
-                                <div className="w-3 h-3 rounded-full bg-[#fbbc04]" />
-                                <div className="w-3 h-3 rounded-full bg-[#34a853]" />
-                                <span className="ml-2 text-[#9aa0a6] text-xs">your-app.ts</span>
-                            </div>
-                            <div className="space-y-1 text-[13px] leading-relaxed">
-                                <div>
-                                    <span className="text-[#9aa0a6]">// Install: </span>
-                                    <span className="text-[#8ab4f8]">npm install quantacipher-sdk</span>
+                    {/* Right side: Enlarged High-End Code Window */}
+                    <div className="relative hidden lg:block w-full max-w-[650px] ml-auto">
+                        <div className="relative z-10 bg-[#0d1117] rounded-[16px] shadow-[0_20px_50px_rgba(0,0,0,0.25)] font-mono text-[14px] sm:text-[15px] border border-[#30363d] overflow-hidden">
+                            {/* Window Header */}
+                            <div className="flex items-center bg-[#161b22] border-b border-[#30363d] px-4 py-3">
+                                <div className="flex gap-2">
+                                    <div className="w-3 h-3 rounded-full bg-[#ff5f56]" />
+                                    <div className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
+                                    <div className="w-3 h-3 rounded-full bg-[#27c93f]" />
                                 </div>
-                                <div className="mt-3">
-                                    <span className="text-[#c586c0]">import </span>
-                                    <span className="text-[#9cdcfe]">{"{ QuantaCipher }"}</span>
-                                    <span className="text-[#c586c0]"> from </span>
-                                    <span className="text-[#ce9178]">'quantacipher-sdk'</span>
-                                    <span className="text-[#d4d4d4]">;</span>
-                                </div>
-                                <div className="mt-3">
-                                    <span className="text-[#569cd6]">const </span>
-                                    <span className="text-[#9cdcfe]">qz</span>
-                                    <span className="text-[#d4d4d4]"> = </span>
-                                    <span className="text-[#569cd6]">new </span>
-                                    <span className="text-[#4ec9b0]">QuantaCipher</span>
-                                    <span className="text-[#d4d4d4]">{"({"}</span>
-                                </div>
-                                <div className="pl-4">
-                                    <span className="text-[#9cdcfe]">apiKey</span>
-                                    <span className="text-[#d4d4d4]">: </span>
-                                    <span className="text-[#ce9178]">'qz_live_xxxx'</span>
-                                </div>
-                                <div><span className="text-[#d4d4d4]">{"});"}</span></div>
-                                <div className="mt-3">
-                                    <span className="text-[#9aa0a6]">// That's it. Your data is quantum-safe. ✓</span>
-                                </div>
-                                <div>
-                                    <span className="text-[#c586c0]">await </span>
-                                    <span className="text-[#9cdcfe]">qz</span>
-                                    <span className="text-[#d4d4d4]">.</span>
-                                    <span className="text-[#dcdcaa]">secureData</span>
-                                    <span className="text-[#d4d4d4]">(</span>
-                                    <span className="text-[#9cdcfe]">patientRecord</span>
-                                    <span className="text-[#d4d4d4]">);</span>
+                                <div className="mx-auto flex items-center gap-2 text-[#8b949e] text-[13px] font-medium">
+                                    quantacipher-integration.ts
                                 </div>
                             </div>
-                            {/* Green receipt badge */}
-                            <motion.div
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 1.2, duration: 0.4 }}
-                                className="mt-4 flex items-center gap-2 bg-[#137333]/20 border border-[#34a853]/30 rounded-[8px] px-3 py-2"
-                            >
-                                <div className="w-2 h-2 rounded-full bg-[#34a853] animate-pulse" />
-                                <span className="text-[#34a853] text-[12px] font-medium">Receipt issued • Kyber-1024 encrypted • 1.2ms</span>
-                            </motion.div>
+
+                            {/* Code Content */}
+                            <div className="p-8 leading-[1.8]">
+                                <div>
+                                    <span className="text-[#8b949e]">// Install SDK via npm</span>
+                                </div>
+                                <div className="mb-5">
+                                    <span className="text-[#8b949e]">// </span>
+                                    <span className="text-[#ff7b72]">npm</span>
+                                    <span className="text-[#c9d1d9]"> install quantacipher-sdk</span>
+                                </div>
+
+                                <div className="mb-6">
+                                    <span className="text-[#ff7b72]">import</span>
+                                    <span className="text-[#c9d1d9]"> {"{ "}</span>
+                                    <span className="text-[#d2a8ff]">QuantaCipher</span>
+                                    <span className="text-[#c9d1d9]">{" }"} </span>
+                                    <span className="text-[#ff7b72]">from</span>
+                                    <span className="text-[#a5d6ff]"> 'quantacipher-sdk'</span>
+                                    <span className="text-[#c9d1d9]">;</span>
+                                </div>
+
+                                <div className="mb-2">
+                                    <span className="text-[#8b949e]">// Encrypt patient record locally — Kyber-1024</span>
+                                </div>
+                                <div>
+                                    <span className="text-[#ff7b72]">const</span>
+                                    <span className="text-[#79c0ff]"> qz</span>
+                                    <span className="text-[#ff7b72]"> = new</span>
+                                    <span className="text-[#d2a8ff]"> QuantaCipher</span>
+                                    <span className="text-[#c9d1d9]">{"({ "}</span>
+                                </div>
+                                <div className="pl-6">
+                                    <span className="text-[#79c0ff]">apiKey</span>
+                                    <span className="text-[#c9d1d9]">: process.env.</span>
+                                    <span className="text-[#79c0ff]">QZ_KEY</span>
+                                </div>
+                                <div>
+                                    <span className="text-[#c9d1d9]">{"});"}</span>
+                                </div>
+                                
+                                <div className="mt-6">
+                                    <span className="text-[#ff7b72]">await</span>
+                                    <span className="text-[#79c0ff]"> qz</span>
+                                    <span className="text-[#c9d1d9]">.</span>
+                                    <span className="text-[#d2a8ff]">secureData</span>
+                                    <span className="text-[#c9d1d9]">(</span>
+                                    <span className="text-[#79c0ff]">patientRecord</span>
+                                    <span className="text-[#c9d1d9]">, {"{ "}</span>
+                                    <span className="text-[#79c0ff]">type</span>
+                                    <span className="text-[#c9d1d9]">: </span>
+                                    <span className="text-[#a5d6ff]">'ehr'</span>
+                                    <span className="text-[#c9d1d9]"> {"});"}</span>
+                                </div>
+
+                                {/* Green receipt badge inside terminal */}
+                                <div className="mt-8 pt-6 border-t border-[#30363d] flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-2.5 h-2.5 rounded-full bg-[#2ea043] animate-pulse shadow-[0_0_8px_rgba(46,160,67,0.8)]" />
+                                        <span className="text-[#2ea043] text-[13px] font-bold uppercase tracking-wider">Receipt Issued</span>
+                                    </div>
+                                    <span className="text-[#8b949e] text-[13px] font-medium">Kyber-1024</span>
+                                </div>
+                            </div>
                         </div>
 
-                        {/* Animated blobs behind */}
-                        <div className="absolute inset-0 -z-10 rounded-[24px] overflow-hidden opacity-30">
-                            <motion.div
-                                animate={{ y: [0, -15, 0], scale: [1, 1.05, 1] }}
-                                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                                className="absolute top-[10%] left-[10%] w-[160px] h-[160px] bg-[#4285F4] rounded-full mix-blend-multiply"
-                            />
-                            <motion.div
-                                animate={{ y: [0, 20, 0], scale: [1, 1.1, 1] }}
-                                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                                className="absolute top-[30%] right-[20%] w-[200px] h-[200px] bg-[#34A853] rounded-full mix-blend-multiply"
-                            />
-                            <motion.div
-                                animate={{ y: [0, -15, 0], scale: [1, 1.05, 1] }}
-                                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                                className="absolute bottom-[15%] left-[30%] w-[140px] h-[140px] bg-[#1a73e8] rounded-full mix-blend-multiply"
-                            />
-                        </div>
-                    </motion.div>
+                        {/* Subtle background glow effect behind IDE */}
+                        <div className="absolute -inset-1 bg-gradient-to-r from-[#1a73e8] to-[#34a853] rounded-[16px] blur-[30px] opacity-[0.15] -z-10 pointer-events-none" />
+                    </div>
                 </div>
             </div>
         </section>

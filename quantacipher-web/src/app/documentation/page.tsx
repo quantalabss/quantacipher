@@ -1,175 +1,128 @@
-﻿"use client";
+"use client";
 
-import Link from "next/link";
-import { Book, Code, Zap, CheckCircle2 } from "lucide-react";
+import { Code2, Terminal, Globe, Key, FileText } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { motion } from "framer-motion";
 
 export default function DocumentationPage() {
     return (
         <div className="min-h-screen bg-white">
             <Navbar />
 
-            <main className="pt-24 pb-16">
-                <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-                    {/* Hero */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5 }}
-                        className="max-w-[800px] mb-16 border-b border-[#dadce0] pb-16"
-                    >
-                        <h1 className="text-[48px] font-normal text-[#202124] mb-4">Documentation</h1>
-                        <p className="text-[18px] text-[#5f6368] leading-relaxed">
-                            Everything you need to monitor your Enterprise APIs and blockchain infrastructure.
+            <main className="pt-32 pb-24">
+                <div className="max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8">
+                    {/* Header */}
+                    <div className="mb-16 border-b border-[#dadce0] pb-12">
+                        <div className="inline-flex items-center gap-2 bg-[#e8f0fe] text-[#1a73e8] px-3 py-1 rounded-full text-[13px] font-medium mb-6">
+                            <FileText className="w-4 h-4" />
+                            Documentation
+                        </div>
+                        <h1 className="text-[40px] sm:text-[48px] font-normal text-[#202124] mb-4">QuantaCipher API Reference</h1>
+                        <p className="text-[18px] text-[#5f6368] leading-relaxed max-w-2xl">
+                            Integrate post-quantum encryption into your infrastructure in minutes. Choose between our native Node.js SDK with bundled WebAssembly, or hit our REST API directly.
                         </p>
-                    </motion.div>
-
-                    {/* Quick Start */}
-                    <div className="max-w-[800px] mb-16 border-b border-[#dadce0] pb-16">
-                        <div className="flex items-center gap-3 mb-6">
-                            <Zap className="w-6 h-6 text-[#1a73e8]" />
-                            <h2 className="text-[32px] font-normal text-[#202124]">Quick Start</h2>
-                        </div>
-
-                        <div className="space-y-6">
-                            <motion.div
-                                initial={{ opacity: 0, x: -20 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.5 }}
-                                className="bg-[#f8f9fa] rounded-[8px] p-6 border border-[#dadce0]"
-                            >
-                                <h3 className="text-[20px] font-medium text-[#202124] mb-4">1. Create an Account</h3>
-                                <p className="text-[16px] text-[#5f6368] mb-4">
-                                    Sign up using your Google account. No credit card required for the free tier.
-                                </p>
-                                <Link href="/signin" className="text-[#1a73e8] hover:underline text-[14px] font-medium">
-                                    Get Started →
-                                </Link>
-                            </motion.div>
-
-                            <motion.div
-                                initial={{ opacity: 0, x: -20 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.5, delay: 0.1 }}
-                                className="bg-[#f8f9fa] rounded-[8px] p-6 border border-[#dadce0]"
-                            >
-                                <h3 className="text-[20px] font-medium text-[#202124] mb-4">2. Add Your First Monitor</h3>
-                                <p className="text-[16px] text-[#5f6368] mb-4">
-                                    Navigate to your dashboard and click "Add Monitor". Paste your RPC endpoint URL.
-                                </p>
-                                <div className="bg-[#202124] rounded-[4px] p-4 font-mono text-[13px] text-[#e8eaed] overflow-x-auto">
-                                    https://eth-mainnet.alchemyapi.io/v2/YOUR_API_KEY
-                                </div>
-                            </motion.div>
-
-                            <motion.div
-                                initial={{ opacity: 0, x: -20 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.5, delay: 0.2 }}
-                                className="bg-[#f8f9fa] rounded-[8px] p-6 border border-[#dadce0]"
-                            >
-                                <h3 className="text-[20px] font-medium text-[#202124] mb-4">3. Configure Alerts</h3>
-                                <p className="text-[16px] text-[#5f6368] mb-4">
-                                    Choose between email alerts (default) or webhook notifications for Discord/Slack.
-                                </p>
-                                <ul className="space-y-2">
-                                    <li className="flex items-start gap-2 text-[14px] text-[#3c4043]">
-                                        <CheckCircle2 className="w-4 h-4 text-[#34a853] mt-0.5 flex-shrink-0" />
-                                        Email: Instant alerts to your registered email
-                                    </li>
-                                    <li className="flex items-start gap-2 text-[14px] text-[#3c4043]">
-                                        <CheckCircle2 className="w-4 h-4 text-[#34a853] mt-0.5 flex-shrink-0" />
-                                        Webhook: Real-time notifications in Discord/Slack
-                                    </li>
-                                </ul>
-                            </motion.div>
-                        </div>
                     </div>
 
-                    {/* API Reference */}
-                    <div className="max-w-[800px] mb-16 border-b border-[#dadce0] pb-16">
+                    {/* Authentication */}
+                    <section className="mb-20">
                         <div className="flex items-center gap-3 mb-6">
-                            <Code className="w-6 h-6 text-[#1a73e8]" />
-                            <h2 className="text-[32px] font-normal text-[#202124]">Supported Networks</h2>
+                            <Key className="w-6 h-6 text-[#202124]" />
+                            <h2 className="text-[28px] font-normal text-[#202124]">Authentication</h2>
                         </div>
+                        <p className="text-[#5f6368] mb-6">
+                            All requests to QuantaCipher require an API key. You can generate a free API key from your dashboard.
+                        </p>
+                        <div className="bg-[#f8f9fa] border border-[#dadce0] rounded-[8px] p-6">
+                            <p className="text-[14px] text-[#202124] font-medium mb-2">For the Node.js SDK:</p>
+                            <p className="text-[14px] text-[#5f6368] mb-4">Pass the key in the constructor.</p>
+                            
+                            <p className="text-[14px] text-[#202124] font-medium mb-2 mt-6">For the REST API:</p>
+                            <p className="text-[14px] text-[#5f6368] mb-2">Send the key in the <code className="bg-[#e8eaed] px-1.5 py-0.5 rounded text-[13px] font-mono">x-api-key</code> header.</p>
+                        </div>
+                    </section>
 
-                        <div className="space-y-4">
-                            <div className="border border-[#dadce0] rounded-[8px] p-6">
-                                <h3 className="text-[18px] font-medium text-[#202124] mb-2">EVM Compatible Chains</h3>
-                                <p className="text-[14px] text-[#5f6368] mb-4">
-                                    We perform <code className="bg-[#f1f3f4] px-2 py-1 rounded text-[13px] font-mono">eth_blockNumber</code> checks to verify node synchronization.
-                                </p>
-                                <div className="flex flex-wrap gap-2">
-                                    {["Ethereum", "Polygon", "Arbitrum", "Optimism", "BSC", "Avalanche", "Base"].map((chain) => (
-                                        <span key={chain} className="bg-[#e8f0fe] text-[#1a73e8] px-3 py-1 rounded-full text-[12px] font-medium">
-                                            {chain}
-                                        </span>
-                                    ))}
+                    {/* Node.js SDK */}
+                    <section id="nodejs" className="mb-20">
+                        <div className="flex items-center gap-3 mb-6">
+                            <Terminal className="w-6 h-6 text-[#202124]" />
+                            <h2 className="text-[28px] font-normal text-[#202124]">Node.js SDK</h2>
+                        </div>
+                        <p className="text-[#5f6368] mb-8 leading-relaxed">
+                            The official SDK uses native WebAssembly bindings to execute Kyber-1024 encryption directly within your Node.js runtime. This guarantees zero-trust because plaintext never leaves your machine.
+                        </p>
+
+                        <div className="space-y-8">
+                            <div>
+                                <h3 className="text-[18px] font-medium text-[#202124] mb-4">1. Installation</h3>
+                                <div className="bg-[#202124] rounded-[8px] p-4 text-[14px] font-mono text-[#e8eaed] overflow-x-auto">
+                                    npm install quantacipher-sdk
                                 </div>
                             </div>
 
-                            <div className="border border-[#dadce0] rounded-[8px] p-6">
-                                <h3 className="text-[18px] font-medium text-[#202124] mb-2">Solana & SVM Chains</h3>
-                                <p className="text-[14px] text-[#5f6368] mb-4">
-                                    We perform <code className="bg-[#f1f3f4] px-2 py-1 rounded text-[13px] font-mono">getSlot</code> checks to verify node health.
-                                </p>
-                                <div className="flex flex-wrap gap-2">
-                                    {["Solana Mainnet", "Solana Devnet", "Custom SVM"].map((chain) => (
-                                        <span key={chain} className="bg-[#e8f0fe] text-[#1a73e8] px-3 py-1 rounded-full text-[12px] font-medium">
-                                            {chain}
-                                        </span>
-                                    ))}
+                            <div>
+                                <h3 className="text-[18px] font-medium text-[#202124] mb-4">2. Usage</h3>
+                                <div className="bg-[#202124] rounded-[8px] p-6 font-mono text-[13px] leading-relaxed overflow-x-auto">
+                                    <div className="text-[#c586c0]">import <span className="text-[#9cdcfe]">{"{ QuantaCipher }"}</span> from <span className="text-[#ce9178]">'quantacipher-sdk'</span>;</div>
+                                    <br/>
+                                    <div className="text-[#9aa0a6]">// Initialize the client</div>
+                                    <div className="text-[#569cd6]">const <span className="text-[#9cdcfe]">qz</span> = new <span className="text-[#4ec9b0]">QuantaCipher</span>{"({"}</div>
+                                    <div>  <span className="text-[#9cdcfe]">apiKey</span>: <span className="text-[#ce9178]">'qz_live_...'</span></div>
+                                    <div>{"});"}</div>
+                                    <br/>
+                                    <div className="text-[#9aa0a6]">// Encrypt any arbitrary payload</div>
+                                    <div className="text-[#569cd6]">const <span className="text-[#9cdcfe]">sensitiveData</span> = {"{ "}</div>
+                                    <div>  <span className="text-[#9cdcfe]">email</span>: <span className="text-[#ce9178]">'user@enterprise.com'</span>,</div>
+                                    <div>  <span className="text-[#9cdcfe]">ssn</span>: <span className="text-[#ce9178]">'***-**-****'</span></div>
+                                    <div>{"};"}</div>
+                                    <br/>
+                                    <div className="text-[#9aa0a6]">// Returns a verifiable cryptographic receipt</div>
+                                    <div className="text-[#c586c0]">const <span className="text-[#9cdcfe]">receipt</span> = await <span className="text-[#9cdcfe]">qz</span>.<span className="text-[#dcdcaa]">secureData</span>(<span className="text-[#9cdcfe]">sensitiveData</span>);</div>
+                                    <br/>
+                                    <div><span className="text-[#9cdcfe]">console</span>.<span className="text-[#dcdcaa]">log</span>(<span className="text-[#9cdcfe]">receipt.ciphertext</span>); <span className="text-[#9aa0a6]">// QZ_TRUE_PQC_KEM:...</span></div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </section>
 
-                    {/* Webhook Setup */}
-                    <div className="max-w-[800px]">
+                    {/* REST API */}
+                    <section id="rest">
                         <div className="flex items-center gap-3 mb-6">
-                            <Book className="w-6 h-6 text-[#1a73e8]" />
-                            <h2 className="text-[32px] font-normal text-[#202124]">Webhook Setup</h2>
+                            <Globe className="w-6 h-6 text-[#202124]" />
+                            <h2 className="text-[28px] font-normal text-[#202124]">REST API</h2>
                         </div>
+                        <p className="text-[#5f6368] mb-8 leading-relaxed">
+                            For environments where WebAssembly isn't supported, you can send pre-encrypted or plaintext data directly to our secure edge ingestion Gateway.
+                        </p>
 
-                        <div className="space-y-6">
-                            <motion.div
-                                initial={{ opacity: 0, x: -20 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.5 }}
-                            >
-                                <h3 className="text-[20px] font-medium text-[#202124] mb-3">Discord Webhook</h3>
-                                <ol className="space-y-3 list-decimal list-inside text-[14px] text-[#5f6368]">
-                                    <li>Go to your Discord server settings → Integrations → Webhooks</li>
-                                    <li>Click "New Webhook" and select your channel</li>
-                                    <li>Copy the webhook URL</li>
-                                    <li>Paste it in QuantaCipher when creating a monitor</li>
-                                </ol>
-                            </motion.div>
-
-                            <motion.div
-                                initial={{ opacity: 0, x: -20 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.5, delay: 0.1 }}
-                            >
-                                <h3 className="text-[20px] font-medium text-[#202124] mb-3">Slack Webhook</h3>
-                                <ol className="space-y-3 list-decimal list-inside text-[14px] text-[#5f6368]">
-                                    <li>Visit <a href="https://api.slack.com/messaging/webhooks" className="text-[#1a73e8] hover:underline" target="_blank">Slack Incoming Webhooks</a></li>
-                                    <li>Create a new app and enable Incoming Webhooks</li>
-                                    <li>Add webhook to your workspace and select a channel</li>
-                                    <li>Copy the webhook URL and paste it in QuantaCipher</li>
-                                </ol>
-                            </motion.div>
+                        <div className="border border-[#dadce0] rounded-[8px] overflow-hidden">
+                            <div className="bg-[#f8f9fa] border-b border-[#dadce0] p-4 flex items-center gap-3">
+                                <span className="bg-[#137333] text-white px-2 py-1 rounded text-[12px] font-bold">POST</span>
+                                <code className="text-[14px] font-mono text-[#202124]">https://api.quantacipher.com/v1/ingest</code>
+                            </div>
+                            <div className="p-6">
+                                <h3 className="text-[14px] font-bold text-[#202124] uppercase tracking-wider mb-4">Request Example</h3>
+                                <div className="bg-[#202124] rounded-[8px] p-5 font-mono text-[13px] leading-relaxed overflow-x-auto text-[#d4d4d4]">
+                                    <div><span className="text-[#dcdcaa]">curl</span> -X POST https://api.quantacipher.com/v1/ingest \</div>
+                                    <div>  -H <span className="text-[#ce9178]">'Content-Type: application/json'</span> \</div>
+                                    <div>  -H <span className="text-[#ce9178]">'x-api-key: qz_live_xxxx'</span> \</div>
+                                    <div>  -d <span className="text-[#ce9178]">'{"{ \"ciphertext\": \"QZ_TRUE_PQC_KEM:...\" }"}</span>'</div>
+                                </div>
+                                
+                                <h3 className="text-[14px] font-bold text-[#202124] uppercase tracking-wider mt-8 mb-4">Response Example</h3>
+                                <div className="bg-[#202124] rounded-[8px] p-5 font-mono text-[13px] leading-relaxed overflow-x-auto text-[#d4d4d4]">
+                                    <div>{"{"}</div>
+                                    <div>  <span className="text-[#9cdcfe]">"success"</span>: <span className="text-[#569cd6]">true</span>,</div>
+                                    <div>  <span className="text-[#9cdcfe]">"receiptId"</span>: <span className="text-[#ce9178]">"req_29x8f..."</span>,</div>
+                                    <div>  <span className="text-[#9cdcfe]">"algorithm"</span>: <span className="text-[#ce9178]">"Kyber-1024"</span>,</div>
+                                    <div>  <span className="text-[#9cdcfe]">"latencyMs"</span>: <span className="text-[#b5cea8]">1.2</span></div>
+                                    <div>{"}"}</div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </section>
                 </div>
             </main>
+            
             <Footer />
         </div>
     );

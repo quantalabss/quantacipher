@@ -1,6 +1,5 @@
-﻿"use client";
+"use client";
 
-import { motion } from "framer-motion";
 import { Package, Cpu, Receipt, ShieldCheck } from "lucide-react";
 
 const steps = [
@@ -66,12 +65,8 @@ export function WhyChooseUs() {
                 {/* Steps */}
                 <div className="space-y-6 mb-20">
                     {steps.map((step, i) => (
-                        <motion.div
+                        <div
                             key={step.number}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.5, delay: i * 0.1 }}
                             className="flex flex-col md:flex-row gap-6 p-8 bg-white border border-[#dadce0] rounded-[16px] hover:shadow-md transition-shadow duration-300"
                         >
                             {/* Step number + icon */}
@@ -100,18 +95,12 @@ export function WhyChooseUs() {
                                     <span>{step.code}</span>
                                 </div>
                             </div>
-                        </motion.div>
+                        </div>
                     ))}
                 </div>
 
                 {/* Stats */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5 }}
-                    className="bg-white rounded-[16px] p-12 border border-[#dadce0]"
-                >
+                <div className="bg-white rounded-[16px] p-12 border border-[#dadce0]">
                     <div className="text-center mb-10">
                         <div className="flex items-center justify-center gap-2 mb-2">
                             <ShieldCheck className="w-5 h-5 text-[#1a73e8]" />
@@ -128,7 +117,7 @@ export function WhyChooseUs() {
                             </div>
                         ))}
                     </div>
-                </motion.div>
+                </div>
             </div>
         </section>
     );

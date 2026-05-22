@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -9,13 +8,7 @@ export function CTA() {
     return (
         <section className="py-24 bg-white">
             <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5 }}
-                    className="bg-[#1a73e8] rounded-[24px] p-16 text-center relative overflow-hidden"
-                >
+                <div className="bg-[#1a73e8] rounded-[24px] p-16 text-center relative overflow-hidden shadow-sm">
                     <div className="relative z-10 max-w-2xl mx-auto">
                         <h2 className="text-[36px] sm:text-[44px] font-normal text-white mb-4 leading-tight">
                             Start securing data.<br />Before quantum hits.
@@ -30,7 +23,7 @@ export function CTA() {
                                     size="lg"
                                     className="bg-white hover:bg-[#f8f9fa] text-[#1a73e8] rounded-[8px] px-8 h-[52px] text-[16px] font-medium shadow-none hover:shadow-lg transition-all"
                                 >
-                                    Get free API key
+                                    Get your API keys
                                     <ArrowRight className="ml-2 w-4 h-4" />
                                 </Button>
                             </Link>
@@ -46,7 +39,7 @@ export function CTA() {
                     {/* Decorative blobs */}
                     <div className="absolute -top-10 -right-10 w-72 h-72 bg-white/5 rounded-full" />
                     <div className="absolute -bottom-20 -left-10 w-96 h-96 bg-white/5 rounded-full" />
-                </motion.div>
+                </div>
             </div>
         </section>
     );
