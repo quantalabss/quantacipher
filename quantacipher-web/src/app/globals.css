@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+@theme {
+    --font-sans: var(--font-roboto);
+}
+
+:root {
+    --background: #ffffff;
+    --foreground: #202124;
+
+    --primary: #1a73e8;
+    --primary-hover: #1967d2;
+    --primary-foreground: #ffffff;
+
+    --secondary: #f1f3f4;
+    --secondary-foreground: #202124;
+
+    --muted: #f8f9fa;
+    --muted-foreground: #5f6368;
+
+    --border: #dadce0;
+}
+
+body {
+    background-color: var(--background);
+    color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    letter-spacing: -0.5px;
+}

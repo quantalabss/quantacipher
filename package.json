@@ -1,0 +1,13 @@
+{
+  "name": "quantacipher-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "quantacipher-web",
+    "quantacipher-gateway",
+    "quantacipher-sdk-js"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces"
+  }
+}

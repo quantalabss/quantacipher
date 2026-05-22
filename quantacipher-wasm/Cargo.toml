@@ -1,0 +1,15 @@
+﻿[package]
+name = "quantacipher-wasm"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+wasm-bindgen = "0.2"
+base64 = "0.21"
+aes-gcm = "0.10"
+pqc_kyber = { version = "0.7.1", features = ["wasm"] }
+rand = { version = "0.8", features = ["getrandom"] }
+getrandom = { version = "0.2", features = ["js"] }

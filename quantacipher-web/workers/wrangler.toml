@@ -1,0 +1,11 @@
+name = "rpcwatch-cron"
+main = "cron-worker.js"
+compatibility_date = "2024-01-30"
+
+# Triggers once every minute
+[triggers]
+crons = ["* * * * *"]
+
+[vars]
+# You can override this in dashboard
+# CRON_SECRET = "your-secret-key"

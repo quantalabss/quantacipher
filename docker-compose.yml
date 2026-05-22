@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  gateway:
+    build:
+      context: ./quantacipher-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=production
+      - PORT=4000
+    restart: unless-stopped
+
+  # Optional: If your gateway needs MongoDB locally on the VPS
+  # mongodb:
+  #   image: mongo:6
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - mongo-data:/data/db
+
+volumes:
+  mongo-data:
