@@ -1,4 +1,4 @@
-﻿/**
+/**
  * QuantaCipher SDK — Usage Examples
  *
  * Before running:
@@ -11,7 +11,7 @@ import { QuantaCipher } from './src/index';
 
 const sdk = new QuantaCipher({
     apiKey: 'qz_live_7ii2gjkit5eaxwlhj7c2geusb3ipdbo4',
-    gatewayUrl: 'http://localhost:4000/api/v1/ingest', // local dev
+    gatewayUrl: 'https://gateway.quantacipher.com/api/v1/ingest', // production
 });
 
 async function main() {

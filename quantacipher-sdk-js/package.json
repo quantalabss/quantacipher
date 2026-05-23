@@ -2,13 +2,20 @@
   "name": "quantacipher-sdk",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "dev": "ts-node example.ts",
     "build": "tsc"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "quantacipher",
+    "pqc",
+    "kyber",
+    "post-quantum",
+    "encryption"
+  ],
+  "author": "QuantaLabs",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
