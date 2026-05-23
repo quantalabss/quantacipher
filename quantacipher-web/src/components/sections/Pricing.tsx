@@ -4,10 +4,10 @@ import { Button } from "@/components/ui/button";
 
 const plans = [
     {
-        name: "Hobby",
+        name: "Developer",
         price: "$0",
         period: "/mo",
-        description: "Perfect for exploring post-quantum security and small side projects.",
+        description: "Perfect for exploring post-quantum security in development environments.",
         features: [
             "10,000 API calls / month",
             "Kyber-1024 WASM encryption",
@@ -20,34 +20,34 @@ const plans = [
         popular: false,
     },
     {
-        name: "Dev",
-        price: "$49",
+        name: "Startup",
+        price: "$239",
         period: "/mo",
-        description: "For solo developers and small teams launching secure apps.",
+        description: "For small teams needing more capacity and basic SLAs.",
         features: [
             "100,000 API calls / month",
-            "Everything in Hobby, plus:",
-            "REST API Access",
-            "Basic usage analytics",
+            "Everything in Developer, plus:",
+            "99.9% Uptime SLA",
             "Email support (48h SLA)",
+            "Basic usage analytics",
             "Up to 5 API Keys",
         ],
-        buttonText: "Get Started",
+        buttonText: "Start Free Trial",
         buttonVariant: "outline",
         popular: false,
     },
     {
-        name: "Business",
-        price: "$99",
+        name: "Professional",
+        price: "$499",
         period: "/mo",
-        description: "For growing companies that need higher volume and reliability.",
+        description: "For startups and production applications handling sensitive data.",
         features: [
             "1,000,000 API calls / month",
-            "Everything in Dev, plus:",
+            "Everything in Startup, plus:",
             "99.9% Uptime SLA",
-            "Priority email support (24h)",
+            "Priority email support (24h SLA)",
             "Advanced analytics dashboard",
-            "Unlimited API Keys",
+            "Up to 10 API Keys",
         ],
         buttonText: "Start Free Trial",
         buttonVariant: "primary",
@@ -55,16 +55,16 @@ const plans = [
     },
     {
         name: "Enterprise",
-        price: "$199",
-        period: "/mo",
-        description: "Maximum limits, compliance reports, and white-glove onboarding.",
+        price: "Custom",
+        period: "",
+        description: "Maximum limits, SOC2/HIPAA compliance, and white-glove onboarding.",
         features: [
-            "10,000,000 API calls / month",
-            "Everything in Business, plus:",
+            "Unlimited API calls",
+            "Dedicated gateway instances",
             "SOC2 / HIPAA compliance reports",
             "Dedicated Slack channel",
             "24/7 Phone support",
-            "Custom rate limits",
+            "Custom integrations",
         ],
         buttonText: "Contact Sales",
         buttonVariant: "outline",
@@ -74,11 +74,11 @@ const plans = [
 
 export function Pricing() {
     return (
-        <section id="pricing" className="py-24 bg-[#f8f9fa] border-b border-[#dadce0]">
+        <section id="pricing" className="py-24 bg-white border-b border-[#dadce0]">
             <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-16">
-                    <p className="text-[12px] font-bold text-[#1a73e8] uppercase tracking-widest mb-4 flex justify-center items-center gap-2">
-                        <Zap className="w-4 h-4" /> Pricing
+                    <p className="text-[12px] font-bold text-[#5f6368] uppercase tracking-widest mb-4 flex justify-center items-center gap-2">
+                        Pricing
                     </p>
                     <h2 className="text-[32px] sm:text-[48px] leading-[1.2] font-normal text-[#202124] mb-4">
                         Predictable pricing for every stage
@@ -133,9 +133,7 @@ export function Pricing() {
                             <div className="space-y-4 flex-grow w-full pt-6 border-t border-[#f1f3f4]">
                                 {plan.features.map((feature, i) => (
                                     <div key={i} className="flex items-start gap-3">
-                                        <div className="w-5 h-5 rounded-full bg-[#e6f4ea] flex items-center justify-center flex-shrink-0 mt-0.5">
-                                            <Check className="w-3 h-3 text-[#137333]" />
-                                        </div>
+                                        <Check className="w-4 h-4 text-[#5f6368] mt-0.5 flex-shrink-0" />
                                         <span className={`text-[14px] ${i === 0 ? 'font-bold text-[#202124]' : 'text-[#5f6368]'}`}>{feature}</span>
                                     </div>
                                 ))}

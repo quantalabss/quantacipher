@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
@@ -109,10 +109,10 @@ export default function SignInPage() {
                         transition={{ duration: 0.6 }}
                     >
                         <h2 className="text-[56px] sm:text-[64px] leading-[1.1] font-normal text-[#202124] mb-6">
-                            Start monitoring <br /> <span className="text-[#1a73e8]">in seconds.</span>
+                            Start securing <br /> <span className="text-[#1a73e8]">in seconds.</span>
                         </h2>
                         <p className="text-[20px] text-[#5f6368] leading-relaxed mb-8">
-                            Track uptime, latency, and incidents for all your critical APIs. Get instant alerts when something breaks.
+                            Secure your critical APIs with Kyber-1024 encryption and manage your Zero-Trust infrastructure.
                         </p>
                     </motion.div>
                 </div>

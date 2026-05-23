@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -31,7 +31,7 @@ export default function TermsPage() {
                                 <section>
                                     <h2 className="text-[24px] font-medium text-[#202124] mb-4">2. Description of Service</h2>
                                     <p className="text-[16px] text-[#5f6368] leading-relaxed">
-                                        QuantaCipher provides blockchain Enterprise API monitoring services. We perform periodic health checks on your specified endpoints and send alerts when issues are detected. Our service is provided "as is" and we make no guarantees about uptime or accuracy of monitoring.
+                                        QuantaCipher provides Zero-Trust API gateway and post-quantum cryptographic services. We provide tools to secure your endpoints using Kyber-1024 encryption. Our service is provided "as is" and we make no guarantees about service availability or security.
                                     </p>
                                 </section>
 
@@ -43,7 +43,7 @@ export default function TermsPage() {
                                     <ul className="list-disc list-inside space-y-2 text-[16px] text-[#5f6368] ml-4">
                                         <li>Maintaining the confidentiality of your account</li>
                                         <li>All activities that occur under your account</li>
-                                        <li>Ensuring your RPC endpoints are properly secured</li>
+                                        <li>Ensuring your API endpoints are properly configured</li>
                                         <li>Complying with all applicable laws and regulations</li>
                                     </ul>
                                 </section>
@@ -70,7 +70,7 @@ export default function TermsPage() {
                                         <li>Use the service for any illegal purpose</li>
                                         <li>Attempt to gain unauthorized access to our systems</li>
                                         <li>Interfere with or disrupt the service</li>
-                                        <li>Use the service to monitor endpoints you don't own or have permission to monitor</li>
+                                        <li>Use the service to secure endpoints you don't own or have permission to access</li>
                                         <li>Resell or redistribute our service without permission</li>
                                     </ul>
                                 </section>
@@ -78,14 +78,14 @@ export default function TermsPage() {
                                 <section>
                                     <h2 className="text-[24px] font-medium text-[#202124] mb-4">6. Service Limits</h2>
                                     <p className="text-[16px] text-[#5f6368] leading-relaxed">
-                                        Each plan has specific limits on the number of monitors, check frequency, and data retention. Exceeding these limits may result in service degradation or suspension. We reserve the right to enforce fair use policies.
+                                        Each plan has specific limits on the number of active API keys, API calls, and bytes secured. Exceeding these limits may result in service degradation or suspension. We reserve the right to enforce fair use policies.
                                     </p>
                                 </section>
 
                                 <section>
                                     <h2 className="text-[24px] font-medium text-[#202124] mb-4">7. Limitation of Liability</h2>
                                     <p className="text-[16px] text-[#5f6368] leading-relaxed">
-                                        QuantaCipher shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of the service. We do not guarantee 100% uptime or that all alerts will be delivered successfully.
+                                        QuantaCipher shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of the service. We do not guarantee 100% uptime or that all payloads will be processed successfully.
                                     </p>
                                 </section>
 

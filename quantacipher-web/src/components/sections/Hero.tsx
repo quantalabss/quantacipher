@@ -54,81 +54,87 @@ export function Hero() {
 
                     {/* Right side: Enlarged High-End Code Window */}
                     <div className="relative hidden lg:block w-full max-w-[650px] ml-auto">
-                        <div className="relative z-10 bg-[#0d1117] rounded-[16px] shadow-[0_20px_50px_rgba(0,0,0,0.25)] font-mono text-[14px] sm:text-[15px] border border-[#30363d] overflow-hidden">
+                        <div className="relative z-10 bg-[#1e2433] rounded-[16px] shadow-[0_20px_60px_rgba(0,0,0,0.2)] font-mono text-[14px] sm:text-[15px] border border-[#2d3550] overflow-hidden">
                             {/* Window Header */}
-                            <div className="flex items-center bg-[#161b22] border-b border-[#30363d] px-4 py-3">
-                                <div className="flex gap-2">
+                            <div className="flex items-center bg-[#252d3f] border-b border-[#2d3550] px-5 py-3.5">
+                                <div className="flex gap-1.5">
                                     <div className="w-3 h-3 rounded-full bg-[#ff5f56]" />
                                     <div className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
                                     <div className="w-3 h-3 rounded-full bg-[#27c93f]" />
                                 </div>
-                                <div className="mx-auto flex items-center gap-2 text-[#8b949e] text-[13px] font-medium">
+                                <div className="mx-auto flex items-center gap-2 text-[#6b7a9e] text-[12px] font-medium tracking-wide">
                                     quantacipher-integration.ts
                                 </div>
                             </div>
 
                             {/* Code Content */}
-                            <div className="p-8 leading-[1.8]">
+                            <div className="p-8 leading-[1.9]">
                                 <div>
-                                    <span className="text-[#8b949e]">// Install SDK via npm</span>
+                                    <span className="text-[#5c6b8a]">// Install SDK via npm</span>
                                 </div>
                                 <div className="mb-5">
-                                    <span className="text-[#8b949e]">// </span>
+                                    <span className="text-[#5c6b8a]">// </span>
                                     <span className="text-[#ff7b72]">npm</span>
-                                    <span className="text-[#c9d1d9]"> install quantacipher-sdk</span>
+                                    <span className="text-[#cdd6f0]"> install quantacipher-sdk</span>
                                 </div>
 
                                 <div className="mb-6">
                                     <span className="text-[#ff7b72]">import</span>
-                                    <span className="text-[#c9d1d9]"> {"{ "}</span>
-                                    <span className="text-[#d2a8ff]">QuantaCipher</span>
-                                    <span className="text-[#c9d1d9]">{" }"} </span>
+                                    <span className="text-[#cdd6f0]"> {"{ "}</span>
+                                    <span className="text-[#c792ea]">QuantaCipher</span>
+                                    <span className="text-[#cdd6f0]">{" }"} </span>
                                     <span className="text-[#ff7b72]">from</span>
-                                    <span className="text-[#a5d6ff]"> 'quantacipher-sdk'</span>
-                                    <span className="text-[#c9d1d9]">;</span>
+                                    <span className="text-[#82aaff]"> 'quantacipher-sdk'</span>
+                                    <span className="text-[#cdd6f0]">;</span>
                                 </div>
 
                                 <div className="mb-2">
-                                    <span className="text-[#8b949e]">// Encrypt patient record locally — Kyber-1024</span>
+                                    <span className="text-[#5c6b8a]">// Encrypt patient record locally — Kyber-1024</span>
                                 </div>
                                 <div>
                                     <span className="text-[#ff7b72]">const</span>
-                                    <span className="text-[#79c0ff]"> qz</span>
+                                    <span className="text-[#82aaff]"> qz</span>
                                     <span className="text-[#ff7b72]"> = new</span>
-                                    <span className="text-[#d2a8ff]"> QuantaCipher</span>
-                                    <span className="text-[#c9d1d9]">{"({ "}</span>
+                                    <span className="text-[#c792ea]"> QuantaCipher</span>
+                                    <span className="text-[#cdd6f0]">{"({ "}</span>
                                 </div>
                                 <div className="pl-6">
-                                    <span className="text-[#79c0ff]">apiKey</span>
-                                    <span className="text-[#c9d1d9]">: process.env.</span>
-                                    <span className="text-[#79c0ff]">QZ_KEY</span>
+                                    <span className="text-[#82aaff]">apiKey</span>
+                                    <span className="text-[#cdd6f0]">: process.env.</span>
+                                    <span className="text-[#ffcb6b]">QZ_KEY</span>
                                 </div>
                                 <div>
-                                    <span className="text-[#c9d1d9]">{"});"}</span>
+                                    <span className="text-[#cdd6f0]">{"});"}</span>
                                 </div>
                                 
                                 <div className="mt-6">
                                     <span className="text-[#ff7b72]">await</span>
-                                    <span className="text-[#79c0ff]"> qz</span>
-                                    <span className="text-[#c9d1d9]">.</span>
-                                    <span className="text-[#d2a8ff]">secureData</span>
-                                    <span className="text-[#c9d1d9]">(</span>
-                                    <span className="text-[#79c0ff]">patientRecord</span>
-                                    <span className="text-[#c9d1d9]">, {"{ "}</span>
-                                    <span className="text-[#79c0ff]">type</span>
-                                    <span className="text-[#c9d1d9]">: </span>
-                                    <span className="text-[#a5d6ff]">'ehr'</span>
-                                    <span className="text-[#c9d1d9]"> {"});"}</span>
+                                    <span className="text-[#82aaff]"> qz</span>
+                                    <span className="text-[#cdd6f0]">.</span>
+                                    <span className="text-[#c792ea]">secureData</span>
+                                    <span className="text-[#cdd6f0]">(</span>
+                                    <span className="text-[#82aaff]">patientRecord</span>
+                                    <span className="text-[#cdd6f0]">, {"{ "}</span>
+                                    <span className="text-[#82aaff]">type</span>
+                                    <span className="text-[#cdd6f0]">: </span>
+                                    <span className="text-[#c3e88d]">'ehr'</span>
+                                    <span className="text-[#cdd6f0]"> {"});"}</span>
                                 </div>
 
-                                {/* Green receipt badge inside terminal */}
-                                <div className="mt-8 pt-6 border-t border-[#30363d] flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-2.5 h-2.5 rounded-full bg-[#2ea043] animate-pulse shadow-[0_0_8px_rgba(46,160,67,0.8)]" />
-                                        <span className="text-[#2ea043] text-[13px] font-bold uppercase tracking-wider">Receipt Issued</span>
-                                    </div>
-                                    <span className="text-[#8b949e] text-[13px] font-medium">Kyber-1024</span>
+
+                                {/* Terminal output line */}
+                                <div className="mt-5">
+                                    <span className="text-[#5c6b8a]">// </span>
+                                    <span className="text-[#3ddc84]">✓</span>
+                                    <span className="text-[#82aaff]"> receipt</span>
+                                    <span className="text-[#cdd6f0]">.</span>
+                                    <span className="text-[#c792ea]">status</span>
+                                    <span className="text-[#cdd6f0]"> = </span>
+                                    <span className="text-[#c3e88d]">'issued'</span>
+                                    <span className="text-[#cdd6f0]">  </span>
+                                    <span className="text-[#5c6b8a]">// kyber-1024</span>
                                 </div>
+
                             </div>
                         </div>
 

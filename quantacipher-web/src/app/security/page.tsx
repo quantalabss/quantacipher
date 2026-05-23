@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -21,7 +21,7 @@ export default function SecurityPage() {
                     >
                         <h1 className="text-[48px] font-normal text-[#202124] mb-4">Security</h1>
                         <p className="text-[18px] text-[#5f6368] leading-relaxed">
-                            Your data security is our top priority. Learn about our security practices and how we protect your infrastructure monitoring data.
+                            Your data security is our top priority. Learn about our security practices and how we protect your infrastructure and data.
                         </p>
                     </motion.div>
 
@@ -71,7 +71,7 @@ export default function SecurityPage() {
                             </div>
                             <h3 className="text-[20px] font-medium text-[#202124] mb-3">Access Control</h3>
                             <p className="text-[14px] text-[#5f6368] leading-relaxed">
-                                Your monitoring data is isolated and only accessible to your account. We implement strict role-based access controls for our internal systems.
+                                Your API usage data is isolated and only accessible to your account. We implement strict role-based access controls for our internal systems.
                             </p>
                         </motion.div>
 
@@ -98,23 +98,23 @@ export default function SecurityPage() {
 
                         <div className="space-y-6">
                             <div className="border-l-4 border-[#1a73e8] pl-6">
-                                <h3 className="text-[18px] font-medium text-[#202124] mb-2">Protect Your RPC Endpoints</h3>
+                                <h3 className="text-[18px] font-medium text-[#202124] mb-2">Protect Your Endpoints</h3>
                                 <p className="text-[14px] text-[#5f6368] leading-relaxed">
-                                    Always use HTTPS endpoints. Consider using API key authentication on your RPC providers. Rotate keys regularly and never share them publicly.
+                                    Always use HTTPS endpoints. Secure your Gateway integration properly. Rotate keys regularly and never share them publicly.
                                 </p>
                             </div>
 
                             <div className="border-l-4 border-[#1a73e8] pl-6">
-                                <h3 className="text-[18px] font-medium text-[#202124] mb-2">Secure Your Webhooks</h3>
+                                <h3 className="text-[18px] font-medium text-[#202124] mb-2">Secure Your API Keys</h3>
                                 <p className="text-[14px] text-[#5f6368] leading-relaxed">
-                                    Keep your Discord and Slack webhook URLs private. These URLs grant access to post messages in your channels. Regenerate them if they're ever exposed.
+                                    Keep your QuantaCipher API keys private. These keys grant access to encrypt and decrypt your data. Revoke and regenerate them if they're ever exposed.
                                 </p>
                             </div>
 
                             <div className="border-l-4 border-[#1a73e8] pl-6">
                                 <h3 className="text-[18px] font-medium text-[#202124] mb-2">Monitor Account Activity</h3>
                                 <p className="text-[14px] text-[#5f6368] leading-relaxed">
-                                    Regularly review your monitors and alert configurations. Remove any monitors you no longer need. Sign out of unused sessions.
+                                    Regularly review your API keys and usage analytics. Revoke any keys you no longer need. Sign out of unused sessions.
                                 </p>
                             </div>
                         </div>

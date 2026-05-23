@@ -1,23 +1,23 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Activity, Zap, Bell, ArrowRight } from "lucide-react";
+import { Shield, Key, Database, ArrowRight } from "lucide-react";
 
 const services = [
     {
-        icon: Activity,
-        title: "Global Reliability Monitoring",
-        description: "Ping your critical endpoints every 30s from 12 global regions. Catch regional outages before your customers do.",
+        icon: Shield,
+        title: "Post-Quantum Security",
+        description: "Secure your endpoints with Kyber-1024 cryptography. Future-proof your infrastructure against quantum threats.",
     },
     {
-        icon: Zap,
-        title: "Dependency Tracking",
-        description: "Visualize how one failing 3rd party API impacts your entire stack. Spot bottlenecks instantly.",
+        icon: Key,
+        title: "Zero-Trust API Keys",
+        description: "Manage dynamic, auto-rotating API keys with granular access controls and usage limits.",
     },
     {
-        icon: Bell,
-        title: "Intelligent Alerting",
-        description: "Stop alert fatigue. Get notified via Slack, PagerDuty, or SMS only when it actually matters.",
+        icon: Database,
+        title: "Secure Analytics",
+        description: "Monitor your cryptographic usage and secured bytes in real-time through our intuitive dashboard.",
     },
 ];
 
@@ -33,10 +33,10 @@ export function Services() {
                     className="text-center mb-16"
                 >
                     <h2 className="text-[40px] sm:text-[48px] font-normal text-[#202124] mb-4">
-                        Everything you need to stay online
+                        Everything you need for API security
                     </h2>
                     <p className="text-[18px] text-[#5f6368] max-w-2xl mx-auto">
-                        Comprehensive monitoring tools built for modern engineering teams.
+                        Comprehensive Zero-Trust tools built for modern engineering teams.
                     </p>
                 </motion.div>
 

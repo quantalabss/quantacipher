@@ -5,7 +5,7 @@ import { Shield } from "lucide-react";
 
 export function Footer() {
     return (
-        <footer className="bg-[#f8f9fa] pt-16 pb-12">
+        <footer className="bg-white border-t border-[#dadce0] pt-16 pb-12">
             <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
                     <div className="col-span-2 md:col-span-1">
@@ -53,8 +53,7 @@ export function Footer() {
                     <p className="text-[13px] text-[#9aa0a6]">
                         © {new Date().getFullYear()} QuantaCipher Inc. All rights reserved.
                     </p>
-                    <div className="flex items-center gap-2 bg-white border border-[#dadce0] px-3 py-1.5 rounded-full shadow-sm">
-                        <Shield className="w-3.5 h-3.5 text-[#34a853]" />
+                    <div className="flex items-center justify-center border border-[#dadce0] px-4 py-1.5 rounded-full">
                         <span className="text-[12px] font-medium text-[#5f6368]">NIST Approved</span>
                     </div>
                 </div>

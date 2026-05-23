@@ -5,33 +5,24 @@ import { Package, Cpu, Receipt, ShieldCheck } from "lucide-react";
 const steps = [
     {
         number: "01",
-        icon: Package,
         title: "Install the SDK",
         description:
             "Add quantacipher-sdk to your project with one npm command. Works with Node.js, browsers, and any JavaScript or TypeScript codebase.",
         code: "npm install quantacipher-sdk",
-        color: "#1a73e8",
-        bg: "#e8f0fe",
     },
     {
         number: "02",
-        icon: Cpu,
         title: "Encrypt Locally via WASM",
         description:
             "Our Rust WASM engine runs NIST Kyber-1024 (ML-KEM) directly inside your JavaScript runtime. Your plaintext data never leaves your machine unencrypted.",
         code: "const encrypted = await qz.encryptLocal(sensitiveData);",
-        color: "#34a853",
-        bg: "#e6f4ea",
     },
     {
         number: "03",
-        icon: Receipt,
         title: "Gateway Issues a Tamper-Proof Receipt",
         description:
             "The ciphertext is transmitted to our Gateway, which validates your API key, logs the event, and issues a cryptographic receipt with a timestamp.",
         code: "const receipt = await qz.sendToGateway(encrypted);",
-        color: "#fbbc04",
-        bg: "#fef9e0",
     },
 ];
 
@@ -69,14 +60,8 @@ export function WhyChooseUs() {
                             key={step.number}
                             className="flex flex-col md:flex-row gap-6 p-8 bg-white border border-[#dadce0] rounded-[16px] hover:shadow-md transition-shadow duration-300"
                         >
-                            {/* Step number + icon */}
+                            {/* Step number */}
                             <div className="flex items-start gap-4 md:w-64 flex-shrink-0">
-                                <div
-                                    className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
-                                    style={{ backgroundColor: step.bg }}
-                                >
-                                    <step.icon className="w-6 h-6" style={{ color: step.color }} />
-                                </div>
                                 <div>
                                     <div className="text-[12px] font-bold text-[#9aa0a6] tracking-widest mb-1">
                                         STEP {step.number}
@@ -103,7 +88,6 @@ export function WhyChooseUs() {
                 <div className="bg-white rounded-[16px] p-12 border border-[#dadce0]">
                     <div className="text-center mb-10">
                         <div className="flex items-center justify-center gap-2 mb-2">
-                            <ShieldCheck className="w-5 h-5 text-[#1a73e8]" />
                             <h3 className="text-[12px] font-bold text-[#5f6368] uppercase tracking-widest">
                                 Platform Specs
                             </h3>
@@ -116,6 +100,34 @@ export function WhyChooseUs() {
                                 <div className="text-[14px] text-[#5f6368]">{stat.label}</div>
                             </div>
                         ))}
+                    </div>
+                </div>
+
+                {/* Security Feature Badges */}
+                <div className="mt-8 bg-white rounded-[16px] p-8 sm:p-12 border border-[#dadce0]">
+                    <div className="text-center mb-10">
+                        <h3 className="text-[12px] font-bold text-[#5f6368] uppercase tracking-widest">
+                            Built to Enterprise Standards
+                        </h3>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {/* Badge 1 */}
+                        <div className="bg-white border border-[#dadce0] rounded-[8px] p-6 text-center">
+                            <p className="text-[16px] font-medium text-[#202124] mb-1">NIST ML-KEM Ready</p>
+                            <p className="text-[14px] text-[#5f6368]">FIPS 204 Standard</p>
+                        </div>
+
+                        {/* Badge 2 */}
+                        <div className="bg-white border border-[#dadce0] rounded-[8px] p-6 text-center">
+                            <p className="text-[16px] font-medium text-[#202124] mb-1">Zero-Trust Architecture</p>
+                            <p className="text-[14px] text-[#5f6368]">No Private Key Escrow</p>
+                        </div>
+
+                        {/* Badge 3 */}
+                        <div className="bg-white border border-[#dadce0] rounded-[8px] p-6 text-center">
+                            <p className="text-[16px] font-medium text-[#202124] mb-1">End-to-End Encrypted</p>
+                            <p className="text-[14px] text-[#5f6368]">AES-256-GCM Hybrid</p>
+                        </div>
                     </div>
                 </div>
             </div>

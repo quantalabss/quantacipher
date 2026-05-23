@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -24,12 +24,11 @@ export default function PrivacyPage() {
                                 <section>
                                     <h2 className="text-[24px] font-medium text-[#202124] mb-4">1. Information We Collect</h2>
                                     <p className="text-[16px] text-[#5f6368] leading-relaxed mb-4">
-                                        We collect information you provide directly to us when you create an account, configure monitors, or contact support. This includes:
+                                        We collect information you provide directly to us when you create an account, generate API keys, or contact support. This includes:
                                     </p>
                                     <ul className="list-disc list-inside space-y-2 text-[16px] text-[#5f6368] ml-4">
                                         <li>Email address and name (via Google OAuth)</li>
-                                        <li>RPC endpoint URLs you wish to monitor</li>
-                                        <li>Webhook URLs for alert notifications</li>
+                                        <li>API usage statistics</li>
                                         <li>Payment information (crypto wallet addresses)</li>
                                     </ul>
                                 </section>
@@ -40,8 +39,7 @@ export default function PrivacyPage() {
                                         We use the information we collect to:
                                     </p>
                                     <ul className="list-disc list-inside space-y-2 text-[16px] text-[#5f6368] ml-4">
-                                        <li>Provide, maintain, and improve our monitoring services</li>
-                                        <li>Send you alerts about your monitored endpoints</li>
+                                        <li>Provide, maintain, and improve our cryptographic services</li>
                                         <li>Process payments and manage your subscription</li>
                                         <li>Respond to your support requests</li>
                                         <li>Detect and prevent fraud or abuse</li>
@@ -51,14 +49,14 @@ export default function PrivacyPage() {
                                 <section>
                                     <h2 className="text-[24px] font-medium text-[#202124] mb-4">3. Data Security</h2>
                                     <p className="text-[16px] text-[#5f6368] leading-relaxed">
-                                        We implement industry-standard security measures to protect your data. All data is encrypted in transit using TLS. We do not store your RPC API keys or sensitive credentials - only the endpoint URLs you provide for monitoring purposes.
+                                        We implement industry-standard security measures to protect your data. All data is encrypted in transit using TLS. We securely store your QuantaCipher API keys and usage analytics.
                                     </p>
                                 </section>
 
                                 <section>
                                     <h2 className="text-[24px] font-medium text-[#202124] mb-4">4. Data Retention</h2>
                                     <p className="text-[16px] text-[#5f6368] leading-relaxed">
-                                        We retain your monitoring data and incident history for the duration of your subscription. Historical check data is retained according to your plan (30 days for Validator, 7 days for Hobbyist). You can request deletion of your account and all associated data at any time.
+                                        We retain your API usage analytics and key activity history for the duration of your subscription. You can request deletion of your account and all associated data at any time.
                                     </p>
                                 </section>
 
