@@ -12,16 +12,16 @@ const badges = [
 
 export function Hero() {
     return (
-        <section className="relative pt-[128px] pb-24 overflow-hidden bg-white border-b border-[#dadce0]">
+        <section className="relative pt-[100px] sm:pt-[128px] pb-16 sm:pb-24 overflow-hidden bg-white border-b border-[#dadce0]">
             <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                     <div className="max-w-2xl">
                         <div className="max-w-4xl">
-                            <h1 className="text-[56px] sm:text-[64px] leading-[1.1] font-bold tracking-tight text-[#202124] mb-8">
+                            <h1 className="text-[40px] sm:text-[64px] leading-[1.1] font-bold tracking-tight text-[#202124] mb-8">
                                 Post-Quantum Security{" "}
                                 <span className="text-[#1a73e8]">in two lines of code.</span>
                             </h1>
-                            <p className="text-[20px] sm:text-[22px] leading-[1.6] text-[#5f6368] mb-8 max-w-xl">
+                            <p className="text-[18px] sm:text-[22px] leading-[1.6] text-[#5f6368] mb-8 max-w-xl">
                                 Protect your enterprise data from quantum computer attacks today.
                                 Our SDK encrypts everything locally on your machine before it ever hits a network — zero trust, zero compromise.
                             </p>

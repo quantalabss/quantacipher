@@ -7,7 +7,7 @@ export function Footer() {
     return (
         <footer className="bg-white border-t border-[#dadce0] pt-16 pb-12">
             <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-16">
                     <div className="col-span-2 md:col-span-1">
                         <Link href="/" className="inline-block mb-6">
                             <span className="text-[22px] font-bold text-[#202124] tracking-tighter">
@@ -49,7 +49,7 @@ export function Footer() {
                     </div>
                 </div>
 
-                <div className="pt-8 border-t border-[#dadce0] flex flex-col md:flex-row justify-between items-center gap-4">
+                <div className="pt-8 border-t border-[#dadce0] flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
                     <p className="text-[13px] text-[#9aa0a6]">
                         © {new Date().getFullYear()} QuantaCipher Inc. All rights reserved.
                     </p>

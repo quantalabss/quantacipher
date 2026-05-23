@@ -228,7 +228,7 @@ export function Navbar() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -8 }}
                         transition={{ duration: 0.15 }}
-                        className="md:hidden absolute top-[64px] left-0 w-full bg-white border-b border-[#dadce0] shadow-xl max-h-[calc(100vh-64px)] overflow-y-auto"
+                        className="md:hidden absolute top-[64px] left-0 w-full bg-white border-b border-[#dadce0] shadow-xl max-h-[calc(100vh-64px)] overflow-y-auto pb-12"
                     >
                         <div className="px-6 py-4">
                             <MobileNavSection title="Platform" groups={PLATFORM_GROUPS} />

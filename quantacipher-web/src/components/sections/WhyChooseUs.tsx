@@ -35,7 +35,7 @@ const stats = [
 
 export function WhyChooseUs() {
     return (
-        <section id="how-it-works" className="py-24 bg-white">
+        <section id="how-it-works" className="py-16 sm:py-24 bg-white">
             <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
 
                 {/* Header */}
@@ -43,7 +43,7 @@ export function WhyChooseUs() {
                     <p className="text-[12px] font-bold text-[#5f6368] uppercase tracking-widest mb-4">
                         How It Works
                     </p>
-                    <h2 className="text-[40px] sm:text-[48px] font-normal text-[#202124] mb-6 leading-tight">
+                    <h2 className="text-[32px] sm:text-[48px] font-normal text-[#202124] mb-6 leading-tight">
                         Zero-trust encryption,{" "}
                         <span className="text-[#1a73e8]">zero complexity.</span>
                     </h2>
