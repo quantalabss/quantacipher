@@ -126,8 +126,8 @@ export default function SignInPage() {
             <div className="flex flex-col items-center justify-center p-8 bg-[#f8f9fa]">
                 <div className="w-full max-w-[380px] space-y-8">
                     <div className="text-center">
-                        <div className="lg:hidden w-12 h-12 bg-[#e8f0fe] rounded-full flex items-center justify-center mx-auto mb-6">
-                            <Activity className="w-6 h-6 text-[#1a73e8]" />
+                        <div className="lg:hidden mb-8">
+                            <span className="text-[28px] font-bold text-[#202124] tracking-tight">QuantaCipher</span>
                         </div>
                         <h1 className="text-[28px] font-normal text-[#202124] mb-2">Welcome back</h1>
                         <p className="text-[#5f6368] text-[14px]">
@@ -170,6 +170,15 @@ export default function SignInPage() {
                             </svg>
                             <span className="text-[14px] font-medium">Sign in with GitHub</span>
                         </Button>
+                    </div>
+
+                    <div className="text-center px-4">
+                        <p className="text-[12px] text-[#5f6368] leading-relaxed">
+                            By signing in, you agree to our{" "}
+                            <Link href="/terms" className="text-[#1a73e8] hover:underline">Terms of Service</Link>
+                            {" "}and{" "}
+                            <Link href="/privacy" className="text-[#1a73e8] hover:underline">Privacy Policy</Link>.
+                        </p>
                     </div>
 
                     <div className="pt-4 text-center">

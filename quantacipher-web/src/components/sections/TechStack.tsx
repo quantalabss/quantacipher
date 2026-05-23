@@ -1,25 +1,31 @@
 "use client";
 
+import { CheckCircle2 } from "lucide-react";
+
 const integrations = [
     {
-        lang: "Node.js",
-        badge: "npm install quantacipher-sdk",
+        lang: "Vault Mode",
+        badge: "Permanent Seal",
         code: [
-            { type: "import", text: "import { QuantaCipher } from 'quantacipher-sdk';" },
+            { type: "comment", text: "// Permanent sealed record for audit logs" },
+            { type: "code", text: "const vaultCiphertext = sdk.encryptVault(patientRecord);" },
             { type: "blank" },
-            { type: "comment", text: "// Encrypt patient record locally — Kyber-1024" },
-            { type: "code", text: "const qz = new QuantaCipher({ apiKey: process.env.QZ_KEY });" },
-            { type: "code", text: "await qz.secureData(patientRecord, { type: 'ehr' });" },
+            { type: "comment", text: "// Send to gateway for tamper-proof receipt" },
+            { type: "code", text: "const receipt = await sdk.vaultData(patientRecord, { type: 'hipaa_audit' });" },
         ],
     },
     {
-        lang: "REST API",
-        badge: "POST /api/v1/ingest",
+        lang: "Secure Mode",
+        badge: "User Holds Keys",
         code: [
-            { type: "comment", text: "// Send pre-encrypted ciphertext" },
-            { type: "code", text: 'curl -X POST https://api.quantacipher.com/v1/ingest \\' },
-            { type: "code", text: "  -H 'x-api-key: qz_live_xxxx' \\" },
-            { type: "code", text: "  -d '{ \"ciphertext\": \"QZ_TRUE_PQC_KEM:...\" }'" },
+            { type: "comment", text: "// Encrypt + Decrypt with user keypair" },
+            { type: "code", text: "const keypair = sdk.generateKeypair();" },
+            { type: "blank" },
+            { type: "comment", text: "// Encrypt with public key" },
+            { type: "code", text: "const ciphertext = sdk.encryptSecure(doc, keypair.publicKey);" },
+            { type: "blank" },
+            { type: "comment", text: "// Decrypt locally with private key" },
+            { type: "code", text: "const plaintext = sdk.decryptSecure(ciphertext, keypair.privateKey);" },
         ],
     },
 ];
@@ -41,17 +47,17 @@ const features = [
 
 export function TechStack() {
     return (
-        <section className="py-24 bg-white border-b border-[#dadce0]">
+        <section id="integrations" className="py-24 bg-white border-b border-[#dadce0]">
             <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-16">
-                    <p className="text-[12px] font-bold text-[#5f6368] mb-4 uppercase tracking-widest">
-                        Integrations
+                    <p className="text-[14px] font-bold text-[#5f6368] mb-4 uppercase tracking-widest">
+                        Architecture
                     </p>
                     <h2 className="text-[32px] font-normal text-[#202124] mb-4">
-                        Integrate in minutes, not months
+                        Two distinct modes of operation
                     </h2>
-                    <p className="text-[16px] text-[#5f6368] max-w-[600px] mx-auto">
-                        Two lines of TypeScript or a single REST call. QuantaCipher plugs into any existing stack without a refactor.
+                    <p className="text-[20px] text-[#5f6368] max-w-[600px] mx-auto">
+                        Whether you need permanently sealed audit logs or secure end-to-end encryption with user-held keys, QuantaCipher has you covered.
                     </p>
                 </div>
 
@@ -67,7 +73,7 @@ export function TechStack() {
                                     <div className="w-10 h-10 rounded-[10px] flex items-center justify-center bg-[#f8f9fa] border border-[#dadce0] text-[#202124] font-bold text-[12px]">
                                         {int.lang.slice(0, 2).toUpperCase()}
                                     </div>
-                                    <h3 className="text-[18px] font-medium text-[#202124]">{int.lang}</h3>
+                                    <h3 className="text-[20px] font-medium text-[#202124]">{int.lang}</h3>
                                 </div>
                                 <div className="text-[11px] font-mono px-3 py-1 rounded-full border border-[#dadce0] text-[#5f6368] bg-[#f8f9fa] font-medium">
                                     {int.badge}
@@ -108,10 +114,10 @@ export function TechStack() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
                     {features.map((f) => (
                         <div key={f.title} className="flex gap-3">
-                            <div className="w-2 h-2 rounded-full mt-2 flex-shrink-0 bg-[#1a73e8]" />
+                            <CheckCircle2 className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#80868b]" />
                             <div>
-                                <h4 className="text-[15px] font-medium text-[#202124] mb-1">{f.title}</h4>
-                                <p className="text-[14px] text-[#5f6368] leading-relaxed">{f.description}</p>
+                                <h4 className="text-[18px] font-medium text-[#202124] mb-1">{f.title}</h4>
+                                <p className="text-[16px] text-[#5f6368] leading-relaxed">{f.description}</p>
                             </div>
                         </div>
                     ))}

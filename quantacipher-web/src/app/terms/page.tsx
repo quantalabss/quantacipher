@@ -17,99 +17,75 @@ export default function TermsPage() {
                         transition={{ duration: 0.5 }}
                     >
                         <h1 className="text-[48px] font-normal text-[#202124] mb-4">Terms of Service</h1>
-                        <p className="text-[14px] text-[#5f6368] mb-12">Last updated: January 29, 2026</p>
+                        <p className="text-[14px] text-[#5f6368] mb-12">Last updated: May 23, 2026</p>
 
                         <div className="prose prose-lg max-w-none">
                             <div className="space-y-8">
                                 <section>
-                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">1. Acceptance of Terms</h2>
-                                    <p className="text-[16px] text-[#5f6368] leading-relaxed">
-                                        By accessing and using QuantaCipher, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to these Terms of Service, please do not use our service.
-                                    </p>
-                                </section>
-
-                                <section>
-                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">2. Description of Service</h2>
-                                    <p className="text-[16px] text-[#5f6368] leading-relaxed">
-                                        QuantaCipher provides Zero-Trust API gateway and post-quantum cryptographic services. We provide tools to secure your endpoints using Kyber-1024 encryption. Our service is provided "as is" and we make no guarantees about service availability or security.
-                                    </p>
-                                </section>
-
-                                <section>
-                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">3. User Accounts</h2>
+                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">1. Agreement to Terms</h2>
                                     <p className="text-[16px] text-[#5f6368] leading-relaxed mb-4">
-                                        You are responsible for:
+                                        These Terms of Service ("Terms") constitute a legally binding agreement made between you, whether personally or on behalf of an entity ("you"), and QUANTALABS PRIVATE LIMITED ("QuantaCipher", "we", "us", or "our"), concerning your access to and use of the QuantaCipher API, SDKs, and associated web dashboard (collectively, the "Services"). By accessing the Services, you agree that you have read, understood, and agree to be bound by all of these Terms.
                                     </p>
-                                    <ul className="list-disc list-inside space-y-2 text-[16px] text-[#5f6368] ml-4">
-                                        <li>Maintaining the confidentiality of your account</li>
-                                        <li>All activities that occur under your account</li>
-                                        <li>Ensuring your API endpoints are properly configured</li>
-                                        <li>Complying with all applicable laws and regulations</li>
-                                    </ul>
                                 </section>
 
                                 <section>
-                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">4. Payment Terms</h2>
+                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">2. API Usage and Licenses</h2>
                                     <p className="text-[16px] text-[#5f6368] leading-relaxed mb-4">
-                                        Paid plans are billed monthly in cryptocurrency (ETH). By upgrading to a paid plan, you agree to:
+                                        Subject to your compliance with these Terms, QuantaCipher grants you a limited, non-exclusive, non-transferable, revocable license to access and use our post-quantum cryptographic APIs for your internal business purposes or for integration into your consumer-facing applications. 
                                     </p>
-                                    <ul className="list-disc list-inside space-y-2 text-[16px] text-[#5f6368] ml-4">
-                                        <li>Pay the subscription fee for your selected plan</li>
-                                        <li>Cryptocurrency payments are non-refundable</li>
-                                        <li>We reserve the right to change pricing with 30 days notice</li>
-                                        <li>Failure to pay may result in service suspension</li>
-                                    </ul>
-                                </section>
-
-                                <section>
-                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">5. Acceptable Use</h2>
                                     <p className="text-[16px] text-[#5f6368] leading-relaxed mb-4">
                                         You agree not to:
                                     </p>
                                     <ul className="list-disc list-inside space-y-2 text-[16px] text-[#5f6368] ml-4">
-                                        <li>Use the service for any illegal purpose</li>
-                                        <li>Attempt to gain unauthorized access to our systems</li>
-                                        <li>Interfere with or disrupt the service</li>
-                                        <li>Use the service to secure endpoints you don't own or have permission to access</li>
-                                        <li>Resell or redistribute our service without permission</li>
+                                        <li>Exceed the rate limits associated with your subscribed pricing tier.</li>
+                                        <li>Reverse engineer, decompile, or attempt to extract the source code of our WASM engines or gateway servers.</li>
+                                        <li>Use the Services for any illegal or unauthorized purpose, including but not limited to cryptojacking or distributing malware.</li>
+                                        <li>Share or expose your QuantaCipher API keys publicly. You are solely responsible for the security of your API keys.</li>
                                     </ul>
                                 </section>
 
                                 <section>
-                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">6. Service Limits</h2>
+                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">3. Subscriptions and Payments</h2>
+                                    <p className="text-[16px] text-[#5f6368] leading-relaxed mb-4">
+                                        QuantaCipher offers both free ("Developer") and paid ("Startup", "Professional", "Enterprise") subscription tiers. By selecting a paid tier, you agree to pay the monthly or annual subscription fees indicated at the time of purchase. Fees are non-refundable except as required by law.
+                                    </p>
                                     <p className="text-[16px] text-[#5f6368] leading-relaxed">
-                                        Each plan has specific limits on the number of active API keys, API calls, and bytes secured. Exceeding these limits may result in service degradation or suspension. We reserve the right to enforce fair use policies.
+                                        We reserve the right to change our pricing or institute new charges upon 30 days' notice to you. Continued use of the Services after such changes constitutes your acceptance of the new fees.
                                     </p>
                                 </section>
 
                                 <section>
-                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">7. Limitation of Liability</h2>
+                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">4. Service Level Agreements (SLAs)</h2>
                                     <p className="text-[16px] text-[#5f6368] leading-relaxed">
-                                        QuantaCipher shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of the service. We do not guarantee 100% uptime or that all payloads will be processed successfully.
+                                        Paid tiers ("Startup", "Professional", "Enterprise") are subject to a 99.9% Uptime SLA. If we fail to meet this SLA in a given calendar month, you may be eligible for a service credit. The Developer (Free) tier is provided "as-is" without any warranty of uptime or availability.
                                     </p>
                                 </section>
 
                                 <section>
-                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">8. Termination</h2>
+                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">5. Intellectual Property</h2>
                                     <p className="text-[16px] text-[#5f6368] leading-relaxed">
-                                        We reserve the right to suspend or terminate your account at any time for violation of these terms. You may cancel your account at any time through your account settings.
+                                        All intellectual property rights in the Services, including but not limited to our Kyber-1024 implementations, gateway architecture, and dashboard UI, remain the exclusive property of QUANTALABS PRIVATE LIMITED. These Terms do not grant you any right, title, or interest in our intellectual property.
                                     </p>
                                 </section>
 
                                 <section>
-                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">9. Changes to Terms</h2>
+                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">6. Limitation of Liability</h2>
                                     <p className="text-[16px] text-[#5f6368] leading-relaxed">
-                                        We may modify these terms at any time. We will notify users of significant changes via email. Continued use of the service after changes constitutes acceptance of the new terms.
+                                        IN NO EVENT WILL QUANTACIPHER BE LIABLE FOR ANY INDIRECT, CONSEQUENTIAL, EXEMPLARY, INCIDENTAL, SPECIAL, OR PUNITIVE DAMAGES, INCLUDING LOST PROFIT, LOST DATA, OR OTHER DAMAGES ARISING FROM YOUR USE OF THE SERVICES, EVEN IF WE HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. OUR LIABILITY TO YOU FOR ANY CAUSE WHATSOEVER WILL AT ALL TIMES BE LIMITED TO THE AMOUNT PAID, IF ANY, BY YOU TO US DURING THE SIX (6) MONTH PERIOD PRIOR TO ANY CAUSE OF ACTION ARISING.
                                     </p>
                                 </section>
 
                                 <section>
-                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">10. Contact</h2>
+                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">7. Termination</h2>
                                     <p className="text-[16px] text-[#5f6368] leading-relaxed">
-                                        For questions about these Terms of Service, contact us at{" "}
-                                        <a href="mailto:legal@quantacipher.com" className="text-[#1a73e8] hover:underline">
-                                            legal@quantacipher.com
-                                        </a>
+                                        We may terminate or suspend your account and bar access to the Services immediately, without prior notice or liability, under our sole discretion, for any reason whatsoever, including without limitation a breach of the Terms.
+                                    </p>
+                                </section>
+
+                                <section>
+                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">8. Contact Information</h2>
+                                    <p className="text-[16px] text-[#5f6368] leading-relaxed">
+                                        For legal inquiries regarding these Terms of Service, please contact us at: <a href="mailto:legal@quantacipher.com" className="text-[#1a73e8] hover:underline">legal@quantacipher.com</a>.
                                     </p>
                                 </section>
                             </div>

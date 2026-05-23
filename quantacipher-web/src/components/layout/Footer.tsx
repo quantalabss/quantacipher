@@ -14,48 +14,47 @@ export function Footer() {
                                 QuantaCipher
                             </span>
                         </Link>
-                        <p className="text-[14px] leading-6 text-[#5f6368] mb-6 max-w-[240px]">
+                        <p className="text-[16px] leading-6 text-[#5f6368] mb-6 max-w-[240px]">
                             Enterprise post-quantum encryption API. NIST ML-KEM (Kyber-1024). Zero-trust, zero complexity.
                         </p>
                     </div>
 
                     <div>
-                        <h3 className="text-[12px] font-bold text-[#202124] uppercase tracking-widest mb-6">Product</h3>
+                        <h3 className="text-[14px] font-bold text-[#202124] uppercase tracking-widest mb-6">Product</h3>
                         <ul className="space-y-4">
-                            <li><Link href="/dashboard" className="text-[14px] text-[#5f6368] hover:text-[#1a73e8] transition-colors">Dashboard</Link></li>
-                            <li><Link href="/documentation" className="text-[14px] text-[#5f6368] hover:text-[#1a73e8] transition-colors">Documentation</Link></li>
-                            <li><Link href="#integrations" className="text-[14px] text-[#5f6368] hover:text-[#1a73e8] transition-colors">Integrations</Link></li>
-                            <li><Link href="#pricing" className="text-[14px] text-[#5f6368] hover:text-[#1a73e8] transition-colors">Pricing</Link></li>
+                            <li><Link href="/dashboard" className="text-[16px] text-[#5f6368] hover:text-[#1a73e8] transition-colors">Dashboard</Link></li>
+                            <li><Link href="/documentation" className="text-[16px] text-[#5f6368] hover:text-[#1a73e8] transition-colors">Documentation</Link></li>
+                            <li><Link href="/#integrations" className="text-[16px] text-[#5f6368] hover:text-[#1a73e8] transition-colors">Integrations</Link></li>
+                            <li><Link href="/#pricing" className="text-[16px] text-[#5f6368] hover:text-[#1a73e8] transition-colors">Pricing</Link></li>
                         </ul>
                     </div>
 
                     <div>
-                        <h3 className="text-[12px] font-bold text-[#202124] uppercase tracking-widest mb-6">Developers</h3>
+                        <h3 className="text-[14px] font-bold text-[#202124] uppercase tracking-widest mb-6">Developers</h3>
                         <ul className="space-y-4">
-                            <li><Link href="/documentation#nodejs" className="text-[14px] text-[#5f6368] hover:text-[#1a73e8] transition-colors">Node.js SDK</Link></li>
-                            <li><Link href="/documentation#rest" className="text-[14px] text-[#5f6368] hover:text-[#1a73e8] transition-colors">REST API</Link></li>
-                            <li><Link href="https://github.com/xaexaex/quantacipher" className="text-[14px] text-[#5f6368] hover:text-[#1a73e8] transition-colors">GitHub</Link></li>
-                            <li><Link href="/support" className="text-[14px] text-[#5f6368] hover:text-[#1a73e8] transition-colors">Support</Link></li>
+                            <li><Link href="/documentation#nodejs" className="text-[16px] text-[#5f6368] hover:text-[#1a73e8] transition-colors">Node.js SDK</Link></li>
+                            <li><Link href="/documentation#rest" className="text-[16px] text-[#5f6368] hover:text-[#1a73e8] transition-colors">REST API</Link></li>
+                            <li><Link href="/#" className="text-[16px] text-[#5f6368] hover:text-[#1a73e8] transition-colors">GitHub</Link></li>
+                            <li><Link href="/#" className="text-[16px] text-[#5f6368] hover:text-[#1a73e8] transition-colors">NPM: SDK</Link></li>
+                            <li><Link href="/#" className="text-[16px] text-[#5f6368] hover:text-[#1a73e8] transition-colors">NPM: WASM Engine</Link></li>
+                            <li><Link href="/support" className="text-[16px] text-[#5f6368] hover:text-[#1a73e8] transition-colors">Support</Link></li>
                         </ul>
                     </div>
 
                     <div>
-                        <h3 className="text-[12px] font-bold text-[#202124] uppercase tracking-widest mb-6">Legal</h3>
+                        <h3 className="text-[14px] font-bold text-[#202124] uppercase tracking-widest mb-6">Legal</h3>
                         <ul className="space-y-4">
-                            <li><Link href="/privacy" className="text-[14px] text-[#5f6368] hover:text-[#1a73e8] transition-colors">Privacy Policy</Link></li>
-                            <li><Link href="/terms" className="text-[14px] text-[#5f6368] hover:text-[#1a73e8] transition-colors">Terms of Service</Link></li>
-                            <li><Link href="/security" className="text-[14px] text-[#5f6368] hover:text-[#1a73e8] transition-colors">Security Overview</Link></li>
+                            <li><Link href="/privacy" className="text-[16px] text-[#5f6368] hover:text-[#1a73e8] transition-colors">Privacy Policy</Link></li>
+                            <li><Link href="/terms" className="text-[16px] text-[#5f6368] hover:text-[#1a73e8] transition-colors">Terms of Service</Link></li>
+                            <li><Link href="/security" className="text-[16px] text-[#5f6368] hover:text-[#1a73e8] transition-colors">Security Overview</Link></li>
                         </ul>
                     </div>
                 </div>
 
-                <div className="pt-8 border-t border-[#dadce0] flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
-                    <p className="text-[13px] text-[#9aa0a6]">
-                        © {new Date().getFullYear()} QuantaCipher Inc. All rights reserved.
+                <div className="pt-8 border-t border-[#dadce0] flex flex-col md:flex-row justify-center md:justify-start items-center gap-4 text-center md:text-left">
+                    <p className="text-[15px] text-[#9aa0a6]">
+                        © {new Date().getFullYear()} QUANTALABS PRIVATE LIMITED. All rights reserved.
                     </p>
-                    <div className="flex items-center justify-center border border-[#dadce0] px-4 py-1.5 rounded-full">
-                        <span className="text-[12px] font-medium text-[#5f6368]">NIST Approved</span>
-                    </div>
                 </div>
             </div>
         </footer>

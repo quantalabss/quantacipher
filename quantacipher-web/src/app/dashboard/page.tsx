@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
@@ -184,7 +184,7 @@ export default function DashboardPage() {
     }
 
     return (
-        <div className="p-8 max-w-7xl mx-auto">
+        <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto">
             {/* Header */}
             <div className="mb-8">
                 <h1 className="text-[28px] font-normal text-[#202124]">QuantaCipher Dashboard</h1>
@@ -241,15 +241,15 @@ export default function DashboardPage() {
             {/* API Keys List Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                 <h2 className="text-[20px] font-normal text-[#202124]">API Keys</h2>
-                <div className="flex gap-3">
-                    <Link href="/dashboard/billing">
-                        <Button variant="outline" className="gap-2 bg-white border-[#dadce0] text-[#5f6368] hover:bg-[#f8f9fa] h-[40px]">
+                <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                    <Link href="/dashboard/billing" className="w-full sm:w-auto">
+                        <Button variant="outline" className="w-full sm:w-auto gap-2 bg-white border-[#dadce0] text-[#5f6368] hover:bg-[#f8f9fa] h-[40px]">
                             <Settings className="w-4 h-4" /> Upgrade Plan
                         </Button>
                     </Link>
                     <Button
                         onClick={() => setIsAddModalOpen(true)}
-                        className="bg-[#1a73e8] hover:bg-[#1967d2] text-white rounded-[4px] px-6 h-[40px] text-[14px] font-medium shadow-sm flex items-center gap-2"
+                        className="w-full sm:w-auto bg-[#1a73e8] hover:bg-[#1967d2] text-white rounded-[4px] px-6 h-[40px] text-[14px] font-medium shadow-sm flex items-center justify-center gap-2"
                     >
                         <Plus className="w-5 h-5" /> Generate Key
                     </Button>
@@ -258,12 +258,12 @@ export default function DashboardPage() {
 
             {/* API Keys Table */}
             <div className="bg-white border border-[#dadce0] rounded-[8px] shadow-sm overflow-hidden">
-                <div className="grid grid-cols-12 gap-4 p-4 border-b border-[#dadce0] bg-[#f8f9fa] text-[12px] font-medium text-[#5f6368] uppercase tracking-wider">
-                    <div className="col-span-5 md:col-span-4">Name &amp; Key</div>
-                    <div className="col-span-3 md:col-span-2 text-center">Status</div>
-                    <div className="hidden md:block col-span-2 text-center">API Calls</div>
-                    <div className="hidden md:block col-span-2 text-center">Secured</div>
-                    <div className="col-span-4 md:col-span-2 text-right">Actions</div>
+                <div className="hidden md:grid grid-cols-12 gap-4 p-4 border-b border-[#dadce0] bg-[#f8f9fa] text-[12px] font-medium text-[#5f6368] uppercase tracking-wider">
+                    <div className="col-span-4">Name &amp; Key</div>
+                    <div className="col-span-2 text-center">Status</div>
+                    <div className="col-span-2 text-center">API Calls</div>
+                    <div className="col-span-2 text-center">Secured</div>
+                    <div className="col-span-2 text-right">Actions</div>
                 </div>
 
                 <div className="divide-y divide-[#dadce0]">
@@ -279,32 +279,61 @@ export default function DashboardPage() {
                             layout
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            className="grid grid-cols-12 gap-4 p-4 items-center hover:bg-[#f8f9fa] transition-colors"
+                            className="flex flex-col md:grid md:grid-cols-12 gap-4 p-4 md:items-center hover:bg-[#f8f9fa] transition-colors"
                         >
-                            <div className="col-span-5 md:col-span-4 overflow-hidden">
-                                <div className="font-medium text-[#202124] text-[16px] truncate">{apiKey.name}</div>
-                                <div className="flex items-center gap-2 mt-1">
-                                    <div className="text-[#5f6368] text-[13px] font-mono truncate max-w-[200px] bg-[#f1f3f4] px-2 py-1 rounded-[4px] border border-[#dadce0]">
-                                        {apiKey.key.substring(0, 12)}...{apiKey.key.substring(apiKey.key.length - 4)}
+                            {/* Mobile Top Row / Desktop Col 1 */}
+                            <div className="flex justify-between items-start md:col-span-4 overflow-hidden gap-4">
+                                <div className="flex-1 min-w-0">
+                                    <div className="font-medium text-[#202124] text-[16px] truncate">{apiKey.name}</div>
+                                    <div className="flex items-center gap-2 mt-2">
+                                        <div className="text-[#5f6368] text-[13px] font-mono truncate max-w-[180px] sm:max-w-[200px] bg-[#f1f3f4] px-2 py-1 rounded-[4px] border border-[#dadce0]">
+                                            {apiKey.key.substring(0, 12)}...{apiKey.key.substring(apiKey.key.length - 4)}
+                                        </div>
+                                        <button
+                                            onClick={() => copyToClipboard(apiKey.key)}
+                                            className="text-[#1a73e8] hover:text-[#1967d2] p-1.5 bg-[#f1f3f4] hover:bg-[#e8f0fe] rounded-[4px] transition-colors"
+                                            title="Copy full API Key"
+                                        >
+                                            {copiedKey === apiKey.key ? <CheckCircle2 className="w-4 h-4 text-[#137333]" /> : <Copy className="w-4 h-4" />}
+                                        </button>
                                     </div>
-                                    <button
-                                        onClick={() => copyToClipboard(apiKey.key)}
-                                        className="text-[#1a73e8] hover:text-[#1967d2] p-1 rounded transition-colors"
-                                        title="Copy full API Key"
-                                    >
-                                        {copiedKey === apiKey.key ? <CheckCircle2 className="w-4 h-4 text-[#137333]" /> : <Copy className="w-4 h-4" />}
-                                    </button>
+                                    <div className="text-[11px] text-[#9aa0a6] mt-2">Created {formatDate(apiKey.createdAt)}</div>
+                                    
+                                    {/* Mobile Only: Extra Stats inline */}
+                                    <div className="flex md:hidden items-center gap-4 mt-3 text-[12px] text-[#5f6368]">
+                                        <div className="flex items-center gap-1.5"><Activity className="w-3.5 h-3.5" /> {apiKey.calls.toLocaleString()}</div>
+                                        <div className="flex items-center gap-1.5"><Database className="w-3.5 h-3.5" /> {formatBytes(apiKey.bytesSecured)}</div>
+                                    </div>
                                 </div>
-                                <div className="text-[11px] text-[#9aa0a6] mt-1">Created {formatDate(apiKey.createdAt)}</div>
+                                
+                                {/* Mobile Status & Actions */}
+                                <div className="flex flex-col items-end gap-3 md:hidden shrink-0">
+                                    {apiKey.status === "active" ? (
+                                        <div className="flex items-center gap-1 bg-[#e6f4ea] text-[#137333] px-2 py-1 rounded-[4px] text-[11px] font-bold tracking-wide uppercase">
+                                            Active
+                                        </div>
+                                    ) : (
+                                        <div className="flex items-center gap-1 bg-[#fce8e6] text-[#c5221f] px-2 py-1 rounded-[4px] text-[11px] font-bold tracking-wide uppercase">
+                                            Revoked
+                                        </div>
+                                    )}
+                                    {apiKey.status === 'active' && (
+                                        <button onClick={() => confirmDelete(apiKey._id)} className="p-1.5 text-[#5f6368] hover:text-[#d93025] bg-[#f1f3f4] hover:bg-[#fce8e6] rounded-[4px] transition-colors mt-auto">
+                                            <Trash2 className="w-4 h-4" />
+                                        </button>
+                                    )}
+                                </div>
                             </div>
-                            <div className="col-span-3 md:col-span-2 flex justify-center">
+                            
+                            {/* Desktop Columns */}
+                            <div className="hidden md:flex md:col-span-2 justify-center">
                                 {apiKey.status === "active" ? (
                                     <div className="flex items-center gap-2 bg-[#e6f4ea] text-[#137333] px-3 py-1 rounded-full text-[12px] font-medium">
-                                        <CheckCircle2 className="w-4 h-4" /> <span className="hidden sm:inline">Active</span>
+                                        <CheckCircle2 className="w-4 h-4" /> <span>Active</span>
                                     </div>
                                 ) : (
                                     <div className="flex items-center gap-2 bg-[#fce8e6] text-[#c5221f] px-3 py-1 rounded-full text-[12px] font-medium">
-                                        <XCircle className="w-4 h-4" /> <span className="hidden sm:inline">Revoked</span>
+                                        <XCircle className="w-4 h-4" /> <span>Revoked</span>
                                     </div>
                                 )}
                             </div>
@@ -318,7 +347,7 @@ export default function DashboardPage() {
                                     {formatBytes(apiKey.bytesSecured)}
                                 </div>
                             </div>
-                            <div className="col-span-4 md:col-span-2 flex justify-end gap-2">
+                            <div className="hidden md:flex col-span-2 justify-end gap-2">
                                 {apiKey.status === 'active' && (
                                     <button onClick={() => confirmDelete(apiKey._id)} className="p-2 text-[#5f6368] hover:text-[#d93025] hover:bg-[#fce8e6] rounded-full transition-colors" title="Revoke Key">
                                         <Trash2 className="w-4 h-4" />

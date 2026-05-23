@@ -17,76 +17,72 @@ export default function PrivacyPage() {
                         transition={{ duration: 0.5 }}
                     >
                         <h1 className="text-[48px] font-normal text-[#202124] mb-4">Privacy Policy</h1>
-                        <p className="text-[14px] text-[#5f6368] mb-12">Last updated: January 29, 2026</p>
+                        <p className="text-[14px] text-[#5f6368] mb-12">Last updated: May 23, 2026</p>
 
                         <div className="prose prose-lg max-w-none">
                             <div className="space-y-8">
                                 <section>
-                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">1. Information We Collect</h2>
+                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">1. Introduction</h2>
                                     <p className="text-[16px] text-[#5f6368] leading-relaxed mb-4">
-                                        We collect information you provide directly to us when you create an account, generate API keys, or contact support. This includes:
+                                        QUANTALABS PRIVATE LIMITED ("QuantaCipher", "we", "us", or "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our post-quantum cryptographic services and APIs (collectively, the "Services").
+                                    </p>
+                                </section>
+
+                                <section>
+                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">2. Information We Collect</h2>
+                                    <p className="text-[16px] text-[#5f6368] leading-relaxed mb-4">
+                                        We collect information that you provide directly to us, including:
                                     </p>
                                     <ul className="list-disc list-inside space-y-2 text-[16px] text-[#5f6368] ml-4">
-                                        <li>Email address and name (via Google OAuth)</li>
-                                        <li>API usage statistics</li>
-                                        <li>Payment information (crypto wallet addresses)</li>
+                                        <li><strong>Account Information:</strong> Name, email address, and authentication credentials (e.g., via Google OAuth).</li>
+                                        <li><strong>Billing Information:</strong> Payment details processed securely by our third-party payment processors (e.g., Stripe). We do not store your raw credit card numbers.</li>
+                                        <li><strong>Usage Data:</strong> API request volumes, IP addresses, timestamp logs, and system performance metrics necessary to provide and monitor our Services.</li>
+                                        <li><strong>Customer Support Data:</strong> Information you provide when contacting our support team.</li>
                                     </ul>
                                 </section>
 
                                 <section>
-                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">2. How We Use Your Information</h2>
+                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">3. How We Use Your Information</h2>
                                     <p className="text-[16px] text-[#5f6368] leading-relaxed mb-4">
-                                        We use the information we collect to:
+                                        We use the collected information for various purposes, including to:
                                     </p>
                                     <ul className="list-disc list-inside space-y-2 text-[16px] text-[#5f6368] ml-4">
-                                        <li>Provide, maintain, and improve our cryptographic services</li>
-                                        <li>Process payments and manage your subscription</li>
-                                        <li>Respond to your support requests</li>
-                                        <li>Detect and prevent fraud or abuse</li>
+                                        <li>Provide, operate, and maintain our cryptographic infrastructure.</li>
+                                        <li>Process transactions and send related billing information.</li>
+                                        <li>Send administrative notices, security alerts, and technical updates.</li>
+                                        <li>Respond to comments, questions, and provide customer support.</li>
+                                        <li>Monitor and analyze usage trends to improve the Services and ensure strict compliance with our SLAs.</li>
                                     </ul>
                                 </section>
 
                                 <section>
-                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">3. Data Security</h2>
+                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">4. Data Security & Cryptography</h2>
                                     <p className="text-[16px] text-[#5f6368] leading-relaxed">
-                                        We implement industry-standard security measures to protect your data. All data is encrypted in transit using TLS. We securely store your QuantaCipher API keys and usage analytics.
+                                        Security is at the core of QuantaCipher. We implement enterprise-grade security measures, including NIST-approved Kyber-1024 encryption protocols, to protect your personal information. However, please note that no method of transmission over the Internet or method of electronic storage is 100% secure. While we strive to use commercially acceptable cryptographic means to protect your personal information, we cannot guarantee its absolute security against unprecedented quantum attacks prior to full post-quantum migration.
                                     </p>
                                 </section>
 
                                 <section>
-                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">4. Data Retention</h2>
-                                    <p className="text-[16px] text-[#5f6368] leading-relaxed">
-                                        We retain your API usage analytics and key activity history for the duration of your subscription. You can request deletion of your account and all associated data at any time.
-                                    </p>
-                                </section>
-
-                                <section>
-                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">5. Third-Party Services</h2>
+                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">5. Data Sharing and Disclosure</h2>
                                     <p className="text-[16px] text-[#5f6368] leading-relaxed mb-4">
-                                        We use the following third-party services:
+                                        We do not sell your personal data. We may share information with third-party vendors, service providers, contractors, or agents who perform services for us or on our behalf (e.g., payment processing, data analysis, email delivery, hosting services). These third parties are bound by strict confidentiality agreements and data processing addendums.
                                     </p>
-                                    <ul className="list-disc list-inside space-y-2 text-[16px] text-[#5f6368] ml-4">
-                                        <li>Google OAuth for authentication</li>
-                                        <li>MongoDB Atlas for data storage</li>
-                                        <li>Vercel for hosting and infrastructure</li>
-                                        <li>Resend for email delivery</li>
-                                    </ul>
                                 </section>
 
                                 <section>
-                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">6. Your Rights</h2>
+                                    <h2 className="text-[24px] font-medium text-[#202124] mb-4">6. Your Data Rights</h2>
                                     <p className="text-[16px] text-[#5f6368] leading-relaxed">
-                                        You have the right to access, update, or delete your personal information at any time through your account settings. You may also contact us at privacy@quantacipher.com to exercise these rights.
+                                        Depending on your location, you may have the right to request access to, correction of, or deletion of your personal data. You may also have the right to object to processing or request data portability. To exercise these rights, please contact our Data Protection Officer at privacy@quantacipher.com.
                                     </p>
                                 </section>
 
                                 <section>
                                     <h2 className="text-[24px] font-medium text-[#202124] mb-4">7. Contact Us</h2>
                                     <p className="text-[16px] text-[#5f6368] leading-relaxed">
-                                        If you have questions about this Privacy Policy, please contact us at{" "}
-                                        <a href="mailto:privacy@quantacipher.com" className="text-[#1a73e8] hover:underline">
-                                            privacy@quantacipher.com
-                                        </a>
+                                        If you have any questions, concerns, or requests regarding this Privacy Policy, please contact us at:{" "}
+                                        <br/><br/>
+                                        <strong>QUANTALABS PRIVATE LIMITED</strong><br/>
+                                        Email: <a href="mailto:legal@quantacipher.com" className="text-[#1a73e8] hover:underline">legal@quantacipher.com</a>
                                     </p>
                                 </section>
                             </div>

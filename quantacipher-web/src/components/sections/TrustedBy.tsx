@@ -17,7 +17,7 @@ export function TrustedBy() {
     return (
         <section className="py-16 bg-white border-b border-[#dadce0] overflow-hidden">
             <div className="max-w-[1440px] mx-auto text-center mb-10 px-4">
-                <h2 className="text-[12px] font-bold text-[#5f6368] tracking-[0.2em] uppercase">
+                <h2 className="text-[14px] font-bold text-[#5f6368] tracking-[0.2em] uppercase">
                     Built for compliance-critical industries
                 </h2>
             </div>
@@ -38,7 +38,7 @@ export function TrustedBy() {
                 >
                     {allIndustries.map((industry, index) => (
                         <div key={index}>
-                            <span className="text-[20px] font-medium text-[#5f6368] group-hover:text-[#202124] transition-colors tracking-tight whitespace-nowrap px-4 py-2 border border-transparent group-hover:border-[#dadce0] rounded-full">
+                            <span className="text-[22px] font-medium text-[#5f6368] group-hover:text-[#202124] transition-colors tracking-tight whitespace-nowrap px-4 py-2 border border-transparent group-hover:border-[#dadce0] rounded-full">
                                 {industry.name}
                             </span>
                         </div>

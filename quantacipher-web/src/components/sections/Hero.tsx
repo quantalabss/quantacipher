@@ -17,7 +17,7 @@ export function Hero() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                     <div className="max-w-2xl">
                         <div className="max-w-4xl">
-                            <h1 className="text-[40px] sm:text-[64px] leading-[1.1] font-bold tracking-tight text-[#202124] mb-8">
+                            <h1 className="text-[36px] sm:text-[64px] leading-[1.15] sm:leading-[1.1] font-bold tracking-tight text-[#202124] mb-6 sm:mb-8">
                                 Post-Quantum Security{" "}
                                 <span className="text-[#1a73e8]">in two lines of code.</span>
                             </h1>
@@ -37,15 +37,15 @@ export function Hero() {
                             </div>
                         </div>
 
-                        <div className="flex flex-col sm:flex-row gap-4">
-                            <Link href="/demo">
-                                <Button size="lg" className="bg-[#1a73e8] hover:bg-[#1967d2] hover:shadow-md text-white rounded-[6px] px-8 h-[52px] text-[16px] font-medium transition-all shadow-sm">
+                        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                            <Link href="/demo" className="w-full sm:w-auto">
+                                <Button size="lg" className="w-full sm:w-auto bg-[#1a73e8] hover:bg-[#1967d2] hover:shadow-md text-white rounded-[6px] px-8 h-[52px] text-[16px] font-medium transition-all shadow-sm">
                                     Try Live Demo
                                     <ArrowRight className="ml-2 w-4 h-4" />
                                 </Button>
                             </Link>
-                            <Link href="/documentation">
-                                <Button size="lg" variant="outline" className="border-[#dadce0] text-[#3c4043] hover:bg-[#f8f9fa] rounded-[6px] px-8 h-[52px] text-[16px] font-medium transition-all">
+                            <Link href="/documentation" className="w-full sm:w-auto">
+                                <Button size="lg" variant="outline" className="w-full sm:w-auto border-[#dadce0] text-[#3c4043] hover:bg-[#f8f9fa] rounded-[6px] px-8 h-[52px] text-[16px] font-medium transition-all">
                                     Read the Docs
                                 </Button>
                             </Link>

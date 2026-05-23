@@ -10,7 +10,7 @@ export default function DashboardLayout({
     return (
         <div className="min-h-screen bg-[#f8f9fa] font-sans text-[#202124]">
             <DashboardHeader />
-            <main className="max-w-[1280px] mx-auto p-6 md:p-8">
+            <main className="w-full">
                 {children}
             </main>
         </div>

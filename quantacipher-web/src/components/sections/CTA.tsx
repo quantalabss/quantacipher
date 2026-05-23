@@ -13,7 +13,7 @@ export function CTA() {
                         <h2 className="text-[36px] sm:text-[44px] font-normal text-white mb-4 leading-tight">
                             Start securing data.<br />Before quantum hits.
                         </h2>
-                        <p className="text-[16px] text-white/90 mb-8 max-w-lg mx-auto leading-relaxed">
+                        <p className="text-[18px] text-white/90 mb-8 max-w-lg mx-auto leading-relaxed">
                             NIST finalized the post-quantum standards in 2024. Enterprises that wait will face costly retrofits.
                             Get compliant now — free, in under 15 minutes.
                         </p>
@@ -21,14 +21,14 @@ export function CTA() {
                             <Link href="/signin">
                                 <Button
                                     size="lg"
-                                    className="bg-white hover:bg-[#f8f9fa] text-[#1a73e8] rounded-[8px] px-8 h-[52px] text-[16px] font-medium shadow-none hover:shadow-lg transition-all"
+                                    className="bg-white hover:bg-[#f8f9fa] text-[#1a73e8] rounded-[8px] px-8 h-[52px] text-[18px] font-medium shadow-none hover:shadow-lg transition-all"
                                 >
                                     Get your API keys
                                     <ArrowRight className="ml-2 w-4 h-4" />
                                 </Button>
                             </Link>
                         </div>
-                        <p className="text-white/60 text-[13px] mt-6">
+                        <p className="text-white/60 text-[14px] mt-6">
                             No credit card required. 100% free while in beta.
                         </p>
                     </div>

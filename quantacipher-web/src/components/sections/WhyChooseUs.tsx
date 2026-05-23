@@ -40,45 +40,44 @@ export function WhyChooseUs() {
 
                 {/* Header */}
                 <div className="text-center mb-16">
-                    <p className="text-[12px] font-bold text-[#5f6368] uppercase tracking-widest mb-4">
+                    <p className="text-[14px] font-bold text-[#5f6368] uppercase tracking-widest mb-4">
                         How It Works
                     </p>
                     <h2 className="text-[32px] sm:text-[48px] font-normal text-[#202124] mb-6 leading-tight">
                         Zero-trust encryption,{" "}
                         <span className="text-[#1a73e8]">zero complexity.</span>
                     </h2>
-                    <p className="text-[18px] text-[#5f6368] max-w-2xl mx-auto leading-relaxed">
+                    <p className="text-[20px] text-[#5f6368] max-w-2xl mx-auto leading-relaxed">
                         Quantum computers are coming. NIST issued the final standards in 2024.
                         QuantaCipher makes your app compliant today — in minutes, not months.
                     </p>
                 </div>
 
                 {/* Steps */}
-                <div className="space-y-6 mb-20">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mb-20">
                     {steps.map((step, i) => (
                         <div
                             key={step.number}
-                            className="flex flex-col md:flex-row gap-6 p-8 bg-white border border-[#dadce0] rounded-[16px] hover:shadow-md transition-shadow duration-300"
+                            className="flex flex-col p-8 bg-white border border-[#dadce0] rounded-[16px] hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
                         >
-                            {/* Step number */}
-                            <div className="flex items-start gap-4 md:w-64 flex-shrink-0">
-                                <div>
-                                    <div className="text-[12px] font-bold text-[#9aa0a6] tracking-widest mb-1">
-                                        STEP {step.number}
-                                    </div>
-                                    <h3 className="font-medium text-[18px] text-[#202124]">{step.title}</h3>
+                            {/* Step Header */}
+                            <div className="mb-6">
+                                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#e8f0fe] text-[#1a73e8] font-bold text-[14px] mb-4">
+                                    {step.number}
                                 </div>
+                                <h3 className="font-medium text-[20px] text-[#202124]">{step.title}</h3>
                             </div>
 
-                            {/* Description + code */}
-                            <div className="flex-1">
-                                <p className="text-[15px] text-[#5f6368] leading-relaxed mb-4">
-                                    {step.description}
-                                </p>
-                                <div className="bg-[#f8f9fa] border border-[#dadce0] rounded-[8px] px-4 py-3 font-mono text-[13px] text-[#202124] flex items-center gap-2">
-                                    <span className="text-[#9aa0a6] select-none">$</span>
-                                    <span>{step.code}</span>
-                                </div>
+                            {/* Description */}
+                            <p className="text-[16px] text-[#5f6368] leading-relaxed mb-8 flex-grow">
+                                {step.description}
+                            </p>
+
+                            {/* Code snippet */}
+                            <div className="bg-[#1e2433] rounded-[8px] p-4 font-mono text-[13px] text-[#e8eaed] mt-auto relative overflow-hidden group">
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                                <span className="text-[#5c6b8a] select-none mr-2">❯</span>
+                                <span className="text-[#d4d4d4]">{step.code}</span>
                             </div>
                         </div>
                     ))}
@@ -88,48 +87,22 @@ export function WhyChooseUs() {
                 <div className="bg-white rounded-[16px] p-12 border border-[#dadce0]">
                     <div className="text-center mb-10">
                         <div className="flex items-center justify-center gap-2 mb-2">
-                            <h3 className="text-[12px] font-bold text-[#5f6368] uppercase tracking-widest">
+                            <h3 className="text-[14px] font-bold text-[#5f6368] uppercase tracking-widest">
                                 Platform Specs
                             </h3>
                         </div>
                     </div>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                         {stats.map((stat) => (
                             <div key={stat.label} className="text-center">
                                 <div className="text-[48px] font-normal text-[#1a73e8] mb-1">{stat.value}</div>
-                                <div className="text-[14px] text-[#5f6368]">{stat.label}</div>
+                                <div className="text-[16px] text-[#5f6368]">{stat.label}</div>
                             </div>
                         ))}
                     </div>
                 </div>
 
-                {/* Security Feature Badges */}
-                <div className="mt-8 bg-white rounded-[16px] p-8 sm:p-12 border border-[#dadce0]">
-                    <div className="text-center mb-10">
-                        <h3 className="text-[12px] font-bold text-[#5f6368] uppercase tracking-widest">
-                            Built to Enterprise Standards
-                        </h3>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {/* Badge 1 */}
-                        <div className="bg-white border border-[#dadce0] rounded-[8px] p-6 text-center">
-                            <p className="text-[16px] font-medium text-[#202124] mb-1">NIST ML-KEM Ready</p>
-                            <p className="text-[14px] text-[#5f6368]">FIPS 204 Standard</p>
-                        </div>
 
-                        {/* Badge 2 */}
-                        <div className="bg-white border border-[#dadce0] rounded-[8px] p-6 text-center">
-                            <p className="text-[16px] font-medium text-[#202124] mb-1">Zero-Trust Architecture</p>
-                            <p className="text-[14px] text-[#5f6368]">No Private Key Escrow</p>
-                        </div>
-
-                        {/* Badge 3 */}
-                        <div className="bg-white border border-[#dadce0] rounded-[8px] p-6 text-center">
-                            <p className="text-[16px] font-medium text-[#202124] mb-1">End-to-End Encrypted</p>
-                            <p className="text-[14px] text-[#5f6368]">AES-256-GCM Hybrid</p>
-                        </div>
-                    </div>
-                </div>
             </div>
         </section>
     );
