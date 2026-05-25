@@ -114,7 +114,7 @@ export function Pricing() {
                             </div>
 
                             <Link
-                                href="/signin"
+                                href="/dashboard/billing"
                                 className={`w-full mb-8 flex items-center justify-center gap-2 px-6 py-4 rounded-xl text-sm font-bold transition-all uppercase tracking-wider ${
                                     plan.popular
                                         ? 'bg-[#00E599] text-black hover:bg-white hover:text-black'

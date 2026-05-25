@@ -5,16 +5,18 @@ import Link from "next/link";
 import { Activity, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 
 export default function SignInPage() {
     const { status } = useSession();
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
 
     useEffect(() => {
         if (status === "authenticated") {
-            router.push("/dashboard");
+            router.push(callbackUrl);
         }
     }, [status, router]);
 
@@ -153,7 +155,7 @@ export default function SignInPage() {
 
                     <div className="space-y-3">
                         <Button
-                            onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+                            onClick={() => signIn("google", { callbackUrl })}
                             variant="outline"
                             className="w-full h-[48px] rounded-xl bg-white border border-[#e5e7eb] hover:bg-white hover:border-[#00E599] hover:shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all flex items-center justify-center gap-3"
                         >
@@ -177,7 +179,7 @@ export default function SignInPage() {
                         </div>
 
                         <Button
-                            onClick={() => signIn("github", { callbackUrl: "/dashboard" })}
+                            onClick={() => signIn("github", { callbackUrl })}
                             className="w-full h-[48px] rounded-xl bg-[#24292e] hover:bg-[#2f363d] text-white hover:shadow-md transition-all flex items-center justify-center gap-3"
                         >
                             {/* GitHub Logo */}

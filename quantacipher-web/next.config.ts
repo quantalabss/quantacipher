@@ -36,11 +36,12 @@ const nextConfig: NextConfig = {
                         key: "Content-Security-Policy",
                         value: [
                             "default-src 'self'",
-                            "script-src 'self' 'unsafe-eval' 'unsafe-inline'", // unsafe-eval needed for WASM
+                            "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://checkout.razorpay.com", 
                             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
                             "font-src 'self' https://fonts.gstatic.com",
                             "img-src 'self' data: https:",
-                            "connect-src 'self' https://api.quantacipher.com",
+                            "connect-src 'self' https://api.quantacipher.com https://api.razorpay.com wss://*.razorpay.com https://*.razorpay.com",
+                            "frame-src 'self' https://api.razorpay.com https://checkout.razorpay.com",
                         ].join("; "),
                     },
                 ],

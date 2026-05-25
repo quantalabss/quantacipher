@@ -5,6 +5,20 @@ import { useSession } from "next-auth/react";
 import { CheckCircle2, Loader2, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+        if ((window as any).Razorpay) {
+            resolve(true);
+            return;
+        }
+        const script = document.createElement("script");
+        script.src = "https://checkout.razorpay.com/v1/checkout.js";
+        script.onload = () => resolve(true);
+        script.onerror = () => resolve(false);
+        document.body.appendChild(script);
+    });
+};
+
 const plans = [
     {
         id: "startup",
@@ -42,7 +56,7 @@ export default function BillingPage() {
 
     useEffect(() => {
         if (status === "unauthenticated") {
-            window.location.href = "/signin";
+            window.location.href = "/signin?callbackUrl=/dashboard/billing";
         } else if (status === "authenticated") {
             fetch('/api/keys')
                 .then(res => res.json())
@@ -63,12 +77,53 @@ export default function BillingPage() {
 
     if (status === "unauthenticated") return null;
 
-    const handleUpgrade = (planId: string) => {
+    const handleUpgrade = async (planId: string) => {
         setLoading(planId);
-        setTimeout(() => {
-            alert("Stripe Checkout Integration Coming Soon!");
+        try {
+            const isLoaded = await loadRazorpayScript();
+            if (!isLoaded) {
+                alert("Razorpay SDK failed to load. Are you online?");
+                setLoading(null);
+                return;
+            }
+
+            const res = await fetch('/api/create-razorpay-order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ planId })
+            });
+            
+            if (!res.ok) throw new Error("Failed to create order");
+            
+            const order = await res.json();
+
+            const options = {
+                key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+                amount: order.amount,
+                currency: order.currency,
+                name: "QuantaCipher",
+                description: `Upgrade to ${planId.charAt(0).toUpperCase() + planId.slice(1)} Plan`,
+                order_id: order.id,
+                handler: function (response: any) {
+                    alert(`Payment successful! Payment ID: ${response.razorpay_payment_id}`);
+                    // In a production app, verify the signature on the backend here
+                },
+                prefill: {
+                    name: "QuantaCipher User",
+                },
+                theme: {
+                    color: "#00E599",
+                },
+            };
+
+            const rzp1 = new (window as any).Razorpay(options);
+            rzp1.open();
+        } catch (error) {
+            console.error(error);
+            alert("Error initiating checkout. Please try again.");
+        } finally {
             setLoading(null);
-        }, 1000);
+        }
     };
 
     return (
