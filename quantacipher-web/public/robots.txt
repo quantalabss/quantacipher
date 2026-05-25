@@ -1,0 +1,10 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /dashboard
+
+# Host
+Host: https://quantacipher.com
+
+# Sitemaps
+Sitemap: https://quantacipher.com/sitemap.xml

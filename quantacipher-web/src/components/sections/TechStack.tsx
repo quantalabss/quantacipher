@@ -1,128 +1,122 @@
 "use client";
 
-import { CheckCircle2 } from "lucide-react";
-
-const integrations = [
-    {
-        lang: "Vault Mode",
-        badge: "Permanent Seal",
-        code: [
-            { type: "comment", text: "// Permanent sealed record for audit logs" },
-            { type: "code", text: "const vaultCiphertext = sdk.encryptVault(patientRecord);" },
-            { type: "blank" },
-            { type: "comment", text: "// Send to gateway for tamper-proof receipt" },
-            { type: "code", text: "const receipt = await sdk.vaultData(patientRecord, { type: 'hipaa_audit' });" },
-        ],
-    },
-    {
-        lang: "Secure Mode",
-        badge: "User Holds Keys",
-        code: [
-            { type: "comment", text: "// Encrypt + Decrypt with user keypair" },
-            { type: "code", text: "const keypair = sdk.generateKeypair();" },
-            { type: "blank" },
-            { type: "comment", text: "// Encrypt with public key" },
-            { type: "code", text: "const ciphertext = sdk.encryptSecure(doc, keypair.publicKey);" },
-            { type: "blank" },
-            { type: "comment", text: "// Decrypt locally with private key" },
-            { type: "code", text: "const plaintext = sdk.decryptSecure(ciphertext, keypair.privateKey);" },
-        ],
-    },
-];
-
-const features = [
-    {
-        title: "WASM runs in your environment",
-        description: "The Kyber-1024 encryption runs as compiled Rust WebAssembly inside your Node.js process or browser. Your data never travels as plaintext.",
-    },
-    {
-        title: "Works anywhere JavaScript runs",
-        description: "Browser, Node.js, Deno, Bun, Cloudflare Workers. If it runs JavaScript, it runs QuantaCipher.",
-    },
-    {
-        title: "Drop-in HTTPS integration",
-        description: "No special infrastructure required. The Gateway is a standard HTTPS endpoint. Integrate in under 15 minutes.",
-    },
-];
+import { Terminal, Copy, CheckCircle2 } from "lucide-react";
+import { useState } from "react";
+import Link from "next/link";
 
 export function TechStack() {
-    return (
-        <section id="integrations" className="py-24 bg-white border-b border-[#dadce0]">
-            <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-16">
-                    <p className="text-[14px] font-bold text-[#5f6368] mb-4 uppercase tracking-widest">
-                        Architecture
-                    </p>
-                    <h2 className="text-[32px] font-normal text-[#202124] mb-4">
-                        Two distinct modes of operation
-                    </h2>
-                    <p className="text-[20px] text-[#5f6368] max-w-[600px] mx-auto">
-                        Whether you need permanently sealed audit logs or secure end-to-end encryption with user-held keys, QuantaCipher has you covered.
-                    </p>
-                </div>
+  const [copied, setCopied] = useState(false);
 
-                {/* Code cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-16">
-                    {integrations.map((int) => (
-                        <div
-                            key={int.lang}
-                            className="bg-white border border-[#dadce0] rounded-[16px] p-6 md:p-8"
-                        >
-                            <div className="flex items-center justify-between mb-6">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-[10px] flex items-center justify-center bg-[#f8f9fa] border border-[#dadce0] text-[#202124] font-bold text-[12px]">
-                                        {int.lang.slice(0, 2).toUpperCase()}
-                                    </div>
-                                    <h3 className="text-[20px] font-medium text-[#202124]">{int.lang}</h3>
-                                </div>
-                                <div className="text-[11px] font-mono px-3 py-1 rounded-full border border-[#dadce0] text-[#5f6368] bg-[#f8f9fa] font-medium">
-                                    {int.badge}
-                                </div>
-                            </div>
+  const codeSnippet = `// QuantaCipher Integration
+import { QuantaCipher } from 'quantacipher-sdk';
 
-                            {/* Code block */}
-                            <div className="bg-[#202124] rounded-[12px] p-4 font-mono text-[12px] leading-relaxed">
-                                <div className="flex gap-2 mb-3">
-                                    <div className="w-2.5 h-2.5 rounded-full bg-[#ea4335]" />
-                                    <div className="w-2.5 h-2.5 rounded-full bg-[#fbbc04]" />
-                                    <div className="w-2.5 h-2.5 rounded-full bg-[#34a853]" />
-                                </div>
-                                {int.code.map((line, li) => (
-                                    <div key={li} className={line.type === "blank" ? "h-3" : ""}>
-                                        {line.type === "import" && (
-                                            <span className="text-[#c586c0]">{line.text}</span>
-                                        )}
-                                        {line.type === "comment" && (
-                                            <span className="text-[#6a9955]">{line.text}</span>
-                                        )}
-                                        {line.type === "code" && (
-                                            <span className="text-[#d4d4d4]">{line.text}</span>
-                                        )}
-                                    </div>
-                                ))}
-                                {/* Receipt indicator */}
-                                <div className="mt-3 flex items-center gap-2 border-t border-[#3c4043] pt-3">
-                                    <div className="w-2 h-2 rounded-full bg-[#34a853]" />
-                                    <span className="text-[#34a853] text-[11px]">Receipt issued • Kyber-1024</span>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+const sdk = new QuantaCipher({
+    apiKey: process.env.QZ_KEY
+});
 
-                {/* Feature bullets */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-                    {features.map((f) => (
-                        <div key={f.title} className="flex gap-3">
-                            <CheckCircle2 className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#80868b]" />
-                            <div>
-                                <h4 className="text-[18px] font-medium text-[#202124] mb-1">{f.title}</h4>
-                                <p className="text-[16px] text-[#5f6368] leading-relaxed">{f.description}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+async function processData(patientRecord) {
+    // Mode 1: Vault Mode (Permanent sealed record)
+    const vaultCiphertext = sdk.encryptVault(patientRecord);
+    const receipt = await sdk.vaultData(patientRecord, { type: 'hipaa_audit' });
+    
+    console.log("Audit logged", receipt.id);
+
+    // Mode 2: Secure Mode (User Holds Keys)
+    const keypair = sdk.generateKeypair();
+    const secureCiphertext = sdk.encryptSecure(patientRecord, keypair.publicKey);
+    
+    // Decrypt locally with private key
+    const plaintext = sdk.decryptSecure(secureCiphertext, keypair.privateKey);
+    
+    return plaintext;
+}`;
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(codeSnippet);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <section id="integrations" className="py-24 md:py-32 bg-white relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div className="flex flex-col lg:flex-row items-center gap-16">
+          
+          {/* Text Content */}
+          <div className="w-full lg:w-5/12 animate-fade-in">
+            <span className="text-[#00E599] font-bold tracking-widest uppercase text-xs mb-6 block">
+              Architecture
+            </span>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-black tracking-tighter mb-6 leading-tight">
+              Two distinct modes <br />
+              of operation.
+            </h2>
+            <p className="text-lg text-gray-500 font-medium mb-8">
+              Whether you need permanently sealed audit logs or secure end-to-end encryption with user-held keys, QuantaCipher has you covered. Everything runs locally in your environment.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link href="/signin" className="bg-black text-white px-8 py-4 rounded-full font-medium hover:bg-[#00E599] hover:text-black transition-all hover:scale-105 active:scale-95 text-center">
+                Get API Key
+              </Link>
+              <Link href="/documentation" className="bg-white text-black border border-gray-200 px-8 py-4 rounded-full font-medium hover:border-[#00E599] hover:text-[#00E599] transition-all text-center">
+                Read the Docs
+              </Link>
             </div>
-        </section>
-    );
+          </div>
+
+          {/* Code Terminal */}
+          <div className="w-full lg:w-7/12 animate-fade-in">
+            <div className="bg-[#0A0A0A] border border-gray-800 rounded-2xl overflow-hidden shadow-2xl">
+              {/* Terminal Header */}
+              <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800 bg-[#111]">
+                <div className="flex items-center space-x-2">
+                  <div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50"></div>
+                  <div className="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/50"></div>
+                  <div className="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/50"></div>
+                </div>
+                <div className="flex items-center text-gray-500 text-xs font-mono">
+                  <Terminal className="w-3 h-3 mr-2" />
+                  index.ts
+                </div>
+                <button onClick={copyToClipboard} className="text-gray-500 hover:text-[#00E599] transition-colors">
+                  {copied ? <CheckCircle2 className="w-4 h-4 text-[#00E599]" /> : <Copy className="w-4 h-4" />}
+                </button>
+              </div>
+              
+              {/* Terminal Body */}
+              <div className="p-4 sm:p-6 overflow-x-auto">
+                <pre className="text-[10px] sm:text-xs md:text-sm font-mono leading-relaxed">
+                  <code className="text-gray-300">
+                    <span className="text-gray-500">// QuantaCipher Integration</span><br />
+                    <span className="text-blue-400">import</span> {'{ QuantaCipher }'} <span className="text-blue-400">from</span> <span className="text-green-400">'quantacipher-sdk'</span>;<br />
+                    <br />
+                    <span className="text-blue-400">const</span> sdk = <span className="text-yellow-200">new</span> QuantaCipher({'{'}<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;apiKey: process.env.QZ_KEY<br />
+                    {'}'});<br />
+                    <br />
+                    <span className="text-blue-400">async function</span> <span className="text-yellow-200">processData</span>(patientRecord) {'{'}<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-gray-500">// Mode 1: Vault Mode (Permanent sealed record)</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">const</span> vaultCiphertext = sdk.<span className="text-yellow-200">encryptVault</span>(patientRecord);<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">const</span> receipt = <span className="text-blue-400">await</span> sdk.<span className="text-yellow-200">vaultData</span>(patientRecord, {'{'} type: <span className="text-green-400">'hipaa_audit'</span> {'}'});<br />
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-gray-500">// Mode 2: Secure Mode (User Holds Keys)</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">const</span> keypair = sdk.<span className="text-yellow-200">generateKeypair</span>();<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">const</span> secureCiphertext = sdk.<span className="text-yellow-200">encryptSecure</span>(patientRecord, keypair.publicKey);<br />
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-gray-500">// Decrypt locally with private key</span><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">const</span> plaintext = sdk.<span className="text-yellow-200">decryptSecure</span>(secureCiphertext, keypair.privateKey);<br />
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-blue-400">return</span> plaintext;<br />
+                    {'}'}
+                  </code>
+                </pre>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  );
 }

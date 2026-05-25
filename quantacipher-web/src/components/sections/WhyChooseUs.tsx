@@ -1,109 +1,89 @@
 "use client";
 
-import { Package, Cpu, Receipt, ShieldCheck } from "lucide-react";
-
-const steps = [
-    {
-        number: "01",
-        title: "Install the SDK",
-        description:
-            "Add quantacipher-sdk to your project with one npm command. Works with Node.js, browsers, and any JavaScript or TypeScript codebase.",
-        code: "npm install quantacipher-sdk",
-    },
-    {
-        number: "02",
-        title: "Encrypt Locally via WASM",
-        description:
-            "Our Rust WASM engine runs NIST Kyber-1024 (ML-KEM) directly inside your JavaScript runtime. Your plaintext data never leaves your machine unencrypted.",
-        code: "const encrypted = await qz.encryptLocal(sensitiveData);",
-    },
-    {
-        number: "03",
-        title: "Gateway Issues a Tamper-Proof Receipt",
-        description:
-            "The ciphertext is transmitted to our Gateway, which validates your API key, logs the event, and issues a cryptographic receipt with a timestamp.",
-        code: "const receipt = await qz.sendToGateway(encrypted);",
-    },
-];
-
-const stats = [
-    { value: "3ms", label: "Avg. WASM Encrypt Time" },
-    { value: "256-bit", label: "AES-GCM Symmetric Key" },
-    { value: "1024", label: "Kyber Security Level" },
-    { value: "0%", label: "Plaintext at Gateway" },
-];
+import { Package, Cpu, ShieldCheck, ArrowRight, ArrowUpRight } from "lucide-react";
+import Link from "next/link";
 
 export function WhyChooseUs() {
-    return (
-        <section id="how-it-works" className="py-16 sm:py-24 bg-white">
-            <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+  const steps = [
+    {
+      icon: Package,
+      title: "1. Install the SDK",
+      desc: "Add quantacipher-sdk to your project with one npm command. Works with Node.js, browsers, and any JavaScript or TypeScript codebase.",
+      href: "/documentation",
+      badge: "NPM",
+    },
+    {
+      icon: Cpu,
+      title: "2. Encrypt Locally via WASM",
+      desc: "Our Rust WASM engine runs NIST Kyber-1024 (ML-KEM) directly inside your JavaScript runtime. Your plaintext data never leaves your machine unencrypted.",
+      href: "/architecture",
+      badge: "Zero-Trust",
+    },
+    {
+      icon: ShieldCheck,
+      title: "3. Cryptographic Receipt",
+      desc: "The ciphertext is transmitted to our Gateway, which validates your API key, logs the event, and issues a cryptographic receipt with a timestamp.",
+      href: "/documentation#receipts",
+      badge: "Tamper-Proof",
+    },
+  ];
 
-                {/* Header */}
-                <div className="text-center mb-16">
-                    <p className="text-[14px] font-bold text-[#5f6368] uppercase tracking-widest mb-4">
-                        How It Works
-                    </p>
-                    <h2 className="text-[32px] sm:text-[48px] font-normal text-[#202124] mb-6 leading-tight">
-                        Zero-trust encryption,{" "}
-                        <span className="text-[#1a73e8]">zero complexity.</span>
-                    </h2>
-                    <p className="text-[20px] text-[#5f6368] max-w-2xl mx-auto leading-relaxed">
-                        Quantum computers are coming. NIST issued the final standards in 2024.
-                        QuantaCipher makes your app compliant today — in minutes, not months.
-                    </p>
+  return (
+    <section id="how-it-works" className="py-24 bg-white border-y border-gray-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-12 mb-16">
+          <div className="max-w-2xl animate-fade-in">
+            <h2 className="text-4xl md:text-6xl font-extrabold text-black tracking-tighter mb-8 leading-tight">
+              Zero-trust encryption, <br className="hidden md:block" /><span className="text-[#00E599]">zero complexity.</span>
+            </h2>
+            <p className="text-lg md:text-xl text-gray-500 font-medium mb-10 leading-relaxed">
+              Quantum computers are coming. NIST issued the final standards in 2024.
+              QuantaCipher makes your app compliant today — in minutes, not months.
+            </p>
+            <Link
+              href="/documentation"
+              className="inline-flex items-center text-sm font-bold text-black border-b-[3px] border-[#00E599] pb-1 hover:text-[#00E599] transition-colors uppercase tracking-widest"
+            >
+              Read Documentation <ArrowRight className="w-5 h-5 ml-2" />
+            </Link>
+          </div>
+        </div>
+
+        {/* 3 service cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 animate-fade-in">
+          {steps.map((step, index) => {
+            const Icon = step.icon;
+            return (
+              <Link
+                key={index}
+                href={step.href}
+                className="group relative bg-white border border-gray-100 rounded-[2rem] p-10 hover:border-[#00E599] transition-all shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_50px_rgba(0,229,153,0.1)] flex flex-col overflow-hidden"
+              >
+                {/* Subtle gradient overlay on hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white via-white to-[#00E599]/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                
+                <div className="relative z-10 flex items-center justify-between mb-8">
+                  <div className="bg-white w-14 h-14 rounded-2xl flex items-center justify-center group-hover:bg-black transition-all duration-300">
+                    <Icon className="w-6 h-6 text-black group-hover:text-[#00E599] transition-colors" />
+                  </div>
+                  {step.badge && (
+                    <span className="text-[10px] font-black px-3 py-1 rounded-full bg-gray-100 text-gray-500 border border-gray-200 group-hover:bg-[#00E599]/10 group-hover:text-[#00E599] group-hover:border-[#00E599]/20 transition-colors">
+                      {step.badge}
+                    </span>
+                  )}
                 </div>
-
-                {/* Steps */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mb-20">
-                    {steps.map((step, i) => (
-                        <div
-                            key={step.number}
-                            className="flex flex-col p-8 bg-white border border-[#dadce0] rounded-[16px] hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
-                        >
-                            {/* Step Header */}
-                            <div className="mb-6">
-                                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#e8f0fe] text-[#1a73e8] font-bold text-[14px] mb-4">
-                                    {step.number}
-                                </div>
-                                <h3 className="font-medium text-[20px] text-[#202124]">{step.title}</h3>
-                            </div>
-
-                            {/* Description */}
-                            <p className="text-[16px] text-[#5f6368] leading-relaxed mb-8 flex-grow">
-                                {step.description}
-                            </p>
-
-                            {/* Code snippet */}
-                            <div className="bg-[#1e2433] rounded-[8px] p-4 font-mono text-[13px] text-[#e8eaed] mt-auto relative overflow-hidden group">
-                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                                <span className="text-[#5c6b8a] select-none mr-2">❯</span>
-                                <span className="text-[#d4d4d4]">{step.code}</span>
-                            </div>
-                        </div>
-                    ))}
+                <h3 className="relative z-10 font-extrabold text-black text-2xl mb-4 tracking-tight group-hover:text-black transition-colors">{step.title}</h3>
+                <p className="relative z-10 text-base text-gray-500 font-medium leading-relaxed flex-1 group-hover:text-gray-600 transition-colors">{step.desc}</p>
+                <div className="relative z-10 mt-8 flex items-center gap-2 text-xs font-bold text-[#00E599] opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
+                  View Technical Docs <ArrowUpRight className="w-4 h-4" />
                 </div>
+              </Link>
+            );
+          })}
+        </div>
 
-                {/* Stats */}
-                <div className="bg-white rounded-[16px] p-12 border border-[#dadce0]">
-                    <div className="text-center mb-10">
-                        <div className="flex items-center justify-center gap-2 mb-2">
-                            <h3 className="text-[14px] font-bold text-[#5f6368] uppercase tracking-widest">
-                                Platform Specs
-                            </h3>
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {stats.map((stat) => (
-                            <div key={stat.label} className="text-center">
-                                <div className="text-[48px] font-normal text-[#1a73e8] mb-1">{stat.value}</div>
-                                <div className="text-[16px] text-[#5f6368]">{stat.label}</div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-
-            </div>
-        </section>
-    );
+      </div>
+    </section>
+  );
 }

@@ -82,7 +82,7 @@ export default function SignInPage() {
                             repeat: Infinity,
                             ease: "easeInOut"
                         }}
-                        className="absolute bottom-[35%] right-[35%] w-[90px] h-[90px] rounded-full bg-[#1a73e8] opacity-20"
+                        className="absolute bottom-[35%] right-[35%] w-[90px] h-[90px] rounded-full bg-[#00E599] opacity-20"
                     />
                     <motion.div
                         animate={{
@@ -98,9 +98,16 @@ export default function SignInPage() {
                     />
                 </div>
 
-                <div className="flex items-center gap-2 relative z-10">
-                    <span className="text-[24px] font-normal text-[#5f6368] tracking-tight">QuantaCipher</span>
-                </div>
+                <Link href="/" className="flex items-center gap-3 relative z-10 group w-fit">
+                    <img
+                        src="/logo/quanta-transparent-bg-logo.svg"
+                        alt="QuantaCipher Logo"
+                        className="w-9 h-9 transition-transform group-hover:scale-110"
+                    />
+                    <span className="text-2xl font-bold tracking-tighter text-black">
+                        QuantaCipher<span className="text-[#00E599]">.</span>
+                    </span>
+                </Link>
 
                 <div className="max-w-xl relative z-10">
                     <motion.div
@@ -108,10 +115,10 @@ export default function SignInPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
                     >
-                        <h2 className="text-[56px] sm:text-[64px] leading-[1.1] font-normal text-[#202124] mb-6">
-                            Start securing <br /> <span className="text-[#1a73e8]">in seconds.</span>
+                        <h2 className="text-[56px] sm:text-[64px] leading-[1.1] font-normal text-[black] mb-6">
+                            Start securing <br /> <span className="text-[#00E599]">in seconds.</span>
                         </h2>
-                        <p className="text-[20px] text-[#5f6368] leading-relaxed mb-8">
+                        <p className="text-[20px] text-[#6b7280] leading-relaxed mb-8">
                             Secure your critical APIs with Kyber-1024 encryption and manage your Zero-Trust infrastructure.
                         </p>
                     </motion.div>
@@ -123,14 +130,23 @@ export default function SignInPage() {
             </div>
 
             {/* Right Side - Auth Form (40%) */}
-            <div className="flex flex-col items-center justify-center p-8 bg-[#f8f9fa]">
+            <div className="flex flex-col items-center justify-center p-8 bg-white">
                 <div className="w-full max-w-[380px] space-y-8">
                     <div className="text-center">
-                        <div className="lg:hidden mb-8">
-                            <span className="text-[28px] font-bold text-[#202124] tracking-tight">QuantaCipher</span>
+                        <div className="lg:hidden mb-8 flex justify-center">
+                            <Link href="/" className="flex items-center gap-3 group">
+                                <img
+                                    src="/logo/quanta-transparent-bg-logo.svg"
+                                    alt="QuantaCipher Logo"
+                                    className="w-9 h-9 transition-transform group-hover:scale-110"
+                                />
+                                <span className="text-3xl font-bold tracking-tighter text-black">
+                                    QuantaCipher<span className="text-[#00E599]">.</span>
+                                </span>
+                            </Link>
                         </div>
-                        <h1 className="text-[28px] font-normal text-[#202124] mb-2">Welcome back</h1>
-                        <p className="text-[#5f6368] text-[14px]">
+                        <h1 className="text-[28px] font-normal text-[black] mb-2">Welcome back</h1>
+                        <p className="text-[#6b7280] text-[14px]">
                             Sign in to access your dashboard.
                         </p>
                     </div>
@@ -139,7 +155,7 @@ export default function SignInPage() {
                         <Button
                             onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
                             variant="outline"
-                            className="w-full h-[48px] rounded-[8px] bg-white border border-[#dadce0] hover:bg-[#f8f9fa] hover:border-[#d2e3fc] hover:shadow-sm transition-all flex items-center justify-center gap-3"
+                            className="w-full h-[48px] rounded-xl bg-white border border-[#e5e7eb] hover:bg-white hover:border-[#00E599] hover:shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all flex items-center justify-center gap-3"
                         >
                             {/* Google G Logo */}
                             <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -148,21 +164,21 @@ export default function SignInPage() {
                                 <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.84z" fill="#FBBC05" />
                                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
                             </svg>
-                            <span className="text-[14px] font-medium text-[#3c4043]">Sign in with Google</span>
+                            <span className="text-[14px] font-medium text-[#1f2937]">Sign in with Google</span>
                         </Button>
 
                         <div className="relative">
                             <div className="absolute inset-0 flex items-center">
-                                <span className="w-full border-t border-[#dadce0]" />
+                                <span className="w-full border-t border-[#e5e7eb]" />
                             </div>
                             <div className="relative flex justify-center text-xs uppercase">
-                                <span className="bg-[#f8f9fa] px-2 text-[#5f6368]">Or</span>
+                                <span className="bg-white px-2 text-[#6b7280]">Or</span>
                             </div>
                         </div>
 
                         <Button
                             onClick={() => signIn("github", { callbackUrl: "/dashboard" })}
-                            className="w-full h-[48px] rounded-[8px] bg-[#24292e] hover:bg-[#2f363d] text-white hover:shadow-md transition-all flex items-center justify-center gap-3"
+                            className="w-full h-[48px] rounded-xl bg-[#24292e] hover:bg-[#2f363d] text-white hover:shadow-md transition-all flex items-center justify-center gap-3"
                         >
                             {/* GitHub Logo */}
                             <svg className="w-5 h-5 fill-white" viewBox="0 0 24 24">
@@ -173,16 +189,16 @@ export default function SignInPage() {
                     </div>
 
                     <div className="text-center px-4">
-                        <p className="text-[12px] text-[#5f6368] leading-relaxed">
+                        <p className="text-[12px] text-[#6b7280] leading-relaxed">
                             By signing in, you agree to our{" "}
-                            <Link href="/terms" className="text-[#1a73e8] hover:underline">Terms of Service</Link>
+                            <Link href="/terms" className="text-[#00E599] hover:underline">Terms of Service</Link>
                             {" "}and{" "}
-                            <Link href="/privacy" className="text-[#1a73e8] hover:underline">Privacy Policy</Link>.
+                            <Link href="/privacy" className="text-[#00E599] hover:underline">Privacy Policy</Link>.
                         </p>
                     </div>
 
                     <div className="pt-4 text-center">
-                        <Link href="/" className="inline-flex items-center text-[#5f6368] hover:text-[#202124] text-[14px] font-medium transition-colors">
+                        <Link href="/" className="inline-flex items-center text-[#6b7280] hover:text-[black] text-[14px] font-medium transition-colors">
                             <ArrowLeft className="w-4 h-4 mr-2" /> Return to homepage
                         </Link>
                     </div>

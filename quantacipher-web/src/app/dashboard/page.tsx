@@ -52,10 +52,10 @@ function formatDate(date: string | undefined) {
 
 function getPlanColor(plan: string) {
     switch (plan) {
-        case 'startup': return 'text-[#1a73e8]';
+        case 'startup': return 'text-[#00E599]';
         case 'business': return 'text-[#34a853]';
         case 'enterprise': return 'text-[#9334e6]';
-        default: return 'text-[#5f6368]';
+        default: return 'text-[#6b7280]';
     }
 }
 
@@ -170,8 +170,8 @@ export default function DashboardPage() {
 
     if (status === "loading" || (status === "authenticated" && loading)) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-[#f8f9fa]">
-                <Loader2 className="w-8 h-8 animate-spin text-[#1a73e8]" />
+            <div className="min-h-screen flex items-center justify-center bg-white">
+                <Loader2 className="w-8 h-8 animate-spin text-[#00E599]" />
             </div>
         );
     }
@@ -187,13 +187,13 @@ export default function DashboardPage() {
         <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto">
             {/* Header */}
             <div className="mb-8">
-                <h1 className="text-[28px] font-normal text-[#202124]">QuantaCipher Dashboard</h1>
-                <p className="text-[#5f6368] mt-1">Manage your Zero-Trust API keys and monitor your cryptographic usage.</p>
+                <h1 className="text-[28px] font-normal text-[black]">QuantaCipher Dashboard</h1>
+                <p className="text-[#6b7280] mt-1">Manage your Zero-Trust API keys and monitor your cryptographic usage.</p>
             </div>
 
             {/* Global error */}
             {error && (
-                <div className="mb-6 flex items-center gap-3 bg-[#fce8e6] border border-[#f5c6c4] rounded-[8px] px-4 py-3 text-[#c5221f]">
+                <div className="mb-6 flex items-center gap-3 bg-[#fce8e6] border border-[#f5c6c4] rounded-xl px-4 py-3 text-[#c5221f]">
                     <AlertCircle className="w-5 h-5 flex-shrink-0" />
                     <span className="text-[14px]">{error}</span>
                     <button onClick={() => setError(null)} className="ml-auto text-[#c5221f] hover:text-[#a50e0e]">
@@ -204,52 +204,52 @@ export default function DashboardPage() {
 
             {/* Stats Overview */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <div className="bg-white p-6 rounded-[8px] border border-[#dadce0] shadow-sm">
-                    <h3 className="text-[12px] font-medium text-[#5f6368] uppercase tracking-wider mb-2">Active Keys</h3>
+                <div className="bg-white p-6 rounded-xl border border-[#e5e7eb] shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
+                    <h3 className="text-[12px] font-medium text-[#6b7280] uppercase tracking-wider mb-2">Active Keys</h3>
                     <div className="flex items-center gap-3">
-                        <div className="text-[32px] font-normal text-[#202124]">{analytics.activeKeys}</div>
-                        <Key className="w-6 h-6 text-[#1a73e8] opacity-50" />
+                        <div className="text-[32px] font-normal text-[black]">{analytics.activeKeys}</div>
+                        <Key className="w-6 h-6 text-[#00E599] opacity-50" />
                     </div>
                 </div>
-                <div className="bg-white p-6 rounded-[8px] border border-[#dadce0] shadow-sm">
-                    <h3 className="text-[12px] font-medium text-[#5f6368] uppercase tracking-wider mb-2">API Calls (Total)</h3>
+                <div className="bg-white p-6 rounded-xl border border-[#e5e7eb] shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
+                    <h3 className="text-[12px] font-medium text-[#6b7280] uppercase tracking-wider mb-2">API Calls (Total)</h3>
                     <div className="flex items-center gap-3">
-                        <span className="text-[32px] font-normal text-[#202124]">
+                        <span className="text-[32px] font-normal text-[black]">
                             {analytics.totalCalls.toLocaleString()}
                         </span>
                         <Activity className="w-6 h-6 text-[#34a853] opacity-50" />
                     </div>
                 </div>
-                <div className="bg-white p-6 rounded-[8px] border border-[#dadce0] shadow-sm">
-                    <h3 className="text-[12px] font-medium text-[#5f6368] uppercase tracking-wider mb-2">Data Secured</h3>
+                <div className="bg-white p-6 rounded-xl border border-[#e5e7eb] shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
+                    <h3 className="text-[12px] font-medium text-[#6b7280] uppercase tracking-wider mb-2">Data Secured</h3>
                     <div className="flex items-center gap-3">
-                        <div className="text-[32px] font-normal text-[#202124]">{formatBytes(analytics.totalBytes)}</div>
+                        <div className="text-[32px] font-normal text-[black]">{formatBytes(analytics.totalBytes)}</div>
                         <Database className="w-6 h-6 text-[#fbbc04] opacity-50" />
                     </div>
                 </div>
-                <div className="bg-white p-6 rounded-[8px] border border-[#dadce0] shadow-sm">
-                    <h3 className="text-[12px] font-medium text-[#5f6368] uppercase tracking-wider mb-2">Current Plan</h3>
+                <div className="bg-white p-6 rounded-xl border border-[#e5e7eb] shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
+                    <h3 className="text-[12px] font-medium text-[#6b7280] uppercase tracking-wider mb-2">Current Plan</h3>
                     <div className="flex items-center gap-2">
                         <span className={`text-[28px] font-normal capitalize ${getPlanColor(analytics.plan)}`}>
                             {analytics.plan}
                         </span>
-                        <Shield className="w-5 h-5 text-[#5f6368]" />
+                        <Shield className="w-5 h-5 text-[#6b7280]" />
                     </div>
                 </div>
             </div>
 
             {/* API Keys List Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-                <h2 className="text-[20px] font-normal text-[#202124]">API Keys</h2>
+                <h2 className="text-[20px] font-normal text-[black]">API Keys</h2>
                 <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
                     <Link href="/dashboard/billing" className="w-full sm:w-auto">
-                        <Button variant="outline" className="w-full sm:w-auto gap-2 bg-white border-[#dadce0] text-[#5f6368] hover:bg-[#f8f9fa] h-[40px]">
+                        <Button variant="outline" className="w-full sm:w-auto gap-2 bg-white border-[#e5e7eb] text-[#6b7280] hover:bg-white h-[40px]">
                             <Settings className="w-4 h-4" /> Upgrade Plan
                         </Button>
                     </Link>
                     <Button
                         onClick={() => setIsAddModalOpen(true)}
-                        className="w-full sm:w-auto bg-[#1a73e8] hover:bg-[#1967d2] text-white rounded-[4px] px-6 h-[40px] text-[14px] font-medium shadow-sm flex items-center justify-center gap-2"
+                        className="w-full sm:w-auto bg-[#00E599] hover:bg-[black] text-white rounded-[4px] px-6 h-[40px] text-[14px] font-medium shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex items-center justify-center gap-2"
                     >
                         <Plus className="w-5 h-5" /> Generate Key
                     </Button>
@@ -257,8 +257,8 @@ export default function DashboardPage() {
             </div>
 
             {/* API Keys Table */}
-            <div className="bg-white border border-[#dadce0] rounded-[8px] shadow-sm overflow-hidden">
-                <div className="hidden md:grid grid-cols-12 gap-4 p-4 border-b border-[#dadce0] bg-[#f8f9fa] text-[12px] font-medium text-[#5f6368] uppercase tracking-wider">
+            <div className="bg-white border border-[#e5e7eb] rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] overflow-hidden">
+                <div className="hidden md:grid grid-cols-12 gap-4 p-4 border-b border-[#e5e7eb] bg-white text-[12px] font-medium text-[#6b7280] uppercase tracking-wider">
                     <div className="col-span-4">Name &amp; Key</div>
                     <div className="col-span-2 text-center">Status</div>
                     <div className="col-span-2 text-center">API Calls</div>
@@ -266,9 +266,9 @@ export default function DashboardPage() {
                     <div className="col-span-2 text-right">Actions</div>
                 </div>
 
-                <div className="divide-y divide-[#dadce0]">
+                <div className="divide-y divide-[#e5e7eb]">
                     {apiKeys.length === 0 && (
-                        <div className="p-12 text-center text-[#5f6368]">
+                        <div className="p-12 text-center text-[#6b7280]">
                             <Key className="w-12 h-12 mx-auto mb-4 opacity-20" />
                             <p>No API keys yet. Generate one to start securing data with Kyber-1024.</p>
                         </div>
@@ -279,19 +279,19 @@ export default function DashboardPage() {
                             layout
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            className="flex flex-col md:grid md:grid-cols-12 gap-4 p-4 md:items-center hover:bg-[#f8f9fa] transition-colors"
+                            className="flex flex-col md:grid md:grid-cols-12 gap-4 p-4 md:items-center hover:bg-white transition-colors"
                         >
                             {/* Mobile Top Row / Desktop Col 1 */}
                             <div className="flex justify-between items-start md:col-span-4 overflow-hidden gap-4">
                                 <div className="flex-1 min-w-0">
-                                    <div className="font-medium text-[#202124] text-[16px] truncate">{apiKey.name}</div>
+                                    <div className="font-medium text-[black] text-[16px] truncate">{apiKey.name}</div>
                                     <div className="flex items-center gap-2 mt-2">
-                                        <div className="text-[#5f6368] text-[13px] font-mono truncate max-w-[180px] sm:max-w-[200px] bg-[#f1f3f4] px-2 py-1 rounded-[4px] border border-[#dadce0]">
+                                        <div className="text-[#6b7280] text-[13px] font-mono truncate max-w-[180px] sm:max-w-[200px] bg-[#f1f3f4] px-2 py-1 rounded-[4px] border border-[#e5e7eb]">
                                             {apiKey.key.substring(0, 12)}...{apiKey.key.substring(apiKey.key.length - 4)}
                                         </div>
                                         <button
                                             onClick={() => copyToClipboard(apiKey.key)}
-                                            className="text-[#1a73e8] hover:text-[#1967d2] p-1.5 bg-[#f1f3f4] hover:bg-[#e8f0fe] rounded-[4px] transition-colors"
+                                            className="text-[#00E599] hover:text-[black] p-1.5 bg-[#f1f3f4] hover:bg-[#f3f4f6] rounded-[4px] transition-colors"
                                             title="Copy full API Key"
                                         >
                                             {copiedKey === apiKey.key ? <CheckCircle2 className="w-4 h-4 text-[#137333]" /> : <Copy className="w-4 h-4" />}
@@ -300,7 +300,7 @@ export default function DashboardPage() {
                                     <div className="text-[11px] text-[#9aa0a6] mt-2">Created {formatDate(apiKey.createdAt)}</div>
                                     
                                     {/* Mobile Only: Extra Stats inline */}
-                                    <div className="flex md:hidden items-center gap-4 mt-3 text-[12px] text-[#5f6368]">
+                                    <div className="flex md:hidden items-center gap-4 mt-3 text-[12px] text-[#6b7280]">
                                         <div className="flex items-center gap-1.5"><Activity className="w-3.5 h-3.5" /> {apiKey.calls.toLocaleString()}</div>
                                         <div className="flex items-center gap-1.5"><Database className="w-3.5 h-3.5" /> {formatBytes(apiKey.bytesSecured)}</div>
                                     </div>
@@ -318,7 +318,7 @@ export default function DashboardPage() {
                                         </div>
                                     )}
                                     {apiKey.status === 'active' && (
-                                        <button onClick={() => confirmDelete(apiKey._id)} className="p-1.5 text-[#5f6368] hover:text-[#d93025] bg-[#f1f3f4] hover:bg-[#fce8e6] rounded-[4px] transition-colors mt-auto">
+                                        <button onClick={() => confirmDelete(apiKey._id)} className="p-1.5 text-[#6b7280] hover:text-[#d93025] bg-[#f1f3f4] hover:bg-[#fce8e6] rounded-[4px] transition-colors mt-auto">
                                             <Trash2 className="w-4 h-4" />
                                         </button>
                                     )}
@@ -338,18 +338,18 @@ export default function DashboardPage() {
                                 )}
                             </div>
                             <div className="hidden md:block col-span-2 text-center">
-                                <div className="text-[14px] font-medium text-[#202124]">
+                                <div className="text-[14px] font-medium text-[black]">
                                     {apiKey.calls.toLocaleString()}
                                 </div>
                             </div>
                             <div className="hidden md:block col-span-2 text-center">
-                                <div className="text-[14px] font-medium text-[#202124]">
+                                <div className="text-[14px] font-medium text-[black]">
                                     {formatBytes(apiKey.bytesSecured)}
                                 </div>
                             </div>
                             <div className="hidden md:flex col-span-2 justify-end gap-2">
                                 {apiKey.status === 'active' && (
-                                    <button onClick={() => confirmDelete(apiKey._id)} className="p-2 text-[#5f6368] hover:text-[#d93025] hover:bg-[#fce8e6] rounded-full transition-colors" title="Revoke Key">
+                                    <button onClick={() => confirmDelete(apiKey._id)} className="p-2 text-[#6b7280] hover:text-[#d93025] hover:bg-[#fce8e6] rounded-full transition-colors" title="Revoke Key">
                                         <Trash2 className="w-4 h-4" />
                                     </button>
                                 )}
@@ -366,7 +366,7 @@ export default function DashboardPage() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#202124]/60 backdrop-blur-sm"
+                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[black]/60 backdrop-blur-sm"
                     >
                         <motion.div
                             initial={{ scale: 0.95, opacity: 0, y: 20 }}
@@ -379,7 +379,7 @@ export default function DashboardPage() {
                                     <h2 className="text-[24px] font-normal text-[#1f1f1f]">Generate API Key</h2>
                                     <p className="text-[#444746] text-[14px] mt-1">Create a new key for your application.</p>
                                 </div>
-                                <button onClick={() => { setIsAddModalOpen(false); setSubmitError(null); }} className="text-[#5f6368] hover:bg-[#f1f3f4] p-2 rounded-full transition-colors"><XCircle className="w-6 h-6" /></button>
+                                <button onClick={() => { setIsAddModalOpen(false); setSubmitError(null); }} className="text-[#6b7280] hover:bg-[#f1f3f4] p-2 rounded-full transition-colors"><XCircle className="w-6 h-6" /></button>
                             </div>
 
                             <form onSubmit={handleGenerateKey} className="p-6 space-y-6">
@@ -391,31 +391,31 @@ export default function DashboardPage() {
                                             value={newKeyName}
                                             onChange={(e) => setNewKeyName(e.target.value)}
                                             placeholder=" "
-                                            className="peer w-full h-[56px] px-4 pt-4 rounded-[4px] bg-[#f1f3f4] border-b-[1px] border-[#5f6368] focus:border-[#1a73e8] focus:border-b-[2px] outline-none transition-all placeholder-transparent"
+                                            className="peer w-full h-[56px] px-4 pt-4 rounded-[4px] bg-[#f1f3f4] border-b-[1px] border-[#6b7280] focus:border-[#00E599] focus:border-b-[2px] outline-none transition-all placeholder-transparent"
                                         />
-                                        <label className="absolute left-4 top-4 text-[#5f6368] text-[16px] transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-[16px] peer-focus:top-2 peer-focus:text-[12px] peer-focus:text-[#1a73e8] peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-[12px] pointer-events-none">
+                                        <label className="absolute left-4 top-4 text-[#6b7280] text-[16px] transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-[16px] peer-focus:top-2 peer-focus:text-[12px] peer-focus:text-[#00E599] peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-[12px] pointer-events-none">
                                             Key Name (e.g. Production App)
                                         </label>
                                     </div>
 
                                     {submitError && (
-                                        <div className="flex items-start gap-2 bg-[#fce8e6] border border-[#f5c6c4] rounded-[8px] px-4 py-3 text-[#c5221f]">
+                                        <div className="flex items-start gap-2 bg-[#fce8e6] border border-[#f5c6c4] rounded-xl px-4 py-3 text-[#c5221f]">
                                             <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
                                             <p className="text-[13px]">{submitError}</p>
                                         </div>
                                     )}
 
-                                    <div className="bg-[#e8f0fe] p-4 rounded-[8px] flex items-start gap-3">
-                                        <Shield className="w-5 h-5 text-[#1a73e8] shrink-0 mt-0.5" />
-                                        <p className="text-[13px] text-[#1a73e8] font-medium leading-relaxed">
+                                    <div className="bg-[#f3f4f6] p-4 rounded-xl flex items-start gap-3">
+                                        <Shield className="w-5 h-5 text-[#00E599] shrink-0 mt-0.5" />
+                                        <p className="text-[13px] text-[#00E599] font-medium leading-relaxed">
                                             This key allows the QuantaCipher SDK to send Kyber-1024 encrypted payloads to the Gateway. Keep it secret — treat it like a password.
                                         </p>
                                     </div>
                                 </div>
 
                                 <div className="pt-2 flex justify-end gap-2">
-                                    <Button type="button" variant="ghost" onClick={() => { setIsAddModalOpen(false); setSubmitError(null); }} className="text-[#1a73e8] hover:bg-[#f1f3f4] font-medium rounded-full px-6">Cancel</Button>
-                                    <Button type="submit" disabled={submitting} className="bg-[#1a73e8] hover:bg-[#1967d2] text-white rounded-full px-6 font-medium shadow-none hover:shadow-md transition-all disabled:opacity-50">
+                                    <Button type="button" variant="ghost" onClick={() => { setIsAddModalOpen(false); setSubmitError(null); }} className="text-[#00E599] hover:bg-[#f1f3f4] font-medium rounded-full px-6">Cancel</Button>
+                                    <Button type="submit" disabled={submitting} className="bg-[#00E599] hover:bg-[black] text-white rounded-full px-6 font-medium shadow-none hover:shadow-md transition-all disabled:opacity-50">
                                         {submitting ? <><Loader2 className="w-4 h-4 animate-spin mr-2" />Generating...</> : "Generate Key"}
                                     </Button>
                                 </div>
@@ -429,7 +429,7 @@ export default function DashboardPage() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#202124]/60 backdrop-blur-sm"
+                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[black]/60 backdrop-blur-sm"
                     >
                         <motion.div
                             initial={{ scale: 0.95, opacity: 0, y: 20 }}
@@ -442,7 +442,7 @@ export default function DashboardPage() {
                                 Any applications using this key will immediately lose access to the QuantaCipher Gateway. This action cannot be undone.
                             </p>
                             <div className="flex justify-end gap-2">
-                                <Button variant="ghost" onClick={() => setDeleteModalOpen(false)} className="text-[#1a73e8] hover:bg-[#f1f3f4] font-medium rounded-full px-6">Cancel</Button>
+                                <Button variant="ghost" onClick={() => setDeleteModalOpen(false)} className="text-[#00E599] hover:bg-[#f1f3f4] font-medium rounded-full px-6">Cancel</Button>
                                 <Button onClick={handleDelete} disabled={deleting} className="bg-[#d93025] hover:bg-[#c5221f] text-white rounded-full px-6 font-medium shadow-none hover:shadow-md transition-all">
                                     {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : "Revoke Key"}
                                 </Button>

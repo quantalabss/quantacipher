@@ -39,44 +39,44 @@ export default function DemoPage() {
     };
 
     return (
-        <div className="min-h-screen bg-[#f8f9fa] flex flex-col">
+        <div className="min-h-screen bg-white flex flex-col">
             <Navbar />
 
             <main className="flex-grow pt-32 pb-24 px-4 sm:px-6 lg:px-8 max-w-[1440px] mx-auto w-full">
                 <div className="mb-12 text-center max-w-3xl mx-auto">
-                    <div className="inline-flex items-center gap-2 bg-[#e8f0fe] text-[#1a73e8] px-3 py-1 rounded-full text-[13px] font-medium mb-6">
+                    <div className="inline-flex items-center gap-2 bg-[#f3f4f6] text-[#00E599] px-3 py-1 rounded-full text-[13px] font-medium mb-6">
                         <Activity className="w-4 h-4" />
                         Live Demo
                     </div>
-                    <h1 className="text-[32px] sm:text-[48px] font-normal text-[#202124] mb-4">
+                    <h1 className="text-[32px] sm:text-[48px] font-normal text-[black] mb-4">
                         Experience Post-Quantum Encryption
                     </h1>
-                    <p className="text-[18px] text-[#5f6368]">
+                    <p className="text-[18px] text-[#6b7280]">
                         Type any JSON or text below. The QuantaCipher engine will encrypt it instantly using NIST Kyber-1024, demonstrating the speed of our WASM execution.
                     </p>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full">
                     {/* Left Pane: Plaintext Input */}
-                    <div className="flex flex-col bg-white border border-[#dadce0] rounded-[16px] shadow-sm overflow-hidden h-[400px]">
-                        <div className="bg-[#f1f3f4] border-b border-[#dadce0] px-6 py-4 flex items-center gap-3">
-                            <Key className="w-5 h-5 text-[#5f6368]" />
-                            <h2 className="text-[16px] font-medium text-[#202124]">Plaintext Payload</h2>
+                    <div className="flex flex-col bg-white border border-[#e5e7eb] rounded-[2rem] shadow-[0_4px_20px_rgba(0,0,0,0.03)] overflow-hidden h-[400px]">
+                        <div className="bg-[#f1f3f4] border-b border-[#e5e7eb] px-6 py-4 flex items-center gap-3">
+                            <Key className="w-5 h-5 text-[#6b7280]" />
+                            <h2 className="text-[16px] font-medium text-[black]">Plaintext Payload</h2>
                         </div>
                         <div className="flex-grow p-6">
                             <textarea
                                 value={plaintext}
                                 onChange={(e) => setPlaintext(e.target.value)}
-                                className="w-full h-full resize-none outline-none font-mono text-[14px] leading-relaxed text-[#202124] bg-transparent"
+                                className="w-full h-full resize-none outline-none font-mono text-[14px] leading-relaxed text-[black] bg-transparent"
                                 placeholder="Enter JSON or text..."
                                 spellCheck={false}
                             />
                         </div>
-                        <div className="bg-[#f8f9fa] border-t border-[#dadce0] p-4 flex justify-end">
+                        <div className="bg-white border-t border-[#e5e7eb] p-4 flex justify-end">
                             <Button
                                 onClick={handleEncrypt}
                                 disabled={isEncrypting || !plaintext}
-                                className="bg-[#1a73e8] hover:bg-[#1967d2] text-white px-8 h-[44px] rounded-[6px] shadow-sm font-medium transition-all w-full sm:w-auto"
+                                className="bg-[#00E599] hover:bg-[black] text-white px-8 h-[44px] rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.03)] font-medium transition-all w-full sm:w-auto"
                             >
                                 {isEncrypting ? (
                                     <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Encrypting...</>
@@ -88,8 +88,8 @@ export default function DemoPage() {
                     </div>
 
                     {/* Right Pane: Ciphertext Output */}
-                    <div className="flex flex-col bg-[#202124] rounded-[16px] shadow-xl overflow-hidden h-[400px] border border-[#3c4043]">
-                        <div className="bg-[#303134] border-b border-[#3c4043] px-6 py-4 flex justify-between items-center">
+                    <div className="flex flex-col bg-[black] rounded-[2rem] shadow-xl overflow-hidden h-[400px] border border-[#1f2937]">
+                        <div className="bg-[#303134] border-b border-[#1f2937] px-6 py-4 flex justify-between items-center">
                             <div className="flex items-center gap-3">
                                 <Lock className="w-5 h-5 text-[#34a853]" />
                                 <h2 className="text-[16px] font-medium text-white">Quantum-Safe Ciphertext</h2>
@@ -105,7 +105,7 @@ export default function DemoPage() {
                         <div className="flex-grow p-6 overflow-y-auto font-mono text-[13px] text-[#d4d4d4] leading-relaxed break-all whitespace-pre-wrap">
                             {isEncrypting ? (
                                 <div className="h-full flex flex-col items-center justify-center text-[#9aa0a6]">
-                                    <Loader2 className="w-8 h-8 animate-spin mb-4 text-[#1a73e8]" />
+                                    <Loader2 className="w-8 h-8 animate-spin mb-4 text-[#00E599]" />
                                     <p>Generating lattice-based keys...</p>
                                 </div>
                             ) : result ? (
@@ -113,7 +113,7 @@ export default function DemoPage() {
                                     {result.ciphertext}
                                 </div>
                             ) : (
-                                <div className="h-full flex items-center justify-center text-[#5f6368]">
+                                <div className="h-full flex items-center justify-center text-[#6b7280]">
                                     Waiting for encryption request...
                                 </div>
                             )}

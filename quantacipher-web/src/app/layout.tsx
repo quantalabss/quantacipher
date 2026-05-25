@@ -1,17 +1,46 @@
-﻿import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
+import type { Metadata } from "next";
+import { Manrope } from "next/font/google";
 import "./globals.css";
 
-const roboto = Roboto({
+const manrope = Manrope({
   subsets: ["latin"],
-  weight: ["100", "300", "400", "500", "700", "900"],
-  variable: "--font-roboto",
+  variable: "--font-manrope",
   display: "swap",
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://quantacipher.com'),
   title: "QuantaCipher | Post-Quantum Data Security API",
   description: "QuantaCipher is the world's first post-quantum encryption SaaS. Secure your enterprise data with NIST-standard Kyber-1024 in two lines of code. HIPAA-ready, zero-trust architecture.",
+  openGraph: {
+    title: "QuantaCipher | Post-Quantum Data Security API",
+    description: "Secure your enterprise data with NIST-standard Kyber-1024 in two lines of code. Zero-trust architecture.",
+    url: 'https://quantacipher.com',
+    siteName: 'QuantaCipher',
+    images: [
+      {
+        url: '/og/image.png',
+        width: 1200,
+        height: 630,
+        alt: 'QuantaCipher - Zero Trust Post Quantum Security',
+      }
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "QuantaCipher | Post-Quantum Data Security API",
+    description: "Secure your enterprise data with NIST-standard Kyber-1024 in two lines of code. Zero-trust architecture.",
+    images: ['/og/image.png'],
+  },
+  icons: {
+    icon: '/favicon.ico',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 import { Providers } from "@/components/providers/SessionProvider";
@@ -22,8 +51,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={roboto.variable}>
-      <body className="antialiased min-h-screen bg-white text-[#202124] font-sans selection:bg-[#d2e3fc] selection:text-[#1a73e8]">
+    <html lang="en" className={`${manrope.variable} h-full scroll-smooth`}>
+      <body className="min-h-full flex flex-col bg-white text-black font-sans antialiased">
         <Providers>
           {children}
         </Providers>

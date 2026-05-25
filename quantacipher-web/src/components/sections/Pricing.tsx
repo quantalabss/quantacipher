@@ -1,6 +1,5 @@
-import { Check, Star, Zap } from "lucide-react";
+import { Check, Star, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 
 const plans = [
     {
@@ -74,67 +73,62 @@ const plans = [
 
 export function Pricing() {
     return (
-        <section id="pricing" className="py-16 sm:py-24 bg-white border-b border-[#dadce0]">
-            <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-16">
-                    <p className="text-[14px] font-bold text-[#5f6368] uppercase tracking-widest mb-4 flex justify-center items-center gap-2">
+        <section id="pricing" className="py-24 bg-white border-y border-gray-100">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="text-center mb-16 animate-fade-in">
+                    <p className="text-xs font-black uppercase tracking-widest text-[#00E599] mb-4">
                         Pricing
                     </p>
-                    <h2 className="text-[32px] sm:text-[48px] leading-[1.2] font-normal text-[#202124] mb-4">
-                        Predictable pricing for every stage
+                    <h2 className="text-4xl md:text-5xl font-extrabold text-black tracking-tighter mb-4 leading-tight">
+                        Predictable pricing for <br />every stage
                     </h2>
-                    <p className="text-[20px] sm:text-[22px] text-[#5f6368] max-w-2xl mx-auto">
+                    <p className="text-lg text-gray-500 max-w-2xl mx-auto font-medium">
                         Whether you're building a weekend project or an enterprise healthcare app, we have a plan that fits.
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-fade-in">
                     {plans.map((plan, index) => (
                         <div
                             key={index}
                             className={`
-                                relative p-8 rounded-[16px] bg-white flex flex-col items-start h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-xl
-                                ${plan.popular ? 'border-2 border-[#1a73e8] shadow-lg ring-4 ring-[#1a73e8]/10' : 'border border-[#dadce0]'}
+                                relative p-8 rounded-[2rem] flex flex-col h-full transition-all duration-300 hover:-translate-y-1 
+                                ${plan.popular ? 'bg-black text-white shadow-2xl' : 'bg-white border border-gray-200 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-xl'}
                             `}
                         >
                             {plan.popular && (
-                                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#1a73e8] text-white text-[12px] font-bold px-4 py-1 rounded-full flex items-center gap-1.5 shadow-sm whitespace-nowrap">
-                                    <Star className="w-3.5 h-3.5 fill-white" />
+                                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#00E599] text-black text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg whitespace-nowrap">
+                                    <Star className="w-3 h-3 fill-black" />
                                     Most Popular
                                 </div>
                             )}
 
-                            <h3 className="text-[20px] font-medium text-[#202124] mb-3">{plan.name}</h3>
-                            <p className="text-[16px] text-[#5f6368] mb-6 min-h-[42px] leading-relaxed">
+                            <h3 className={`text-xl font-extrabold tracking-tight mb-3 ${plan.popular ? 'text-white' : 'text-black'}`}>{plan.name}</h3>
+                            <p className={`text-sm mb-8 min-h-[42px] leading-relaxed font-medium ${plan.popular ? 'text-gray-400' : 'text-gray-500'}`}>
                                 {plan.description}
                             </p>
 
                             <div className="flex items-baseline gap-1 mb-8">
-                                <span className="text-[48px] font-normal text-[#202124] tracking-tight">{plan.price}</span>
-                                <span className="text-[#5f6368] font-medium text-[18px]">{plan.period}</span>
+                                <span className={`text-5xl font-extrabold tracking-tighter ${plan.popular ? 'text-white' : 'text-black'}`}>{plan.price}</span>
+                                <span className={`font-medium text-sm ${plan.popular ? 'text-gray-400' : 'text-gray-500'}`}>{plan.period}</span>
                             </div>
 
                             <Link
                                 href="/signin"
-                                className="w-full mb-8"
+                                className={`w-full mb-8 flex items-center justify-center gap-2 px-6 py-4 rounded-xl text-sm font-bold transition-all uppercase tracking-wider ${
+                                    plan.popular
+                                        ? 'bg-[#00E599] text-black hover:bg-white hover:text-black'
+                                        : 'bg-black text-white hover:bg-[#00E599] hover:text-black'
+                                }`}
                             >
-                                <Button
-                                    variant={plan.buttonVariant as "default" | "outline"}
-                                    className={`w-full h-[48px] rounded-[8px] text-[16px] font-medium transition-all ${
-                                        plan.buttonVariant === 'primary' 
-                                            ? 'bg-[#1a73e8] hover:bg-[#1967d2] text-white shadow-sm hover:shadow-md' 
-                                            : 'bg-white border-[#dadce0] text-[#3c4043] hover:bg-[#f8f9fa] hover:border-[#bdc1c6]'
-                                    }`}
-                                >
-                                    {plan.buttonText}
-                                </Button>
+                                {plan.buttonText} <ArrowRight className="w-4 h-4" />
                             </Link>
 
-                            <div className="space-y-4 flex-grow w-full pt-6 border-t border-[#f1f3f4]">
+                            <div className={`space-y-4 flex-grow w-full pt-6 border-t ${plan.popular ? 'border-gray-800' : 'border-gray-100'}`}>
                                 {plan.features.map((feature, i) => (
                                     <div key={i} className="flex items-start gap-3">
-                                        <Check className="w-4 h-4 text-[#5f6368] mt-0.5 flex-shrink-0" />
-                                        <span className={`text-[16px] ${i === 0 ? 'font-bold text-[#202124]' : 'text-[#5f6368]'}`}>{feature}</span>
+                                        <Check className={`w-4 h-4 mt-0.5 flex-shrink-0 ${plan.popular ? 'text-[#00E599]' : 'text-gray-400'}`} />
+                                        <span className={`text-sm font-medium ${plan.popular ? 'text-gray-300' : 'text-gray-600'}`}>{feature}</span>
                                     </div>
                                 ))}
                             </div>

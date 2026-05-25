@@ -1,44 +1,40 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 export function CTA() {
     return (
-        <section className="py-24 bg-white">
-            <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="bg-[#1a73e8] rounded-[24px] p-16 text-center relative overflow-hidden shadow-sm">
+        <section className="py-24 bg-white border-t border-gray-100">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="bg-black rounded-[2rem] p-12 md:p-20 text-center relative overflow-hidden shadow-2xl">
                     <div className="relative z-10 max-w-2xl mx-auto">
-                        <h2 className="text-[36px] sm:text-[44px] font-normal text-white mb-4 leading-tight">
+                        <span className="text-[#00E599] font-black tracking-widest uppercase text-xs mb-6 block">
+                            Enterprise Security
+                        </span>
+                        <h2 className="text-4xl md:text-6xl font-extrabold text-white mb-6 leading-tight tracking-tighter">
                             Start securing data.<br />Before quantum hits.
                         </h2>
-                        <p className="text-[18px] text-white/90 mb-8 max-w-lg mx-auto leading-relaxed">
+                        <p className="text-lg text-gray-400 mb-10 max-w-lg mx-auto font-medium leading-relaxed">
                             NIST finalized the post-quantum standards in 2024. Enterprises that wait will face costly retrofits.
                             Get compliant now — free, in under 15 minutes.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <Link href="/signin">
-                                <Button
-                                    size="lg"
-                                    className="bg-white hover:bg-[#f8f9fa] text-[#1a73e8] rounded-[8px] px-8 h-[52px] text-[18px] font-medium shadow-none hover:shadow-lg transition-all"
-                                >
-                                    Get your API keys
-                                    <ArrowRight className="ml-2 w-4 h-4" />
-                                </Button>
+                            <Link href="/signin" className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#00E599] text-black rounded-full font-bold hover:bg-white hover:text-black transition-all hover:scale-105 active:scale-95 text-sm uppercase tracking-wider">
+                                Get your API keys <ArrowUpRight className="w-4 h-4" />
                             </Link>
                         </div>
-                        <p className="text-white/60 text-[14px] mt-6">
+                        <p className="text-gray-500 font-mono text-xs mt-8">
                             No credit card required. 100% free while in beta.
                         </p>
                     </div>
 
-                    {/* Subtle background gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#1a73e8] to-[#1557b0] opacity-50" />
-
-                    {/* Decorative blobs */}
-                    <div className="absolute -top-10 -right-10 w-72 h-72 bg-white/5 rounded-full" />
-                    <div className="absolute -bottom-20 -left-10 w-96 h-96 bg-white/5 rounded-full" />
+                    {/* Subtle background effects */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#00E599]/10 to-transparent opacity-50" />
+                    
+                    {/* Decorative abstract elements */}
+                    <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#00E599]/5 rounded-full blur-3xl pointer-events-none" />
+                    <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#00E599]/5 rounded-full blur-3xl pointer-events-none" />
                 </div>
             </div>
         </section>

@@ -8,7 +8,7 @@ export default function DashboardLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div className="min-h-screen bg-[#f8f9fa] font-sans text-[#202124]">
+        <div className="min-h-screen bg-white font-sans text-[black]">
             <DashboardHeader />
             <main className="w-full">
                 {children}
