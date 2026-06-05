@@ -9,7 +9,7 @@ export function CTA() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="bg-black rounded-[2rem] p-12 md:p-20 text-center relative overflow-hidden shadow-2xl">
                     <div className="relative z-10 max-w-2xl mx-auto">
-                        <span className="text-[#00E599] font-black tracking-widest uppercase text-xs mb-6 block">
+                        <span className="text-[#C4ED5F] font-black tracking-widest uppercase text-xs mb-6 block">
                             Enterprise Security
                         </span>
                         <h2 className="text-4xl md:text-6xl font-extrabold text-white mb-6 leading-tight tracking-tighter">
@@ -20,7 +20,7 @@ export function CTA() {
                             Get compliant now — free, in under 15 minutes.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <Link href="/signin" className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#00E599] text-black rounded-full font-bold hover:bg-white hover:text-black transition-all hover:scale-105 active:scale-95 text-sm uppercase tracking-wider">
+                            <Link href="/signin" className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#C4ED5F] text-black rounded-full font-bold hover:bg-white hover:text-black transition-all hover:scale-105 active:scale-95 text-sm uppercase tracking-wider">
                                 Get your API keys <ArrowUpRight className="w-4 h-4" />
                             </Link>
                         </div>
@@ -30,11 +30,11 @@ export function CTA() {
                     </div>
 
                     {/* Subtle background effects */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#00E599]/10 to-transparent opacity-50" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#C4ED5F]/10 to-transparent opacity-50" />
                     
                     {/* Decorative abstract elements */}
-                    <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#00E599]/5 rounded-full blur-3xl pointer-events-none" />
-                    <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#00E599]/5 rounded-full blur-3xl pointer-events-none" />
+                    <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#C4ED5F]/5 rounded-full blur-3xl pointer-events-none" />
+                    <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#C4ED5F]/5 rounded-full blur-3xl pointer-events-none" />
                 </div>
             </div>
         </section>

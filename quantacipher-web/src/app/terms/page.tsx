@@ -85,7 +85,7 @@ export default function TermsPage() {
                                 <section>
                                     <h2 className="text-[24px] font-medium text-[black] mb-4">8. Contact Information</h2>
                                     <p className="text-[16px] text-[#6b7280] leading-relaxed">
-                                        For legal inquiries regarding these Terms of Service, please contact us at: <a href="mailto:legal@quantacipher.com" className="text-[#00E599] hover:underline">legal@quantacipher.com</a>.
+                                        For legal inquiries regarding these Terms of Service, please contact us at: <a href="mailto:legal@quantacipher.com" className="text-[#C4ED5F] hover:underline">legal@quantacipher.com</a>.
                                     </p>
                                 </section>
                             </div>

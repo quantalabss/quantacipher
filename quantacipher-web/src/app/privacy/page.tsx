@@ -82,7 +82,7 @@ export default function PrivacyPage() {
                                         If you have any questions, concerns, or requests regarding this Privacy Policy, please contact us at:{" "}
                                         <br/><br/>
                                         <strong>QUANTALABS PRIVATE LIMITED</strong><br/>
-                                        Email: <a href="mailto:legal@quantacipher.com" className="text-[#00E599] hover:underline">legal@quantacipher.com</a>
+                                        Email: <a href="mailto:legal@quantacipher.com" className="text-[#C4ED5F] hover:underline">legal@quantacipher.com</a>
                                     </p>
                                 </section>
                             </div>

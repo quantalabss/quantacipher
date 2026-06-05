@@ -97,7 +97,7 @@ export function Footer() {
           <div className="flex flex-col sm:flex-row gap-3 shrink-0">
             <Link
               href="/signin"
-              className="inline-flex items-center gap-2 px-7 py-3.5 bg-black text-white font-bold rounded-xl hover:bg-[#00E599] hover:text-black transition-all text-sm uppercase tracking-wider"
+              className="inline-flex items-center gap-2 px-7 py-3.5 bg-black text-white font-bold rounded-xl hover:bg-[#C4ED5F] hover:text-black transition-all text-sm uppercase tracking-wider"
             >
               Get Free API Key <ArrowUpRight className="w-4 h-4" />
             </Link>
@@ -126,7 +126,7 @@ export function Footer() {
                 className="w-9 h-9 transition-transform group-hover:scale-110"
               />
               <span className="text-xl font-bold tracking-tighter">
-                QuantaCipher<span className="text-[#00E599]">.</span>
+                QuantaCipher<span className="text-[#C4ED5F]">.</span>
               </span>
             </Link>
             <p className="text-gray-500 text-sm leading-relaxed mb-6 max-w-xs">
@@ -141,7 +141,7 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={s.label}
-                  className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:border-[#00E599] hover:text-[#00E599] transition-all hover:scale-110"
+                  className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:border-[#C4ED5F] hover:text-[#C4ED5F] transition-all hover:scale-110"
                 >
                   {s.icon}
                 </a>
@@ -168,7 +168,7 @@ export function Footer() {
                         {link.label}
                       </Link>
                       {link.badge && (
-                        <span className={`text-[10px] font-black px-1.5 py-0.5 rounded-full leading-none bg-green-50 text-green-700 border border-green-100`}>
+                        <span className="text-[9px] font-black tracking-widest uppercase px-1.5 py-0.5 rounded-full border border-gray-200 text-gray-500 bg-gray-50/50">
                           {link.badge}
                         </span>
                       )}

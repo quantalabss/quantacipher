@@ -35,7 +35,7 @@ export function WhyChooseUs() {
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-12 mb-16">
           <div className="max-w-2xl animate-fade-in">
             <h2 className="text-4xl md:text-6xl font-extrabold text-black tracking-tighter mb-8 leading-tight">
-              Zero-trust encryption, <br className="hidden md:block" /><span className="text-[#00E599]">zero complexity.</span>
+              Zero-trust encryption, <br className="hidden md:block" /><span className="text-[#C4ED5F]">zero complexity.</span>
             </h2>
             <p className="text-lg md:text-xl text-gray-500 font-medium mb-10 leading-relaxed">
               Quantum computers are coming. NIST issued the final standards in 2024.
@@ -43,7 +43,7 @@ export function WhyChooseUs() {
             </p>
             <Link
               href="/documentation"
-              className="inline-flex items-center text-sm font-bold text-black border-b-[3px] border-[#00E599] pb-1 hover:text-[#00E599] transition-colors uppercase tracking-widest"
+              className="inline-flex items-center text-sm font-bold text-black border-b-[3px] border-[#C4ED5F] pb-1 hover:text-[#C4ED5F] transition-colors uppercase tracking-widest"
             >
               Read Documentation <ArrowRight className="w-5 h-5 ml-2" />
             </Link>
@@ -58,24 +58,24 @@ export function WhyChooseUs() {
               <Link
                 key={index}
                 href={step.href}
-                className="group relative bg-white border border-gray-100 rounded-[2rem] p-10 hover:border-[#00E599] transition-all shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_50px_rgba(0,229,153,0.1)] flex flex-col overflow-hidden"
+                className="group relative bg-white border border-gray-100 rounded-[2rem] p-10 hover:border-[#C4ED5F] transition-all shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_50px_rgba(0,229,153,0.1)] flex flex-col overflow-hidden"
               >
                 {/* Subtle gradient overlay on hover */}
-                <div className="absolute inset-0 bg-gradient-to-br from-white via-white to-[#00E599]/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="absolute inset-0 bg-gradient-to-br from-white via-white to-[#C4ED5F]/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 
                 <div className="relative z-10 flex items-center justify-between mb-8">
                   <div className="bg-white w-14 h-14 rounded-2xl flex items-center justify-center group-hover:bg-black transition-all duration-300">
-                    <Icon className="w-6 h-6 text-black group-hover:text-[#00E599] transition-colors" />
+                    <Icon className="w-6 h-6 text-black group-hover:text-[#C4ED5F] transition-colors" />
                   </div>
                   {step.badge && (
-                    <span className="text-[10px] font-black px-3 py-1 rounded-full bg-gray-100 text-gray-500 border border-gray-200 group-hover:bg-[#00E599]/10 group-hover:text-[#00E599] group-hover:border-[#00E599]/20 transition-colors">
+                    <span className="text-[10px] font-black px-3 py-1 rounded-full bg-gray-100 text-gray-500 border border-gray-200 group-hover:bg-[#C4ED5F]/10 group-hover:text-[#C4ED5F] group-hover:border-[#C4ED5F]/20 transition-colors">
                       {step.badge}
                     </span>
                   )}
                 </div>
                 <h3 className="relative z-10 font-extrabold text-black text-2xl mb-4 tracking-tight group-hover:text-black transition-colors">{step.title}</h3>
                 <p className="relative z-10 text-base text-gray-500 font-medium leading-relaxed flex-1 group-hover:text-gray-600 transition-colors">{step.desc}</p>
-                <div className="relative z-10 mt-8 flex items-center gap-2 text-xs font-bold text-[#00E599] opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
+                <div className="relative z-10 mt-8 flex items-center gap-2 text-xs font-bold text-[#C4ED5F] opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
                   View Technical Docs <ArrowUpRight className="w-4 h-4" />
                 </div>
               </Link>

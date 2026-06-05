@@ -30,7 +30,7 @@ export default function SecurityPage() {
                                 <div className="bg-white p-6 rounded-[12px] border border-[#e5e7eb]">
                                     <div className="flex items-center gap-3 mb-4">
                                         <div className="bg-[#f3f4f6] p-2 rounded-full">
-                                            <Shield className="w-6 h-6 text-[#00E599]" />
+                                            <Shield className="w-6 h-6 text-[#C4ED5F]" />
                                         </div>
                                         <h3 className="text-[20px] font-medium text-[black] m-0">NIST Kyber-1024 Implementation</h3>
                                     </div>
@@ -43,7 +43,7 @@ export default function SecurityPage() {
                                 <div className="bg-white p-6 rounded-[12px] border border-[#e5e7eb]">
                                     <div className="flex items-center gap-3 mb-4">
                                         <div className="bg-[#f3f4f6] p-2 rounded-full">
-                                            <Server className="w-6 h-6 text-[#00E599]" />
+                                            <Server className="w-6 h-6 text-[#C4ED5F]" />
                                         </div>
                                         <h3 className="text-[20px] font-medium text-[black] m-0">Zero-Trust WASM Engine</h3>
                                     </div>
@@ -56,7 +56,7 @@ export default function SecurityPage() {
                                 <div className="bg-white p-6 rounded-[12px] border border-[#e5e7eb]">
                                     <div className="flex items-center gap-3 mb-4">
                                         <div className="bg-[#f3f4f6] p-2 rounded-full">
-                                            <Lock className="w-6 h-6 text-[#00E599]" />
+                                            <Lock className="w-6 h-6 text-[#C4ED5F]" />
                                         </div>
                                         <h3 className="text-[20px] font-medium text-[black] m-0">Hybrid Cryptography Fallback</h3>
                                     </div>
@@ -96,7 +96,7 @@ export default function SecurityPage() {
                                         <FileWarning className="w-6 h-6 text-[#6b7280]" /> Vulnerability Disclosure
                                     </h2>
                                     <p className="text-[16px] text-[#6b7280] leading-relaxed">
-                                        We welcome responsible disclosure of vulnerabilities from the security research community. If you believe you have found a security vulnerability in QuantaCipher's systems, APIs, or SDKs, please immediately report it to <a href="mailto:security@quantacipher.com" className="text-[#00E599] hover:underline">security@quantacipher.com</a>. We offer a bug bounty program for critical cryptographic or infrastructure findings.
+                                        We welcome responsible disclosure of vulnerabilities from the security research community. If you believe you have found a security vulnerability in QuantaCipher's systems, APIs, or SDKs, please immediately report it to <a href="mailto:security@quantacipher.com" className="text-[#C4ED5F] hover:underline">security@quantacipher.com</a>. We offer a bug bounty program for critical cryptographic or infrastructure findings.
                                     </p>
                                 </section>
                             </div>

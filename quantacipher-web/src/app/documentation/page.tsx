@@ -63,8 +63,8 @@ export default function DocumentationPage() {
                                 A frictionless wrapper around the WASM engine. It handles hybrid encryption (Kyber-1024 derived shared secrets applied to AES-256-GCM) seamlessly.
                             </p>
                             <div className="bg-[#111] p-4 rounded-xl shadow-inner font-mono text-[10px] text-gray-300 mb-4">
-                                <span className="text-[#00E599]">const</span> keys = sdk.generateKeypair();<br/>
-                                <span className="text-[#00E599]">await</span> sdk.secureData(data, keys.publicKey);
+                                <span className="text-[#C4ED5F]">const</span> keys = sdk.generateKeypair();<br/>
+                                <span className="text-[#C4ED5F]">await</span> sdk.secureData(data, keys.publicKey);
                             </div>
                             <p className="text-xs text-gray-500">Plaintext never leaves your server. The SDK only transmits impenetrable ciphertext over the network.</p>
                         </div>
@@ -77,16 +77,16 @@ export default function DocumentationPage() {
                             </p>
                             <ul className="space-y-3 text-xs text-gray-500 font-medium">
                                 <li className="flex items-start gap-2">
-                                    <span className="text-[#00E599] mt-0.5">✓</span> Validates <code className="text-black font-bold">QZ_VAULT_V1</code> format
+                                    <span className="text-[#C4ED5F] mt-0.5">✓</span> Validates <code className="text-black font-bold">QZ_VAULT_V1</code> format
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="text-[#00E599] mt-0.5">✓</span> Rejects plaintext submissions instantly
+                                    <span className="text-[#C4ED5F] mt-0.5">✓</span> Rejects plaintext submissions instantly
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="text-[#00E599] mt-0.5">✓</span> Issues verifiable cryptographic receipts
+                                    <span className="text-[#C4ED5F] mt-0.5">✓</span> Issues verifiable cryptographic receipts
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="text-[#00E599] mt-0.5">✓</span> Anchors ciphertext to immutable ledger
+                                    <span className="text-[#C4ED5F] mt-0.5">✓</span> Anchors ciphertext to immutable ledger
                                 </li>
                             </ul>
                         </div>
@@ -149,7 +149,7 @@ export default function DocumentationPage() {
                                             <div className="text-[#c586c0]">import <span className="text-[#9cdcfe]">{"{ QuantaCipher }"}</span> from <span className="text-[#ce9178]">'quantacipher-sdk'</span>;</div>
                                             <br/>
                                             <div className="text-gray-500">// Initialize the client</div>
-                                            <div className="text-[#569cd6]">const <span className="text-[#9cdcfe]">qz</span> = new <span className="text-[#00E599]">QuantaCipher</span>{"({"}</div>
+                                            <div className="text-[#569cd6]">const <span className="text-[#9cdcfe]">qz</span> = new <span className="text-[#C4ED5F]">QuantaCipher</span>{"({"}</div>
                                             <div>  <span className="text-[#9cdcfe]">apiKey</span>: <span className="text-[#ce9178]">'qz_live_...'</span></div>
                                             <div>{"});"}</div>
                                             <br/>
@@ -182,13 +182,13 @@ export default function DocumentationPage() {
 
                                 <div className="group block border border-gray-100 rounded-2xl p-7 bg-white hover:border-black hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300">
                                     <div className="bg-white border border-gray-100 rounded-xl p-4 flex items-center gap-3 mb-8">
-                                        <span className="bg-[#00E599] text-black px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-widest">POST</span>
+                                        <span className="bg-[#C4ED5F] text-black px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-widest">POST</span>
                                         <code className="text-sm font-mono text-black font-bold">https://api.quantacipher.com/v1/ingest</code>
                                     </div>
                                     
                                     <h3 className="text-xs font-black tracking-[0.15em] text-gray-400 uppercase mb-4">Request Example</h3>
                                     <div className="bg-[#111] rounded-xl p-5 font-mono text-xs leading-relaxed overflow-x-auto text-gray-300 mb-8 shadow-inner">
-                                        <div><span className="text-[#00E599]">curl</span> -X POST https://api.quantacipher.com/v1/ingest \</div>
+                                        <div><span className="text-[#C4ED5F]">curl</span> -X POST https://api.quantacipher.com/v1/ingest \</div>
                                         <div>  -H <span className="text-[#ce9178]">'Content-Type: application/json'</span> \</div>
                                         <div>  -H <span className="text-[#ce9178]">'x-api-key: qz_live_xxxx'</span> \</div>
                                         <div>  -d <span className="text-[#ce9178]">'{"{ \"ciphertext\": \"QZ_TRUE_PQC_KEM:...\" }"}</span>'</div>
@@ -219,7 +219,7 @@ export default function DocumentationPage() {
                         <div className="absolute inset-0 bg-gradient-to-r from-black to-transparent opacity-80 pointer-events-none"></div>
                         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
                             <div>
-                                <span className="text-[#00E599] font-bold tracking-widest uppercase text-xs mb-4 block">
+                                <span className="text-[#C4ED5F] font-bold tracking-widest uppercase text-xs mb-4 block">
                                     Developer Portal
                                 </span>
                                 <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-4 tracking-tight">
@@ -229,7 +229,7 @@ export default function DocumentationPage() {
                                     Sign in to the dashboard to generate your API keys and track your cryptographic usage limits.
                                 </p>
                             </div>
-                            <div className="shrink-0 flex items-center px-8 py-4 border border-gray-700 text-white font-bold rounded-xl group-hover:bg-[#00E599] group-hover:text-black group-hover:border-[#00E599] transition-all duration-300">
+                            <div className="shrink-0 flex items-center px-8 py-4 border border-gray-700 text-white font-bold rounded-xl group-hover:bg-[#C4ED5F] group-hover:text-black group-hover:border-[#C4ED5F] transition-all duration-300">
                                 Go to Dashboard
                                 <ExternalLink className="w-4 h-4 ml-2" />
                             </div>

@@ -19,7 +19,7 @@ export default function NotFound() {
             
             <div className="flex flex-col sm:flex-row gap-4">
                 <Link href="/">
-                    <Button className="w-full sm:w-auto bg-[#00E599] hover:bg-[black] text-white rounded-lg h-[44px] px-6 font-medium shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all">
+                    <Button className="w-full sm:w-auto bg-[#C4ED5F] hover:bg-[black] text-white rounded-lg h-[44px] px-6 font-medium shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all">
                         <ArrowLeft className="w-4 h-4 mr-2" />
                         Back to Homepage
                     </Button>

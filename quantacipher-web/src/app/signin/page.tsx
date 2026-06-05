@@ -4,11 +4,11 @@ import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { Activity, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 
-export default function SignInPage() {
+function SignInContent() {
     const { status } = useSession();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -84,7 +84,7 @@ export default function SignInPage() {
                             repeat: Infinity,
                             ease: "easeInOut"
                         }}
-                        className="absolute bottom-[35%] right-[35%] w-[90px] h-[90px] rounded-full bg-[#00E599] opacity-20"
+                        className="absolute bottom-[35%] right-[35%] w-[90px] h-[90px] rounded-full bg-[#C4ED5F] opacity-20"
                     />
                     <motion.div
                         animate={{
@@ -107,7 +107,7 @@ export default function SignInPage() {
                         className="w-9 h-9 transition-transform group-hover:scale-110"
                     />
                     <span className="text-2xl font-bold tracking-tighter text-black">
-                        QuantaCipher<span className="text-[#00E599]">.</span>
+                        QuantaCipher<span className="text-[#C4ED5F]">.</span>
                     </span>
                 </Link>
 
@@ -118,7 +118,7 @@ export default function SignInPage() {
                         transition={{ duration: 0.6 }}
                     >
                         <h2 className="text-[56px] sm:text-[64px] leading-[1.1] font-normal text-[black] mb-6">
-                            Start securing <br /> <span className="text-[#00E599]">in seconds.</span>
+                            Start securing <br /> <span className="text-[#C4ED5F]">in seconds.</span>
                         </h2>
                         <p className="text-[20px] text-[#6b7280] leading-relaxed mb-8">
                             Secure your critical APIs with Kyber-1024 encryption and manage your Zero-Trust infrastructure.
@@ -143,7 +143,7 @@ export default function SignInPage() {
                                     className="w-9 h-9 transition-transform group-hover:scale-110"
                                 />
                                 <span className="text-3xl font-bold tracking-tighter text-black">
-                                    QuantaCipher<span className="text-[#00E599]">.</span>
+                                    QuantaCipher<span className="text-[#C4ED5F]">.</span>
                                 </span>
                             </Link>
                         </div>
@@ -157,7 +157,7 @@ export default function SignInPage() {
                         <Button
                             onClick={() => signIn("google", { callbackUrl })}
                             variant="outline"
-                            className="w-full h-[48px] rounded-xl bg-white border border-[#e5e7eb] hover:bg-white hover:border-[#00E599] hover:shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all flex items-center justify-center gap-3"
+                            className="w-full h-[48px] rounded-xl bg-white border border-[#e5e7eb] hover:bg-white hover:border-[#C4ED5F] hover:shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all flex items-center justify-center gap-3"
                         >
                             {/* Google G Logo */}
                             <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -193,9 +193,9 @@ export default function SignInPage() {
                     <div className="text-center px-4">
                         <p className="text-[12px] text-[#6b7280] leading-relaxed">
                             By signing in, you agree to our{" "}
-                            <Link href="/terms" className="text-[#00E599] hover:underline">Terms of Service</Link>
+                            <Link href="/terms" className="text-[#C4ED5F] hover:underline">Terms of Service</Link>
                             {" "}and{" "}
-                            <Link href="/privacy" className="text-[#00E599] hover:underline">Privacy Policy</Link>.
+                            <Link href="/privacy" className="text-[#C4ED5F] hover:underline">Privacy Policy</Link>.
                         </p>
                     </div>
 
@@ -207,5 +207,13 @@ export default function SignInPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function SignInPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-white" />}>
+            <SignInContent />
+        </Suspense>
     );
 }

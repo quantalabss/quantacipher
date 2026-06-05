@@ -45,7 +45,7 @@ async function processData(patientRecord) {
           
           {/* Text Content */}
           <div className="w-full lg:w-5/12 animate-fade-in">
-            <span className="text-[#00E599] font-bold tracking-widest uppercase text-xs mb-6 block">
+            <span className="text-[#C4ED5F] font-bold tracking-widest uppercase text-xs mb-6 block">
               Architecture
             </span>
             <h2 className="text-4xl md:text-5xl font-extrabold text-black tracking-tighter mb-6 leading-tight">
@@ -56,10 +56,10 @@ async function processData(patientRecord) {
               Whether you need permanently sealed audit logs or secure end-to-end encryption with user-held keys, QuantaCipher has you covered. Everything runs locally in your environment.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/signin" className="bg-black text-white px-8 py-4 rounded-full font-medium hover:bg-[#00E599] hover:text-black transition-all hover:scale-105 active:scale-95 text-center">
+              <Link href="/signin" className="bg-black text-white px-8 py-4 rounded-full font-medium hover:bg-[#C4ED5F] hover:text-black transition-all hover:scale-105 active:scale-95 text-center">
                 Get API Key
               </Link>
-              <Link href="/documentation" className="bg-white text-black border border-gray-200 px-8 py-4 rounded-full font-medium hover:border-[#00E599] hover:text-[#00E599] transition-all text-center">
+              <Link href="/documentation" className="bg-white text-black border border-gray-200 px-8 py-4 rounded-full font-medium hover:border-[#C4ED5F] hover:text-[#C4ED5F] transition-all text-center">
                 Read the Docs
               </Link>
             </div>
@@ -79,8 +79,8 @@ async function processData(patientRecord) {
                   <Terminal className="w-3 h-3 mr-2" />
                   index.ts
                 </div>
-                <button onClick={copyToClipboard} className="text-gray-500 hover:text-[#00E599] transition-colors">
-                  {copied ? <CheckCircle2 className="w-4 h-4 text-[#00E599]" /> : <Copy className="w-4 h-4" />}
+                <button onClick={copyToClipboard} className="text-gray-500 hover:text-[#C4ED5F] transition-colors">
+                  {copied ? <CheckCircle2 className="w-4 h-4 text-[#C4ED5F]" /> : <Copy className="w-4 h-4" />}
                 </button>
               </div>
               

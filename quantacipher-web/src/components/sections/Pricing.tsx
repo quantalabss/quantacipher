@@ -76,7 +76,7 @@ export function Pricing() {
         <section id="pricing" className="py-24 bg-white border-y border-gray-100">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-16 animate-fade-in">
-                    <p className="text-xs font-black uppercase tracking-widest text-[#00E599] mb-4">
+                    <p className="text-xs font-black uppercase tracking-widest text-[#C4ED5F] mb-4">
                         Pricing
                     </p>
                     <h2 className="text-4xl md:text-5xl font-extrabold text-black tracking-tighter mb-4 leading-tight">
@@ -97,7 +97,7 @@ export function Pricing() {
                             `}
                         >
                             {plan.popular && (
-                                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#00E599] text-black text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg whitespace-nowrap">
+                                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#C4ED5F] text-black text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg whitespace-nowrap">
                                     <Star className="w-3 h-3 fill-black" />
                                     Most Popular
                                 </div>
@@ -117,8 +117,8 @@ export function Pricing() {
                                 href="/dashboard/billing"
                                 className={`w-full mb-8 flex items-center justify-center gap-2 px-6 py-4 rounded-xl text-sm font-bold transition-all uppercase tracking-wider ${
                                     plan.popular
-                                        ? 'bg-[#00E599] text-black hover:bg-white hover:text-black'
-                                        : 'bg-black text-white hover:bg-[#00E599] hover:text-black'
+                                        ? 'bg-[#C4ED5F] text-black hover:bg-white hover:text-black'
+                                        : 'bg-black text-white hover:bg-[#C4ED5F] hover:text-black'
                                 }`}
                             >
                                 {plan.buttonText} <ArrowRight className="w-4 h-4" />
@@ -127,7 +127,7 @@ export function Pricing() {
                             <div className={`space-y-4 flex-grow w-full pt-6 border-t ${plan.popular ? 'border-gray-800' : 'border-gray-100'}`}>
                                 {plan.features.map((feature, i) => (
                                     <div key={i} className="flex items-start gap-3">
-                                        <Check className={`w-4 h-4 mt-0.5 flex-shrink-0 ${plan.popular ? 'text-[#00E599]' : 'text-gray-400'}`} />
+                                        <Check className={`w-4 h-4 mt-0.5 flex-shrink-0 ${plan.popular ? 'text-[#C4ED5F]' : 'text-gray-400'}`} />
                                         <span className={`text-sm font-medium ${plan.popular ? 'text-gray-300' : 'text-gray-600'}`}>{feature}</span>
                                     </div>
                                 ))}

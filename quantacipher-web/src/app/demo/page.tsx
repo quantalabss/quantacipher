@@ -44,7 +44,7 @@ export default function DemoPage() {
 
             <main className="flex-grow pt-32 pb-24 px-4 sm:px-6 lg:px-8 max-w-[1440px] mx-auto w-full">
                 <div className="mb-12 text-center max-w-3xl mx-auto">
-                    <div className="inline-flex items-center gap-2 bg-[#f3f4f6] text-[#00E599] px-3 py-1 rounded-full text-[13px] font-medium mb-6">
+                    <div className="inline-flex items-center gap-2 bg-[#f3f4f6] text-[#C4ED5F] px-3 py-1 rounded-full text-[13px] font-medium mb-6">
                         <Activity className="w-4 h-4" />
                         Live Demo
                     </div>
@@ -76,7 +76,7 @@ export default function DemoPage() {
                             <Button
                                 onClick={handleEncrypt}
                                 disabled={isEncrypting || !plaintext}
-                                className="bg-[#00E599] hover:bg-[black] text-white px-8 h-[44px] rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.03)] font-medium transition-all w-full sm:w-auto"
+                                className="bg-[#C4ED5F] hover:bg-[black] text-white px-8 h-[44px] rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.03)] font-medium transition-all w-full sm:w-auto"
                             >
                                 {isEncrypting ? (
                                     <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Encrypting...</>
@@ -105,7 +105,7 @@ export default function DemoPage() {
                         <div className="flex-grow p-6 overflow-y-auto font-mono text-[13px] text-[#d4d4d4] leading-relaxed break-all whitespace-pre-wrap">
                             {isEncrypting ? (
                                 <div className="h-full flex flex-col items-center justify-center text-[#9aa0a6]">
-                                    <Loader2 className="w-8 h-8 animate-spin mb-4 text-[#00E599]" />
+                                    <Loader2 className="w-8 h-8 animate-spin mb-4 text-[#C4ED5F]" />
                                     <p>Generating lattice-based keys...</p>
                                 </div>
                             ) : result ? (

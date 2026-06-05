@@ -19,7 +19,7 @@ export function TrustedBy() {
           {logos.map((logo, index) => {
             const Icon = logo.icon;
             return (
-              <div key={index} className="flex items-center space-x-2 text-gray-600 hover:text-[#00E599] hover:grayscale-0 hover:opacity-100 transition-all cursor-default scale-90 sm:scale-100">
+              <div key={index} className="flex items-center space-x-2 text-gray-600 hover:text-[#C4ED5F] hover:grayscale-0 hover:opacity-100 transition-all cursor-default scale-90 sm:scale-100">
                 <Icon className="w-5 h-5 md:w-6 md:h-6" />
                 <span className="font-bold text-xs md:text-sm tracking-tight">{logo.name}</span>
               </div>

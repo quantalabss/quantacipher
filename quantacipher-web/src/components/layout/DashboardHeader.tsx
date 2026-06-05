@@ -23,7 +23,7 @@ export function DashboardHeader() {
                         className="w-7 h-7 transition-transform group-hover:scale-110"
                     />
                     <span className="text-lg font-bold tracking-tighter text-black">
-                        QuantaCipher<span className="text-[#00E599]">.</span>
+                        QuantaCipher<span className="text-[#C4ED5F]">.</span>
                     </span>
                 </Link>
                 <nav className="hidden md:flex gap-6">
@@ -38,13 +38,13 @@ export function DashboardHeader() {
                     <input
                         type="text"
                         placeholder="Search..."
-                        className="bg-white border-none rounded-xl h-[40px] pl-10 pr-4 text-sm w-[240px] focus:ring-2 focus:ring-[#00E599] focus:bg-white transition-all outline-none placeholder:text-gray-400 font-medium"
+                        className="bg-white border-none rounded-xl h-[40px] pl-10 pr-4 text-sm w-[240px] focus:ring-2 focus:ring-[#C4ED5F] focus:bg-white transition-all outline-none placeholder:text-gray-400 font-medium"
                     />
                 </div>
                 {session?.user?.image ? (
                     <img src={session.user.image} alt="Profile" className="w-8 h-8 rounded-full border border-gray-200" />
                 ) : (
-                    <div className="w-8 h-8 rounded-full bg-[#00E599] text-black flex items-center justify-center text-sm font-black">
+                    <div className="w-8 h-8 rounded-full bg-[#C4ED5F] text-black flex items-center justify-center text-sm font-black">
                         {session?.user?.name?.[0] || "U"}
                     </div>
                 )}

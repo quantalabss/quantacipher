@@ -52,7 +52,7 @@ function formatDate(date: string | undefined) {
 
 function getPlanColor(plan: string) {
     switch (plan) {
-        case 'startup': return 'text-[#00E599]';
+        case 'startup': return 'text-[#C4ED5F]';
         case 'business': return 'text-[#34a853]';
         case 'enterprise': return 'text-[#9334e6]';
         default: return 'text-[#6b7280]';
@@ -171,7 +171,7 @@ export default function DashboardPage() {
     if (status === "loading" || (status === "authenticated" && loading)) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-white">
-                <Loader2 className="w-8 h-8 animate-spin text-[#00E599]" />
+                <Loader2 className="w-8 h-8 animate-spin text-[#C4ED5F]" />
             </div>
         );
     }
@@ -208,7 +208,7 @@ export default function DashboardPage() {
                     <h3 className="text-[12px] font-medium text-[#6b7280] uppercase tracking-wider mb-2">Active Keys</h3>
                     <div className="flex items-center gap-3">
                         <div className="text-[32px] font-normal text-[black]">{analytics.activeKeys}</div>
-                        <Key className="w-6 h-6 text-[#00E599] opacity-50" />
+                        <Key className="w-6 h-6 text-[#C4ED5F] opacity-50" />
                     </div>
                 </div>
                 <div className="bg-white p-6 rounded-xl border border-[#e5e7eb] shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
@@ -249,7 +249,7 @@ export default function DashboardPage() {
                     </Link>
                     <Button
                         onClick={() => setIsAddModalOpen(true)}
-                        className="w-full sm:w-auto bg-[#00E599] hover:bg-[black] text-white rounded-[4px] px-6 h-[40px] text-[14px] font-medium shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex items-center justify-center gap-2"
+                        className="w-full sm:w-auto bg-[#C4ED5F] hover:bg-[black] text-white rounded-[4px] px-6 h-[40px] text-[14px] font-medium shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex items-center justify-center gap-2"
                     >
                         <Plus className="w-5 h-5" /> Generate Key
                     </Button>
@@ -291,7 +291,7 @@ export default function DashboardPage() {
                                         </div>
                                         <button
                                             onClick={() => copyToClipboard(apiKey.key)}
-                                            className="text-[#00E599] hover:text-[black] p-1.5 bg-[#f1f3f4] hover:bg-[#f3f4f6] rounded-[4px] transition-colors"
+                                            className="text-[#C4ED5F] hover:text-[black] p-1.5 bg-[#f1f3f4] hover:bg-[#f3f4f6] rounded-[4px] transition-colors"
                                             title="Copy full API Key"
                                         >
                                             {copiedKey === apiKey.key ? <CheckCircle2 className="w-4 h-4 text-[#137333]" /> : <Copy className="w-4 h-4" />}
@@ -391,9 +391,9 @@ export default function DashboardPage() {
                                             value={newKeyName}
                                             onChange={(e) => setNewKeyName(e.target.value)}
                                             placeholder=" "
-                                            className="peer w-full h-[56px] px-4 pt-4 rounded-[4px] bg-[#f1f3f4] border-b-[1px] border-[#6b7280] focus:border-[#00E599] focus:border-b-[2px] outline-none transition-all placeholder-transparent"
+                                            className="peer w-full h-[56px] px-4 pt-4 rounded-[4px] bg-[#f1f3f4] border-b-[1px] border-[#6b7280] focus:border-[#C4ED5F] focus:border-b-[2px] outline-none transition-all placeholder-transparent"
                                         />
-                                        <label className="absolute left-4 top-4 text-[#6b7280] text-[16px] transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-[16px] peer-focus:top-2 peer-focus:text-[12px] peer-focus:text-[#00E599] peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-[12px] pointer-events-none">
+                                        <label className="absolute left-4 top-4 text-[#6b7280] text-[16px] transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-[16px] peer-focus:top-2 peer-focus:text-[12px] peer-focus:text-[#C4ED5F] peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-[12px] pointer-events-none">
                                             Key Name (e.g. Production App)
                                         </label>
                                     </div>
@@ -406,16 +406,16 @@ export default function DashboardPage() {
                                     )}
 
                                     <div className="bg-[#f3f4f6] p-4 rounded-xl flex items-start gap-3">
-                                        <Shield className="w-5 h-5 text-[#00E599] shrink-0 mt-0.5" />
-                                        <p className="text-[13px] text-[#00E599] font-medium leading-relaxed">
+                                        <Shield className="w-5 h-5 text-[#C4ED5F] shrink-0 mt-0.5" />
+                                        <p className="text-[13px] text-[#C4ED5F] font-medium leading-relaxed">
                                             This key allows the QuantaCipher SDK to send Kyber-1024 encrypted payloads to the Gateway. Keep it secret — treat it like a password.
                                         </p>
                                     </div>
                                 </div>
 
                                 <div className="pt-2 flex justify-end gap-2">
-                                    <Button type="button" variant="ghost" onClick={() => { setIsAddModalOpen(false); setSubmitError(null); }} className="text-[#00E599] hover:bg-[#f1f3f4] font-medium rounded-full px-6">Cancel</Button>
-                                    <Button type="submit" disabled={submitting} className="bg-[#00E599] hover:bg-[black] text-white rounded-full px-6 font-medium shadow-none hover:shadow-md transition-all disabled:opacity-50">
+                                    <Button type="button" variant="ghost" onClick={() => { setIsAddModalOpen(false); setSubmitError(null); }} className="text-[#C4ED5F] hover:bg-[#f1f3f4] font-medium rounded-full px-6">Cancel</Button>
+                                    <Button type="submit" disabled={submitting} className="bg-[#C4ED5F] hover:bg-[black] text-white rounded-full px-6 font-medium shadow-none hover:shadow-md transition-all disabled:opacity-50">
                                         {submitting ? <><Loader2 className="w-4 h-4 animate-spin mr-2" />Generating...</> : "Generate Key"}
                                     </Button>
                                 </div>
@@ -442,7 +442,7 @@ export default function DashboardPage() {
                                 Any applications using this key will immediately lose access to the QuantaCipher Gateway. This action cannot be undone.
                             </p>
                             <div className="flex justify-end gap-2">
-                                <Button variant="ghost" onClick={() => setDeleteModalOpen(false)} className="text-[#00E599] hover:bg-[#f1f3f4] font-medium rounded-full px-6">Cancel</Button>
+                                <Button variant="ghost" onClick={() => setDeleteModalOpen(false)} className="text-[#C4ED5F] hover:bg-[#f1f3f4] font-medium rounded-full px-6">Cancel</Button>
                                 <Button onClick={handleDelete} disabled={deleting} className="bg-[#d93025] hover:bg-[#c5221f] text-white rounded-full px-6 font-medium shadow-none hover:shadow-md transition-all">
                                     {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : "Revoke Key"}
                                 </Button>

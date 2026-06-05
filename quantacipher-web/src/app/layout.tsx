@@ -56,6 +56,28 @@ export default function RootLayout({
         <Providers>
           {children}
         </Providers>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              "name": "QuantaCipher",
+              "applicationCategory": "SecurityApplication",
+              "operatingSystem": "All",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD"
+              },
+              "publisher": {
+                "@type": "Organization",
+                "name": "QuantaLabs Private Limited",
+                "url": "https://www.quantalabs.cc"
+              }
+            })
+          }}
+        />
       </body>
     </html>
   );

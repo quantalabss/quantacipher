@@ -26,7 +26,7 @@ export function Hero() {
             >
               Post Quantum <br />
               Security. <br />
-              <span className="text-[#00E599] whitespace-nowrap">In two lines of code.</span>
+              <span className="text-[#C4ED5F] whitespace-nowrap">In two lines of code.</span>
             </h1>
 
             <p className="text-lg md:text-[1.125rem] text-gray-600 mb-6 leading-relaxed font-medium max-w-xl">
@@ -45,7 +45,7 @@ export function Hero() {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
               <Link
                 href="/signin"
-                className="group flex items-center justify-center space-x-2 px-7 py-3.5 bg-black text-white rounded-full font-medium hover:bg-[#00E599] hover:text-black transition-all hover:scale-105 active:scale-95 w-full sm:w-auto shadow-xl"
+                className="group flex items-center justify-center space-x-2 px-7 py-3.5 bg-black text-white rounded-full font-medium hover:bg-[#C4ED5F] hover:text-black transition-all hover:scale-105 active:scale-95 w-full sm:w-auto shadow-xl"
               >
                 <span>Get Free API Key</span>
                 <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
@@ -84,16 +84,16 @@ export function Hero() {
                         </div>
                         <div className="mb-5">
                             <span className="text-gray-500">// </span>
-                            <span className="text-[#00E599]">npm</span>
+                            <span className="text-[#C4ED5F]">npm</span>
                             <span className="text-gray-300"> install quantacipher-sdk</span>
                         </div>
 
                         <div className="mb-6">
-                            <span className="text-[#00E599]">import</span>
+                            <span className="text-[#C4ED5F]">import</span>
                             <span className="text-gray-300"> {"{ "}</span>
                             <span className="text-white">QuantaCipher</span>
                             <span className="text-gray-300">{" }"} </span>
-                            <span className="text-[#00E599]">from</span>
+                            <span className="text-[#C4ED5F]">from</span>
                             <span className="text-gray-400"> 'quantacipher-sdk'</span>
                             <span className="text-gray-300">;</span>
                         </div>
@@ -102,9 +102,9 @@ export function Hero() {
                             <span className="text-gray-500">// Encrypt patient record locally — Kyber-1024</span>
                         </div>
                         <div>
-                            <span className="text-[#00E599]">const</span>
+                            <span className="text-[#C4ED5F]">const</span>
                             <span className="text-white"> qz</span>
-                            <span className="text-[#00E599]"> = new</span>
+                            <span className="text-[#C4ED5F]"> = new</span>
                             <span className="text-white"> QuantaCipher</span>
                             <span className="text-gray-300">{"({ "}</span>
                         </div>
@@ -118,10 +118,10 @@ export function Hero() {
                         </div>
                         
                         <div className="mt-6">
-                            <span className="text-[#00E599]">await</span>
+                            <span className="text-[#C4ED5F]">await</span>
                             <span className="text-white"> qz</span>
                             <span className="text-gray-300">.</span>
-                            <span className="text-[#00E599]">secureData</span>
+                            <span className="text-[#C4ED5F]">secureData</span>
                             <span className="text-gray-300">(</span>
                             <span className="text-white">patientRecord</span>
                             <span className="text-gray-300">, {"{ "}</span>
@@ -134,10 +134,10 @@ export function Hero() {
                         {/* Terminal output line */}
                         <div className="mt-5">
                             <span className="text-gray-500">// </span>
-                            <span className="text-[#00E599]">✓</span>
+                            <span className="text-[#C4ED5F]">✓</span>
                             <span className="text-white"> receipt</span>
                             <span className="text-gray-300">.</span>
-                            <span className="text-[#00E599]">status</span>
+                            <span className="text-[#C4ED5F]">status</span>
                             <span className="text-gray-300"> = </span>
                             <span className="text-gray-400">'issued'</span>
                             <span className="text-gray-300">  </span>
@@ -148,7 +148,7 @@ export function Hero() {
                 </div>
 
                 {/* Subtle background glow effect behind IDE */}
-                <div className="absolute -inset-1 bg-[#00E599] rounded-3xl blur-[40px] opacity-[0.08] -z-10 pointer-events-none" />
+                <div className="absolute -inset-1 bg-[#C4ED5F] rounded-3xl blur-[40px] opacity-[0.08] -z-10 pointer-events-none" />
             </div>
           </div>
         </div>

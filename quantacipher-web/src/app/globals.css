@@ -3,9 +3,9 @@
 @theme {
   --color-background: #ffffff;
   --color-foreground: #000000;
-  --color-primary: #00E599;
+  --color-primary: #C4ED5F;
   --color-primary-foreground: #000000;
-  --color-secondary: #00E599;
+  --color-secondary: #C4ED5F;
   --color-muted: #525252;
   --color-card: #f5f5f5;
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
@@ -14,8 +14,8 @@
 :root {
   --background: #ffffff;
   --foreground: #000000;
-  --primary: #00E599;
-  --secondary: #00E599;
+  --primary: #C4ED5F;
+  --secondary: #C4ED5F;
 }
 
 html {

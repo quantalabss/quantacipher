@@ -70,7 +70,7 @@ export default function BillingPage() {
     if (status === "loading") {
         return (
             <div className="min-h-screen flex items-center justify-center">
-                <Loader2 className="w-8 h-8 animate-spin text-[#00E599]" />
+                <Loader2 className="w-8 h-8 animate-spin text-[#C4ED5F]" />
             </div>
         );
     }
@@ -112,7 +112,7 @@ export default function BillingPage() {
                     name: "QuantaCipher User",
                 },
                 theme: {
-                    color: "#00E599",
+                    color: "#C4ED5F",
                 },
             };
 
@@ -136,7 +136,7 @@ export default function BillingPage() {
                     <h3 className="text-[12px] font-medium text-[#6b7280] uppercase tracking-wider mb-2">Current Plan</h3>
                     <div className="flex items-center gap-3 mb-2">
                         <span className="text-[28px] font-normal text-[black]">Developer</span>
-                        <span className="bg-[#f3f4f6] text-[#00E599] text-[12px] px-2 py-1 rounded-[4px] font-medium uppercase tracking-wide">Free</span>
+                        <span className="bg-[#f3f4f6] text-[#C4ED5F] text-[12px] px-2 py-1 rounded-[4px] font-medium uppercase tracking-wide">Free</span>
                     </div>
                     <p className="text-[14px] text-[#6b7280]">
                         You are currently on the free Developer tier. Upgrade for higher limits and SLAs.
@@ -152,7 +152,7 @@ export default function BillingPage() {
                         <span className="font-medium text-[black]">{analytics.activeKeys} / 1</span>
                     </div>
                     <div className="w-full bg-[#e5e7eb] h-1.5 rounded-full mt-2 overflow-hidden">
-                        <div className="bg-[#00E599] h-full rounded-full transition-all duration-500" style={{ width: `${Math.min(100, (analytics.totalCalls / 10000) * 100)}%` }}></div>
+                        <div className="bg-[#C4ED5F] h-full rounded-full transition-all duration-500" style={{ width: `${Math.min(100, (analytics.totalCalls / 10000) * 100)}%` }}></div>
                     </div>
                 </div>
             </div>
@@ -162,9 +162,9 @@ export default function BillingPage() {
                 <h2 className="text-[20px] font-normal text-[black] mb-4">Upgrade Options</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {plans.map((plan) => (
-                        <div key={plan.id} className={`bg-white p-6 rounded-xl border flex flex-col h-full ${plan.id === 'professional' ? 'border-2 border-[#00E599] shadow-md relative' : 'border-[#e5e7eb] shadow-[0_4px_20px_rgba(0,0,0,0.03)]'}`}>
+                        <div key={plan.id} className={`bg-white p-6 rounded-xl border flex flex-col h-full ${plan.id === 'professional' ? 'border-2 border-[#C4ED5F] shadow-md relative' : 'border-[#e5e7eb] shadow-[0_4px_20px_rgba(0,0,0,0.03)]'}`}>
                             {plan.id === 'professional' && (
-                                <div className="absolute top-0 right-0 bg-[#00E599] text-white text-[11px] font-bold tracking-wide uppercase px-4 py-1 rounded-bl-[8px]">
+                                <div className="absolute top-0 right-0 bg-[#C4ED5F] text-white text-[11px] font-bold tracking-wide uppercase px-4 py-1 rounded-bl-[8px]">
                                     Recommended
                                 </div>
                             )}
@@ -180,7 +180,7 @@ export default function BillingPage() {
                             <Button
                                 onClick={() => handleUpgrade(plan.id)}
                                 disabled={loading !== null}
-                                className={`w-full mb-8 h-[48px] rounded-xl text-[15px] font-medium transition-all ${plan.id === 'professional' ? 'bg-[#00E599] hover:bg-[black] text-white shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-md' : 'bg-white border border-[#e5e7eb] text-[#1f2937] hover:bg-white'}`}
+                                className={`w-full mb-8 h-[48px] rounded-xl text-[15px] font-medium transition-all ${plan.id === 'professional' ? 'bg-[#C4ED5F] hover:bg-[black] text-white shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-md' : 'bg-white border border-[#e5e7eb] text-[#1f2937] hover:bg-white'}`}
                                 variant={plan.id === 'professional' ? 'default' : 'outline'}
                             >
                                 {loading === plan.id ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <CreditCard className="w-4 h-4 mr-2" />}
@@ -190,7 +190,7 @@ export default function BillingPage() {
                             <div className="space-y-4 flex-grow pt-6 border-t border-[#f1f3f4]">
                                 {plan.features.map((feature, i) => (
                                     <div key={i} className="flex items-start gap-3 text-[14px]">
-                                        <CheckCircle2 className="w-4 h-4 text-[#00E599] flex-shrink-0 mt-0.5" />
+                                        <CheckCircle2 className="w-4 h-4 text-[#C4ED5F] flex-shrink-0 mt-0.5" />
                                         <span className="text-[#1f2937] font-medium">{feature}</span>
                                     </div>
                                 ))}
