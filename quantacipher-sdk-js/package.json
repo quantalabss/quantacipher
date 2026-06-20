@@ -1,7 +1,14 @@
 {
   "name": "quantacipher-sdk",
   "version": "1.0.1",
-  "description": "",
+  "description": "Zero-trust PQC (Kyber) encryption SDK for JS/TS",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xaexaex/quantacipher.git"
+  },
+  "files": [
+    "dist/src"
+  ],
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "scripts": {
@@ -16,7 +23,7 @@
     "encryption"
   ],
   "author": "QuantaLabs",
-  "license": "ISC",
+  "license": "MIT",
   "type": "commonjs",
   "dependencies": {
     "axios": "^1.16.1",

@@ -2,6 +2,10 @@
 name = "quantacipher-core"
 version = "0.1.0"
 edition = "2021"
+description = "Zero-trust PQC (Kyber) encryption core"
+repository = "https://github.com/xaexaex/quantacipher"
+license = "MIT"
+authors = ["QuantaLabs"]
 
 [dependencies]
 base64 = "0.21"

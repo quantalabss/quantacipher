@@ -2,6 +2,10 @@
 name = "quantacipher-python"
 version = "0.1.0"
 edition = "2021"
+description = "Zero-trust PQC (Kyber) encryption Python bindings"
+repository = "https://github.com/xaexaex/quantacipher"
+license = "MIT"
+authors = ["QuantaLabs"]
 
 [lib]
 name = "quantacipher"

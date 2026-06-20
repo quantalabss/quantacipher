@@ -26,8 +26,7 @@ async function test() {
     if (plaintext === message) {
         console.log("\n[✔] JS/TS SDK Test Passed successfully!");
     } else {
-        console.error("\n[✖] Decryption failed!");
-        process.exit(1);
+        throw new Error("\n[✖] Decryption failed!");
     }
 }
 
