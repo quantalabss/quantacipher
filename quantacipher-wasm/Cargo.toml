@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 description = "Zero-trust PQC (Kyber) encryption WASM bindings"
 repository = "https://github.com/xaexaex/quantacipher"
-license = "UNLICENSED"
+license = "MIT"
 authors = ["QuantaLabs"]
 
 [lib]
