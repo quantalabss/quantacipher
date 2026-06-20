@@ -23,7 +23,7 @@
     "encryption"
   ],
   "author": "QuantaLabs",
-  "license": "MIT",
+  "license": "UNLICENSED",
   "type": "commonjs",
   "dependencies": {
     "axios": "^1.16.1",

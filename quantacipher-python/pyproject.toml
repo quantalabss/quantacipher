@@ -7,6 +7,6 @@ name = "quantacipher"
 version = "0.1.0"
 description = "Zero-trust PQC encryption library for Python"
 authors = [{ name = "QuantaLabs" }]
-license = { text = "MIT" }
+license = { text = "UNLICENSED" }
 urls = { Repository = "https://github.com/xaexaex/quantacipher" }
 dependencies = []
