@@ -1,0 +1,12 @@
+[package]
+name = "quantacipher-core"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+base64 = "0.21"
+aes-gcm = "0.10"
+pqc_kyber = "0.7.1"
+rand = "0.8"
+# Note: getrandom is removed from here so we don't force 'js' feature on Python builds.
+# It will use the OS default rng (or WASM rng if provided in the wrapper).

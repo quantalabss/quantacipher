@@ -119,9 +119,7 @@ export class QuantaCipher {
         this.requireDualMode('encryptSecure');
         console.log(`[QuantaCipher SDK] SECURE MODE: Encrypting with user public key (Kyber-1024)...`);
         const mod = require('quantacipher-wasm');
-        const result = mod.secure_encrypt(plaintext, publicKeyB64);
-        if (result.startsWith('QZ_ERROR:')) throw new Error(result);
-        return result;
+        return mod.secure_encrypt(plaintext, publicKeyB64);
     }
 
     /**
@@ -133,9 +131,7 @@ export class QuantaCipher {
         this.requireDualMode('decryptSecure');
         console.log(`[QuantaCipher SDK] SECURE MODE: Decrypting locally with user private key...`);
         const mod = require('quantacipher-wasm');
-        const result = mod.secure_decrypt(ciphertextPayload, privateKeyB64);
-        if (result.startsWith('QZ_ERROR:')) throw new Error(result);
-        return result;
+        return mod.secure_decrypt(ciphertextPayload, privateKeyB64);
     }
 
     /**

@@ -1,241 +1,27 @@
 /* @ts-self-types="./quantacipher_wasm.d.ts" */
 
-class Kex {
-    static __wrap(ptr) {
-        const obj = Object.create(Kex.prototype);
-        obj.__wbg_ptr = ptr;
-        KexFinalization.register(obj, obj.__wbg_ptr, obj);
-        return obj;
-    }
-    __destroy_into_raw() {
-        const ptr = this.__wbg_ptr;
-        this.__wbg_ptr = 0;
-        KexFinalization.unregister(this);
-        return ptr;
-    }
-    free() {
-        const ptr = this.__destroy_into_raw();
-        wasm.__wbg_kex_free(ptr, 0);
-    }
-    /**
-     * @returns {Uint8Array}
-     */
-    get ciphertext() {
-        const ret = wasm.kex_ciphertext(this.__wbg_ptr);
-        var v1 = getArrayU8FromWasm0(ret[0], ret[1]).slice();
-        wasm.__wbindgen_free(ret[0], ret[1] * 1, 1);
-        return v1;
-    }
-    /**
-     * @param {Uint8Array} public_key
-     */
-    constructor(public_key) {
-        const ptr0 = passArray8ToWasm0(public_key, wasm.__wbindgen_malloc);
-        const len0 = WASM_VECTOR_LEN;
-        const ret = wasm.kex_new(ptr0, len0);
-        this.__wbg_ptr = ret;
-        KexFinalization.register(this, this.__wbg_ptr, this);
-        return this;
-    }
-    /**
-     * @param {Uint8Array} ciphertext
-     */
-    set ciphertext(ciphertext) {
-        const ptr0 = passArray8ToWasm0(ciphertext, wasm.__wbindgen_malloc);
-        const len0 = WASM_VECTOR_LEN;
-        wasm.kex_set_ciphertext(this.__wbg_ptr, ptr0, len0);
-    }
-    /**
-     * @param {Uint8Array} sharedSecret
-     */
-    set sharedSecret(sharedSecret) {
-        const ptr0 = passArray8ToWasm0(sharedSecret, wasm.__wbindgen_malloc);
-        const len0 = WASM_VECTOR_LEN;
-        wasm.kex_set_sharedSecret(this.__wbg_ptr, ptr0, len0);
-    }
-    /**
-     * @returns {Uint8Array}
-     */
-    get sharedSecret() {
-        const ret = wasm.kex_sharedSecret(this.__wbg_ptr);
-        var v1 = getArrayU8FromWasm0(ret[0], ret[1]).slice();
-        wasm.__wbindgen_free(ret[0], ret[1] * 1, 1);
-        return v1;
-    }
-}
-if (Symbol.dispose) Kex.prototype[Symbol.dispose] = Kex.prototype.free;
-exports.Kex = Kex;
-
-class Keys {
-    static __wrap(ptr) {
-        const obj = Object.create(Keys.prototype);
-        obj.__wbg_ptr = ptr;
-        KeysFinalization.register(obj, obj.__wbg_ptr, obj);
-        return obj;
-    }
-    __destroy_into_raw() {
-        const ptr = this.__wbg_ptr;
-        this.__wbg_ptr = 0;
-        KeysFinalization.unregister(this);
-        return ptr;
-    }
-    free() {
-        const ptr = this.__destroy_into_raw();
-        wasm.__wbg_keys_free(ptr, 0);
-    }
-    constructor() {
-        const ret = wasm.keys_new();
-        if (ret[2]) {
-            throw takeFromExternrefTable0(ret[1]);
-        }
-        this.__wbg_ptr = ret[0];
-        KeysFinalization.register(this, this.__wbg_ptr, this);
-        return this;
-    }
-    /**
-     * @returns {Uint8Array}
-     */
-    get pubkey() {
-        const ret = wasm.keys_pubkey(this.__wbg_ptr);
-        var v1 = getArrayU8FromWasm0(ret[0], ret[1]).slice();
-        wasm.__wbindgen_free(ret[0], ret[1] * 1, 1);
-        return v1;
-    }
-    /**
-     * @returns {Uint8Array}
-     */
-    get secret() {
-        const ret = wasm.keys_secret(this.__wbg_ptr);
-        var v1 = getArrayU8FromWasm0(ret[0], ret[1]).slice();
-        wasm.__wbindgen_free(ret[0], ret[1] * 1, 1);
-        return v1;
-    }
-}
-if (Symbol.dispose) Keys.prototype[Symbol.dispose] = Keys.prototype.free;
-exports.Keys = Keys;
-
-class Params {
-    __destroy_into_raw() {
-        const ptr = this.__wbg_ptr;
-        this.__wbg_ptr = 0;
-        ParamsFinalization.unregister(this);
-        return ptr;
-    }
-    free() {
-        const ptr = this.__destroy_into_raw();
-        wasm.__wbg_params_free(ptr, 0);
-    }
-    /**
-     * @returns {number}
-     */
-    get ciphertextBytes() {
-        const ret = wasm.__wbg_get_params_ciphertextBytes(this.__wbg_ptr);
-        return ret >>> 0;
-    }
-    /**
-     * @returns {number}
-     */
-    get publicKeyBytes() {
-        const ret = wasm.__wbg_get_params_publicKeyBytes(this.__wbg_ptr);
-        return ret >>> 0;
-    }
-    /**
-     * @returns {number}
-     */
-    get secretKeyBytes() {
-        const ret = wasm.__wbg_get_params_secretKeyBytes(this.__wbg_ptr);
-        return ret >>> 0;
-    }
-    /**
-     * @returns {number}
-     */
-    get sharedSecretBytes() {
-        const ret = wasm.__wbg_get_params_sharedSecretBytes(this.__wbg_ptr);
-        return ret >>> 0;
-    }
-    /**
-     * @returns {number}
-     */
-    static get ciphertextBytes() {
-        const ret = wasm.params_ciphertextBytes();
-        return ret >>> 0;
-    }
-    /**
-     * @returns {number}
-     */
-    static get publicKeyBytes() {
-        const ret = wasm.params_publicKeyBytes();
-        return ret >>> 0;
-    }
-    /**
-     * @returns {number}
-     */
-    static get secretKeyBytes() {
-        const ret = wasm.params_secretKeyBytes();
-        return ret >>> 0;
-    }
-    /**
-     * @returns {number}
-     */
-    static get sharedSecretBytes() {
-        const ret = wasm.params_sharedSecretBytes();
-        return ret >>> 0;
-    }
-}
-if (Symbol.dispose) Params.prototype[Symbol.dispose] = Params.prototype.free;
-exports.Params = Params;
-
-/**
- * @param {Uint8Array} ct
- * @param {Uint8Array} sk
- * @returns {Uint8Array}
- */
-function decapsulate(ct, sk) {
-    const ptr0 = passArray8ToWasm0(ct, wasm.__wbindgen_malloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ptr1 = passArray8ToWasm0(sk, wasm.__wbindgen_malloc);
-    const len1 = WASM_VECTOR_LEN;
-    const ret = wasm.decapsulate(ptr0, len0, ptr1, len1);
-    if (ret[3]) {
-        throw takeFromExternrefTable0(ret[2]);
-    }
-    var v3 = getArrayU8FromWasm0(ret[0], ret[1]).slice();
-    wasm.__wbindgen_free(ret[0], ret[1] * 1, 1);
-    return v3;
-}
-exports.decapsulate = decapsulate;
-
-/**
- * @param {Uint8Array} pk
- * @returns {Kex}
- */
-function encapsulate(pk) {
-    const ptr0 = passArray8ToWasm0(pk, wasm.__wbindgen_malloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.encapsulate(ptr0, len0);
-    if (ret[2]) {
-        throw takeFromExternrefTable0(ret[1]);
-    }
-    return Kex.__wrap(ret[0]);
-}
-exports.encapsulate = encapsulate;
-
 /**
  * @param {string} plaintext
  * @returns {string}
  */
 function encrypt_local_kyber(plaintext) {
-    let deferred2_0;
-    let deferred2_1;
+    let deferred3_0;
+    let deferred3_1;
     try {
         const ptr0 = passStringToWasm0(plaintext, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len0 = WASM_VECTOR_LEN;
         const ret = wasm.encrypt_local_kyber(ptr0, len0);
-        deferred2_0 = ret[0];
-        deferred2_1 = ret[1];
-        return getStringFromWasm0(ret[0], ret[1]);
+        var ptr2 = ret[0];
+        var len2 = ret[1];
+        if (ret[3]) {
+            ptr2 = 0; len2 = 0;
+            throw takeFromExternrefTable0(ret[2]);
+        }
+        deferred3_0 = ptr2;
+        deferred3_1 = len2;
+        return getStringFromWasm0(ptr2, len2);
     } finally {
-        wasm.__wbindgen_free(deferred2_0, deferred2_1, 1);
+        wasm.__wbindgen_free(deferred3_0, deferred3_1, 1);
     }
 }
 exports.encrypt_local_kyber = encrypt_local_kyber;
@@ -244,15 +30,21 @@ exports.encrypt_local_kyber = encrypt_local_kyber;
  * @returns {string}
  */
 function generate_keypair() {
-    let deferred1_0;
-    let deferred1_1;
+    let deferred2_0;
+    let deferred2_1;
     try {
         const ret = wasm.generate_keypair();
-        deferred1_0 = ret[0];
-        deferred1_1 = ret[1];
-        return getStringFromWasm0(ret[0], ret[1]);
+        var ptr1 = ret[0];
+        var len1 = ret[1];
+        if (ret[3]) {
+            ptr1 = 0; len1 = 0;
+            throw takeFromExternrefTable0(ret[2]);
+        }
+        deferred2_0 = ptr1;
+        deferred2_1 = len1;
+        return getStringFromWasm0(ptr1, len1);
     } finally {
-        wasm.__wbindgen_free(deferred1_0, deferred1_1, 1);
+        wasm.__wbindgen_free(deferred2_0, deferred2_1, 1);
     }
 }
 exports.generate_keypair = generate_keypair;
@@ -275,36 +67,30 @@ function get_wasm_version() {
 exports.get_wasm_version = get_wasm_version;
 
 /**
- * @returns {Keys}
- */
-function keypair() {
-    const ret = wasm.keypair();
-    if (ret[2]) {
-        throw takeFromExternrefTable0(ret[1]);
-    }
-    return Keys.__wrap(ret[0]);
-}
-exports.keypair = keypair;
-
-/**
  * @param {string} ciphertext_payload
  * @param {string} private_key_b64
  * @returns {string}
  */
 function secure_decrypt(ciphertext_payload, private_key_b64) {
-    let deferred3_0;
-    let deferred3_1;
+    let deferred4_0;
+    let deferred4_1;
     try {
         const ptr0 = passStringToWasm0(ciphertext_payload, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len0 = WASM_VECTOR_LEN;
         const ptr1 = passStringToWasm0(private_key_b64, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len1 = WASM_VECTOR_LEN;
         const ret = wasm.secure_decrypt(ptr0, len0, ptr1, len1);
-        deferred3_0 = ret[0];
-        deferred3_1 = ret[1];
-        return getStringFromWasm0(ret[0], ret[1]);
+        var ptr3 = ret[0];
+        var len3 = ret[1];
+        if (ret[3]) {
+            ptr3 = 0; len3 = 0;
+            throw takeFromExternrefTable0(ret[2]);
+        }
+        deferred4_0 = ptr3;
+        deferred4_1 = len3;
+        return getStringFromWasm0(ptr3, len3);
     } finally {
-        wasm.__wbindgen_free(deferred3_0, deferred3_1, 1);
+        wasm.__wbindgen_free(deferred4_0, deferred4_1, 1);
     }
 }
 exports.secure_decrypt = secure_decrypt;
@@ -315,19 +101,25 @@ exports.secure_decrypt = secure_decrypt;
  * @returns {string}
  */
 function secure_encrypt(plaintext, public_key_b64) {
-    let deferred3_0;
-    let deferred3_1;
+    let deferred4_0;
+    let deferred4_1;
     try {
         const ptr0 = passStringToWasm0(plaintext, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len0 = WASM_VECTOR_LEN;
         const ptr1 = passStringToWasm0(public_key_b64, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len1 = WASM_VECTOR_LEN;
         const ret = wasm.secure_encrypt(ptr0, len0, ptr1, len1);
-        deferred3_0 = ret[0];
-        deferred3_1 = ret[1];
-        return getStringFromWasm0(ret[0], ret[1]);
+        var ptr3 = ret[0];
+        var len3 = ret[1];
+        if (ret[3]) {
+            ptr3 = 0; len3 = 0;
+            throw takeFromExternrefTable0(ret[2]);
+        }
+        deferred4_0 = ptr3;
+        deferred4_1 = len3;
+        return getStringFromWasm0(ptr3, len3);
     } finally {
-        wasm.__wbindgen_free(deferred3_0, deferred3_1, 1);
+        wasm.__wbindgen_free(deferred4_0, deferred4_1, 1);
     }
 }
 exports.secure_encrypt = secure_encrypt;
@@ -337,34 +129,29 @@ exports.secure_encrypt = secure_encrypt;
  * @returns {string}
  */
 function vault_encrypt(plaintext) {
-    let deferred2_0;
-    let deferred2_1;
+    let deferred3_0;
+    let deferred3_1;
     try {
         const ptr0 = passStringToWasm0(plaintext, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len0 = WASM_VECTOR_LEN;
         const ret = wasm.vault_encrypt(ptr0, len0);
-        deferred2_0 = ret[0];
-        deferred2_1 = ret[1];
-        return getStringFromWasm0(ret[0], ret[1]);
+        var ptr2 = ret[0];
+        var len2 = ret[1];
+        if (ret[3]) {
+            ptr2 = 0; len2 = 0;
+            throw takeFromExternrefTable0(ret[2]);
+        }
+        deferred3_0 = ptr2;
+        deferred3_1 = len2;
+        return getStringFromWasm0(ptr2, len2);
     } finally {
-        wasm.__wbindgen_free(deferred2_0, deferred2_1, 1);
+        wasm.__wbindgen_free(deferred3_0, deferred3_1, 1);
     }
 }
 exports.vault_encrypt = vault_encrypt;
 function __wbg_get_imports() {
     const import0 = {
         __proto__: null,
-        __wbg_Error_bce6d499ff0a4aff: function(arg0, arg1) {
-            const ret = Error(getStringFromWasm0(arg0, arg1));
-            return ret;
-        },
-        __wbg___wbindgen_debug_string_edece8177ad01481: function(arg0, arg1) {
-            const ret = debugString(arg1);
-            const ptr1 = passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-            const len1 = WASM_VECTOR_LEN;
-            getDataViewMemory0().setInt32(arg0 + 4 * 1, len1, true);
-            getDataViewMemory0().setInt32(arg0 + 4 * 0, ptr1, true);
-        },
         __wbg___wbindgen_is_function_5cd60d5cf78b4eef: function(arg0) {
             const ret = typeof(arg0) === 'function';
             return ret;
@@ -476,98 +263,15 @@ function __wbg_get_imports() {
     };
 }
 
-const KexFinalization = (typeof FinalizationRegistry === 'undefined')
-    ? { register: () => {}, unregister: () => {} }
-    : new FinalizationRegistry(ptr => wasm.__wbg_kex_free(ptr, 1));
-const KeysFinalization = (typeof FinalizationRegistry === 'undefined')
-    ? { register: () => {}, unregister: () => {} }
-    : new FinalizationRegistry(ptr => wasm.__wbg_keys_free(ptr, 1));
-const ParamsFinalization = (typeof FinalizationRegistry === 'undefined')
-    ? { register: () => {}, unregister: () => {} }
-    : new FinalizationRegistry(ptr => wasm.__wbg_params_free(ptr, 1));
-
 function addToExternrefTable0(obj) {
     const idx = wasm.__externref_table_alloc();
     wasm.__wbindgen_externrefs.set(idx, obj);
     return idx;
 }
 
-function debugString(val) {
-    // primitive types
-    const type = typeof val;
-    if (type == 'number' || type == 'boolean' || val == null) {
-        return  `${val}`;
-    }
-    if (type == 'string') {
-        return `"${val}"`;
-    }
-    if (type == 'symbol') {
-        const description = val.description;
-        if (description == null) {
-            return 'Symbol';
-        } else {
-            return `Symbol(${description})`;
-        }
-    }
-    if (type == 'function') {
-        const name = val.name;
-        if (typeof name == 'string' && name.length > 0) {
-            return `Function(${name})`;
-        } else {
-            return 'Function';
-        }
-    }
-    // objects
-    if (Array.isArray(val)) {
-        const length = val.length;
-        let debug = '[';
-        if (length > 0) {
-            debug += debugString(val[0]);
-        }
-        for(let i = 1; i < length; i++) {
-            debug += ', ' + debugString(val[i]);
-        }
-        debug += ']';
-        return debug;
-    }
-    // Test for built-in
-    const builtInMatches = /\[object ([^\]]+)\]/.exec(toString.call(val));
-    let className;
-    if (builtInMatches && builtInMatches.length > 1) {
-        className = builtInMatches[1];
-    } else {
-        // Failed to match the standard '[object ClassName]'
-        return toString.call(val);
-    }
-    if (className == 'Object') {
-        // we're a user defined class or Object
-        // JSON.stringify avoids problems with cycles, and is generally much
-        // easier than looping through ownProperties of `val`.
-        try {
-            return 'Object(' + JSON.stringify(val) + ')';
-        } catch (_) {
-            return 'Object';
-        }
-    }
-    // errors
-    if (val instanceof Error) {
-        return `${val.name}: ${val.message}\n${val.stack}`;
-    }
-    // TODO we could test for more things here, like `Set`s and `Map`s.
-    return className;
-}
-
 function getArrayU8FromWasm0(ptr, len) {
     ptr = ptr >>> 0;
     return getUint8ArrayMemory0().subarray(ptr / 1, ptr / 1 + len);
-}
-
-let cachedDataViewMemory0 = null;
-function getDataViewMemory0() {
-    if (cachedDataViewMemory0 === null || cachedDataViewMemory0.buffer.detached === true || (cachedDataViewMemory0.buffer.detached === undefined && cachedDataViewMemory0.buffer !== wasm.memory.buffer)) {
-        cachedDataViewMemory0 = new DataView(wasm.memory.buffer);
-    }
-    return cachedDataViewMemory0;
 }
 
 function getStringFromWasm0(ptr, len) {
@@ -593,13 +297,6 @@ function handleError(f, args) {
 
 function isLikeNone(x) {
     return x === undefined || x === null;
-}
-
-function passArray8ToWasm0(arg, malloc) {
-    const ptr = malloc(arg.length * 1, 1) >>> 0;
-    getUint8ArrayMemory0().set(arg, ptr / 1);
-    WASM_VECTOR_LEN = arg.length;
-    return ptr;
 }
 
 function passStringToWasm0(arg, malloc, realloc) {
