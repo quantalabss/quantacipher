@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Key, Activity, CreditCard, LogOut, X } from "lucide-react";
+import { Key, Activity, CreditCard, LogOut, X, BookOpen } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
 
 const navItems = [
     { name: "API Keys", href: "/dashboard", icon: Key },
     { name: "Usage", href: "/dashboard/usage", icon: Activity },
     { name: "Billing", href: "/dashboard/billing", icon: CreditCard },
+    { name: "Documentation", href: "https://quantachain.gitbook.io/quantacipher", icon: BookOpen },
 ];
 
 interface DashboardSidebarProps {
@@ -81,6 +82,8 @@ export function DashboardSidebar({ isOpen, setIsOpen }: DashboardSidebarProps) {
                                 key={item.name}
                                 href={item.href}
                                 onClick={() => setIsOpen(false)}
+                                target={item.href.startsWith('http') ? "_blank" : undefined}
+                                rel={item.href.startsWith('http') ? "noopener noreferrer" : undefined}
                                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-[14px] font-medium transition-all ${
                                     isActive
                                         ? "bg-white/10 text-white"

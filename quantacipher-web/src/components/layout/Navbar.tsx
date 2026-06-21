@@ -17,7 +17,7 @@ const navGroups = [
   {
     name: "Resources",
     links: [
-      { label: "Documentation", href: "/documentation", desc: "Integration guides and API reference" },
+      { label: "Documentation", href: "https://quantachain.gitbook.io/quantacipher", desc: "Integration guides and API reference" },
       { label: "NPM Package", href: "https://www.npmjs.com/package/quanta-sdk", desc: "Install the Node/Browser SDK" },
       { label: "Python PIP", href: "#", desc: "Install the Python bindings" },
     ],
@@ -106,6 +106,8 @@ export function Navbar() {
                           <Link
                             key={link.label}
                             href={link.href}
+                            target={link.href.startsWith('http') ? "_blank" : undefined}
+                            rel={link.href.startsWith('http') ? "noopener noreferrer" : undefined}
                             className="block p-3 rounded-xl hover:bg-[#1a1a1a] transition-colors group/link"
                             onClick={() => setActiveDropdown(null)}
                           >
@@ -165,6 +167,8 @@ export function Navbar() {
                     <Link
                       key={link.label}
                       href={link.href}
+                      target={link.href.startsWith('http') ? "_blank" : undefined}
+                      rel={link.href.startsWith('http') ? "noopener noreferrer" : undefined}
                       className="block px-2 py-3 text-base font-semibold text-gray-300 hover:text-white hover:bg-[#111] rounded-xl transition-all"
                       onClick={() => setIsOpen(false)}
                     >
