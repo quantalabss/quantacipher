@@ -81,29 +81,29 @@ const footerColumns = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-gray-100 bg-white text-black">
+    <footer className="border-t border-white/[0.02] bg-transparent text-white">
 
       {/* ── PRE-FOOTER CTA STRIP ────────────────────────────────── */}
-      <div className="border-b border-gray-100">
+      <div className="border-b border-white/[0.02]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 flex flex-col md:flex-row items-center justify-between gap-8">
           <div>
             <p className="text-xs font-black uppercase tracking-widest text-gray-400 mb-2">
               Enterprise Post-Quantum Encryption
             </p>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-black tracking-tight">
+            <h2 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight">
               Ready to secure your data stack?
             </h2>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 shrink-0">
             <Link
               href="/signin"
-              className="inline-flex items-center gap-2 px-7 py-3.5 bg-black text-white font-bold rounded-xl hover:bg-[#C4ED5F] hover:text-black transition-all text-sm uppercase tracking-wider"
+              className="inline-flex items-center gap-2 px-7 py-3.5 bg-white text-black font-bold rounded-xl hover:bg-[#C4ED5F] transition-all text-sm uppercase tracking-wider"
             >
               Get Free API Key <ArrowUpRight className="w-4 h-4" />
             </Link>
             <Link
               href="/documentation"
-              className="inline-flex items-center gap-2 px-7 py-3.5 border border-gray-200 text-black font-bold rounded-xl hover:border-black transition-all text-sm uppercase tracking-wider"
+              className="inline-flex items-center gap-2 px-7 py-3.5 border border-[#333] text-white font-bold rounded-xl hover:border-gray-500 transition-all text-sm uppercase tracking-wider"
             >
               Read Docs
             </Link>
@@ -141,7 +141,7 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={s.label}
-                  className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:border-[#C4ED5F] hover:text-[#C4ED5F] transition-all hover:scale-110"
+                  className="w-9 h-9 rounded-full border border-[#333] flex items-center justify-center text-gray-400 hover:border-[#C4ED5F] hover:text-[#C4ED5F] transition-all hover:scale-110"
                 >
                   {s.icon}
                 </a>
@@ -153,7 +153,7 @@ export function Footer() {
           <div className="lg:col-span-9 grid grid-cols-2 md:grid-cols-4 gap-10">
             {footerColumns.map((col) => (
               <div key={col.heading}>
-                <h4 className="font-black text-xs uppercase tracking-widest text-gray-900 mb-5">
+                <h4 className="font-black text-xs uppercase tracking-widest text-white mb-5">
                   {col.heading}
                 </h4>
                 <ul className="space-y-3">
@@ -163,12 +163,12 @@ export function Footer() {
                         href={link.href}
                         target={(link as { external?: boolean }).external ? "_blank" : undefined}
                         rel={(link as { external?: boolean }).external ? "noopener noreferrer" : undefined}
-                        className="text-sm text-gray-500 hover:text-black transition-colors font-medium"
+                        className="text-sm text-gray-400 hover:text-white transition-colors font-medium"
                       >
                         {link.label}
                       </Link>
                       {link.badge && (
-                        <span className="text-[9px] font-black tracking-widest uppercase px-1.5 py-0.5 rounded-full border border-gray-200 text-gray-500 bg-gray-50/50">
+                        <span className="text-[9px] font-black tracking-widest uppercase px-1.5 py-0.5 rounded-full border border-[#333] text-gray-400 bg-[#111]">
                           {link.badge}
                         </span>
                       )}
@@ -183,16 +183,16 @@ export function Footer() {
       </div>
 
       {/* ── BOTTOM BAR ──────────────────────────────────────────── */}
-      <div className="border-t border-gray-100">
+      <div className="border-t border-white/[0.02]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="font-mono text-[10px] text-gray-400">
             © {new Date().getFullYear()} QuantaLabs Private Limited. All rights reserved.
           </p>
-          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-gray-400">
-            <Link href="/privacy" className="hover:text-black transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-black transition-colors">Terms of Service</Link>
-            <Link href="/support" className="hover:text-black transition-colors">Contact</Link>
-            <a href="mailto:contact@quantalabs.cc" className="hover:text-black transition-colors">
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-gray-500">
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+            <Link href="/support" className="hover:text-white transition-colors">Contact</Link>
+            <a href="mailto:contact@quantalabs.cc" className="hover:text-white transition-colors">
               contact@quantalabs.cc
             </a>
           </div>

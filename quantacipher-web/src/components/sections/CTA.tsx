@@ -5,7 +5,7 @@ import { ArrowUpRight } from "lucide-react";
 
 export function CTA() {
     return (
-        <section className="py-24 bg-white border-t border-gray-100">
+        <section className="py-24 bg-transparent border-t border-white/[0.02]">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="bg-black rounded-[2rem] p-12 md:p-20 text-center relative overflow-hidden shadow-2xl">
                     <div className="relative z-10 max-w-2xl mx-auto">

@@ -22,117 +22,77 @@ function SignInContent() {
 
     return (
         <div className="min-h-screen grid lg:grid-cols-[60%_40%]">
-            {/* Left Side - Hero/Branding (60%) */}
-            <div className="hidden lg:flex flex-col justify-between bg-white p-12 relative overflow-hidden">
-                {/* Animated circles background - matching homepage */}
-                <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                    <motion.div
-                        animate={{
-                            y: [0, -20, 0],
-                            x: [0, 10, 0],
-                        }}
-                        transition={{
-                            duration: 8,
-                            repeat: Infinity,
-                            ease: "easeInOut"
-                        }}
-                        className="absolute top-[15%] right-[15%] w-[280px] h-[280px] rounded-full bg-[#ea4335] opacity-20"
-                    />
-                    <motion.div
-                        animate={{
-                            y: [0, 30, 0],
-                            x: [0, -15, 0],
-                        }}
-                        transition={{
-                            duration: 10,
-                            repeat: Infinity,
-                            ease: "easeInOut"
-                        }}
-                        className="absolute top-[40%] right-[25%] w-[180px] h-[180px] rounded-full bg-[#34a853] opacity-20"
-                    />
-                    <motion.div
-                        animate={{
-                            y: [0, -25, 0],
-                            x: [0, 20, 0],
-                        }}
-                        transition={{
-                            duration: 12,
-                            repeat: Infinity,
-                            ease: "easeInOut"
-                        }}
-                        className="absolute bottom-[20%] right-[10%] w-[220px] h-[220px] rounded-full bg-[#4285f4] opacity-20"
-                    />
-                    <motion.div
-                        animate={{
-                            y: [0, 15, 0],
-                            x: [0, -10, 0],
-                        }}
-                        transition={{
-                            duration: 9,
-                            repeat: Infinity,
-                            ease: "easeInOut"
-                        }}
-                        className="absolute top-[25%] right-[40%] w-[120px] h-[120px] rounded-full bg-[#fbbc05] opacity-20"
-                    />
-                    <motion.div
-                        animate={{
-                            y: [0, -18, 0],
-                            x: [0, 12, 0],
-                        }}
-                        transition={{
-                            duration: 11,
-                            repeat: Infinity,
-                            ease: "easeInOut"
-                        }}
-                        className="absolute bottom-[35%] right-[35%] w-[90px] h-[90px] rounded-full bg-[#C4ED5F] opacity-20"
-                    />
-                    <motion.div
-                        animate={{
-                            y: [0, 22, 0],
-                            x: [0, -8, 0],
-                        }}
-                        transition={{
-                            duration: 7,
-                            repeat: Infinity,
-                            ease: "easeInOut"
-                        }}
-                        className="absolute top-[10%] right-[5%] w-[60px] h-[60px] rounded-full bg-[#ea4335] opacity-25"
-                    />
-                </div>
+            {/* Left Side — Dark panel with node grid */}
+            <div className="hidden lg:flex flex-col justify-between bg-[#0a0a0a] p-12 relative overflow-hidden">
 
+                {/* Subtle dot grid pattern */}
+                <div
+                    className="absolute inset-0 opacity-[0.15] pointer-events-none"
+                    style={{
+                        backgroundImage: `radial-gradient(circle, #C4ED5F 1px, transparent 1px)`,
+                        backgroundSize: "32px 32px",
+                    }}
+                />
+
+                {/* Lime glow */}
+                <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[400px] bg-[#C4ED5F] opacity-[0.04] rounded-full blur-[100px] pointer-events-none" />
+
+                {/* Logo */}
                 <Link href="/" className="flex items-center gap-3 relative z-10 group w-fit">
                     <img
                         src="/logo/quanta-transparent-bg-logo.svg"
                         alt="QuantaCipher Logo"
                         className="w-9 h-9 transition-transform group-hover:scale-110"
                     />
-                    <span className="text-2xl font-bold tracking-tighter text-black">
+                    <span className="text-2xl font-bold tracking-tighter text-white">
                         QuantaCipher<span className="text-[#C4ED5F]">.</span>
                     </span>
                 </Link>
 
+                {/* Center content */}
                 <div className="max-w-xl relative z-10">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
                     >
-                        <h2 className="text-[56px] sm:text-[64px] leading-[1.1] font-normal text-[black] mb-6">
-                            Start securing <br /> <span className="text-[#C4ED5F]">in seconds.</span>
-                        </h2>
-                        <p className="text-[20px] text-[#6b7280] leading-relaxed mb-8">
-                            Secure your critical APIs with Kyber-1024 encryption and manage your Zero-Trust infrastructure.
+                        <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#C4ED5F] mb-6">
+                            Zero-Trust · Post-Quantum · Open Source Core
                         </p>
+                        <h2 className="text-[48px] sm:text-[56px] leading-[1.05] font-black tracking-tighter text-white mb-6">
+                            Start securing<br />
+                            <span className="text-[#C4ED5F]">in seconds.</span>
+                        </h2>
+                        <p className="text-[17px] text-gray-400 leading-relaxed mb-10 font-medium">
+                            Enterprise post-quantum encryption. NIST ML-KEM (Kyber-1024).
+                            Your plaintext never leaves your runtime.
+                        </p>
+
+                        {/* Trust signals */}
+                        <div className="flex flex-col gap-3">
+                            {[
+                                "NIST ML-KEM 2024 certified — Kyber-1024",
+                                "Zero plaintext data stored or transmitted",
+                                "Open source core — audit everything",
+                            ].map((item, i) => (
+                                <div key={i} className="flex items-center gap-3">
+                                    <div className="w-5 h-5 rounded-full bg-[#C4ED5F]/10 border border-[#C4ED5F]/30 flex items-center justify-center flex-shrink-0">
+                                        <span className="text-[#C4ED5F] text-[10px] font-black">✓</span>
+                                    </div>
+                                    <span className="text-[13px] font-semibold text-gray-400">{item}</span>
+                                </div>
+                            ))}
+                        </div>
                     </motion.div>
                 </div>
 
-                <div className="text-[14px] text-[#9aa0a6] relative z-10">
-                    &copy; {new Date().getFullYear()} QuantaCipher Inc.
+                <div className="text-[13px] text-gray-600 relative z-10 font-mono">
+                    &copy; {new Date().getFullYear()} QuantaLabs Private Limited.
                 </div>
             </div>
 
             {/* Right Side - Auth Form (40%) */}
-            <div className="flex flex-col items-center justify-center p-8 bg-white">
+            <div className="flex flex-col items-center justify-center p-8 bg-[#0a0a0a]">
                 <div className="w-full max-w-[380px] space-y-8">
                     <div className="text-center">
                         <div className="lg:hidden mb-8 flex justify-center">
@@ -142,13 +102,13 @@ function SignInContent() {
                                     alt="QuantaCipher Logo"
                                     className="w-9 h-9 transition-transform group-hover:scale-110"
                                 />
-                                <span className="text-3xl font-bold tracking-tighter text-black">
+                                <span className="text-3xl font-bold tracking-tighter text-white">
                                     QuantaCipher<span className="text-[#C4ED5F]">.</span>
                                 </span>
                             </Link>
                         </div>
-                        <h1 className="text-[28px] font-normal text-[black] mb-2">Welcome back</h1>
-                        <p className="text-[#6b7280] text-[14px]">
+                        <h1 className="text-[28px] font-normal text-white mb-2">Welcome back</h1>
+                        <p className="text-gray-400 text-[14px]">
                             Sign in to access your dashboard.
                         </p>
                     </div>
@@ -157,7 +117,7 @@ function SignInContent() {
                         <Button
                             onClick={() => signIn("google", { callbackUrl })}
                             variant="outline"
-                            className="w-full h-[48px] rounded-xl bg-white border border-[#e5e7eb] hover:bg-white hover:border-[#C4ED5F] hover:shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all flex items-center justify-center gap-3"
+                            className="w-full h-[48px] rounded-xl bg-[#0a0a0a] border border-[#222] hover:bg-[#111] hover:border-[#C4ED5F] transition-all flex items-center justify-center gap-3"
                         >
                             {/* Google G Logo */}
                             <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -166,21 +126,21 @@ function SignInContent() {
                                 <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.84z" fill="#FBBC05" />
                                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
                             </svg>
-                            <span className="text-[14px] font-medium text-[#1f2937]">Sign in with Google</span>
+                            <span className="text-[14px] font-medium text-white">Sign in with Google</span>
                         </Button>
 
                         <div className="relative">
                             <div className="absolute inset-0 flex items-center">
-                                <span className="w-full border-t border-[#e5e7eb]" />
+                                <span className="w-full border-t border-[#222]" />
                             </div>
                             <div className="relative flex justify-center text-xs uppercase">
-                                <span className="bg-white px-2 text-[#6b7280]">Or</span>
+                                <span className="bg-[#0a0a0a] px-2 text-gray-500">Or</span>
                             </div>
                         </div>
 
                         <Button
                             onClick={() => signIn("github", { callbackUrl })}
-                            className="w-full h-[48px] rounded-xl bg-[#24292e] hover:bg-[#2f363d] text-white hover:shadow-md transition-all flex items-center justify-center gap-3"
+                            className="w-full h-[48px] rounded-xl bg-[#111] border border-[#222] hover:bg-[#1f1f1f] text-white hover:shadow-md transition-all flex items-center justify-center gap-3"
                         >
                             {/* GitHub Logo */}
                             <svg className="w-5 h-5 fill-white" viewBox="0 0 24 24">
@@ -191,7 +151,7 @@ function SignInContent() {
                     </div>
 
                     <div className="text-center px-4">
-                        <p className="text-[12px] text-[#6b7280] leading-relaxed">
+                        <p className="text-[12px] text-gray-400 leading-relaxed">
                             By signing in, you agree to our{" "}
                             <Link href="/terms" className="text-[#C4ED5F] hover:underline">Terms of Service</Link>
                             {" "}and{" "}
@@ -200,7 +160,7 @@ function SignInContent() {
                     </div>
 
                     <div className="pt-4 text-center">
-                        <Link href="/" className="inline-flex items-center text-[#6b7280] hover:text-[black] text-[14px] font-medium transition-colors">
+                        <Link href="/" className="inline-flex items-center text-gray-400 hover:text-white text-[14px] font-medium transition-colors">
                             <ArrowLeft className="w-4 h-4 mr-2" /> Return to homepage
                         </Link>
                     </div>
@@ -212,8 +172,21 @@ function SignInContent() {
 
 export default function SignInPage() {
     return (
-        <Suspense fallback={<div className="min-h-screen bg-white" />}>
-            <SignInContent />
+        <Suspense fallback={<div className="min-h-screen bg-[#0a0a0a]" />}>
+            <div className="relative min-h-screen bg-[#0a0a0a]">
+                <div className="relative z-[1]">
+                    <SignInContent />
+                </div>
+                {/* Global Noise Overlay */}
+                <div 
+                  className="fixed inset-0 z-[100] pointer-events-none opacity-[0.25] mix-blend-screen"
+                  style={{ 
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+                    backgroundRepeat: 'repeat',
+                    backgroundSize: '120px 120px'
+                  }} 
+                />
+            </div>
         </Suspense>
     );
 }

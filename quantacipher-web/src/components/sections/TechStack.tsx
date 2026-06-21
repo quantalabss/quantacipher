@@ -38,38 +38,43 @@ async function processData(patientRecord) {
   };
 
   return (
-    <section id="integrations" className="py-24 md:py-32 bg-white relative">
+    <section id="integrations" className="py-24 md:py-32 bg-transparent relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="flex flex-col lg:flex-row items-center gap-16">
           
           {/* Text Content */}
           <div className="w-full lg:w-5/12 animate-fade-in">
-            <span className="text-[#C4ED5F] font-bold tracking-widest uppercase text-xs mb-6 block">
+            <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#8db53a] mb-4 block">
               Architecture
             </span>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-black tracking-tighter mb-6 leading-tight">
-              Two distinct modes <br />
-              of operation.
+            <h2 className="text-4xl md:text-5xl font-extrabold text-white tracking-tighter mb-6 leading-tight">
+              Two distinct modes<br />of operation.
             </h2>
-            <p className="text-lg text-gray-500 font-medium mb-8">
+            <p className="text-base text-gray-400 font-medium mb-8 leading-relaxed">
               Whether you need permanently sealed audit logs or secure end-to-end encryption with user-held keys, QuantaCipher has you covered. Everything runs locally in your environment.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/signin" className="bg-black text-white px-8 py-4 rounded-full font-medium hover:bg-[#C4ED5F] hover:text-black transition-all hover:scale-105 active:scale-95 text-center">
+              <Link href="/signin" className="bg-white text-black px-8 py-3.5 rounded-full font-bold hover:bg-[#C4ED5F] hover:text-black transition-all text-sm uppercase tracking-wider text-center">
                 Get API Key
               </Link>
-              <Link href="/documentation" className="bg-white text-black border border-gray-200 px-8 py-4 rounded-full font-medium hover:border-[#C4ED5F] hover:text-[#C4ED5F] transition-all text-center">
+              <Link href="/documentation" className="bg-[#111] text-white border border-[#222] px-8 py-3.5 rounded-full font-semibold hover:border-[#C4ED5F] hover:text-[#8db53a] transition-all text-sm text-center">
                 Read the Docs
               </Link>
             </div>
           </div>
 
+
           {/* Code Terminal */}
-          <div className="w-full lg:w-7/12 animate-fade-in">
-            <div className="bg-[#0A0A0A] border border-gray-800 rounded-2xl overflow-hidden shadow-2xl">
+          <div className="w-full lg:w-7/12 animate-fade-in relative">
+            <div className="bg-black border border-white/5 rounded-[2rem] overflow-hidden shadow-2xl relative z-10">
+              
+              {/* Subtle background effects like CTA */}
+              <div className="absolute inset-0 bg-gradient-to-br from-[#C4ED5F]/10 to-transparent opacity-50 pointer-events-none" />
+              <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#C4ED5F]/5 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#C4ED5F]/5 rounded-full blur-3xl pointer-events-none" />
               {/* Terminal Header */}
-              <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800 bg-[#111]">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-black/50 backdrop-blur-md relative z-10">
                 <div className="flex items-center space-x-2">
                   <div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50"></div>
                   <div className="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/50"></div>
@@ -85,7 +90,7 @@ async function processData(patientRecord) {
               </div>
               
               {/* Terminal Body */}
-              <div className="p-4 sm:p-6 overflow-x-auto">
+              <div className="p-4 sm:p-6 overflow-x-auto relative z-10">
                 <pre className="text-[10px] sm:text-xs md:text-sm font-mono leading-relaxed">
                   <code className="text-gray-300">
                     <span className="text-gray-500">// QuantaCipher Integration</span><br />

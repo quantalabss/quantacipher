@@ -1,21 +1,28 @@
 @import "tailwindcss";
 
-@theme {
-  --color-background: #ffffff;
-  --color-foreground: #000000;
-  --color-primary: #C4ED5F;
-  --color-primary-foreground: #000000;
-  --color-secondary: #C4ED5F;
-  --color-muted: #525252;
-  --color-card: #f5f5f5;
-  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
-}
-
-:root {
-  --background: #ffffff;
-  --foreground: #000000;
-  --primary: #C4ED5F;
-  --secondary: #C4ED5F;
+@layer base {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ffffff;
+    --card: #0a0a0a;
+    --card-foreground: #ffffff;
+    --popover: #0a0a0a;
+    --popover-foreground: #ffffff;
+    --primary: #C4ED5F;
+    --primary-foreground: #000000;
+    --secondary: #1f1f1f;
+    --secondary-foreground: #ffffff;
+    --muted: #1f1f1f;
+    --muted-foreground: #a1a1aa;
+    --accent: #1f1f1f;
+    --accent-foreground: #ffffff;
+    --destructive: #ef4444;
+    --destructive-foreground: #ffffff;
+    --border: #27272a;
+    --input: #27272a;
+    --ring: #C4ED5F;
+    --radius: 0.5rem;
+  }
 }
 
 html {
@@ -23,17 +30,31 @@ html {
   scroll-padding-top: 120px;
 }
 
-body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    @apply antialiased;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 }
 
 /* Custom Utilities */
 .text-balance {
   text-wrap: balance;
+}
+
+/* Unkey Noise Filter Background Utility */
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 150px;
+  opacity: 0.15;
 }
 
 .glass-card {
@@ -85,21 +106,20 @@ body {
   }
 }
 
-/* Improve scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #000000;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
+  background: #333333;
+  border-radius: 99px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #555555;
 }

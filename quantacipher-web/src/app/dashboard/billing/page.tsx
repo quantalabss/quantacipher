@@ -128,28 +128,28 @@ export default function BillingPage() {
 
     return (
         <div className="space-y-8 max-w-5xl pb-12 p-4 sm:p-6 md:p-8 mx-auto">
-            <h1 className="text-[28px] font-normal text-[black]">Billing & Plans</h1>
+            <h1 className="text-[28px] font-normal text-white">Billing & Plans</h1>
 
             {/* Current Plan */}
-            <div className="bg-white p-6 rounded-xl border border-[#e5e7eb] shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div className="bg-white/[0.02] p-6 rounded-[24px] border border-white/10 backdrop-blur-sm shadow-none flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                 <div>
-                    <h3 className="text-[12px] font-medium text-[#6b7280] uppercase tracking-wider mb-2">Current Plan</h3>
+                    <h3 className="text-[12px] font-medium text-gray-400 uppercase tracking-wider mb-2">Current Plan</h3>
                     <div className="flex items-center gap-3 mb-2">
-                        <span className="text-[28px] font-normal text-[black]">Developer</span>
-                        <span className="bg-[#f3f4f6] text-[#C4ED5F] text-[12px] px-2 py-1 rounded-[4px] font-medium uppercase tracking-wide">Free</span>
+                        <span className="text-[28px] font-normal text-white">Developer</span>
+                        <span className="bg-white/5 text-[#C4ED5F] text-[12px] px-2 py-1 rounded-[4px] font-medium uppercase tracking-wide">Free</span>
                     </div>
-                    <p className="text-[14px] text-[#6b7280]">
+                    <p className="text-[14px] text-gray-400">
                         You are currently on the free Developer tier. Upgrade for higher limits and SLAs.
                     </p>
                 </div>
-                <div className="space-y-3 text-[14px] text-[#1f2937] bg-white p-5 rounded-xl border border-[#e5e7eb] min-w-[260px] w-full md:w-auto mt-4 md:mt-0">
+                <div className="space-y-3 text-[14px] text-white bg-transparent p-5 rounded-xl border border-white/10 min-w-[260px] w-full md:w-auto mt-4 md:mt-0">
                     <div className="flex items-center justify-between">
-                        <span className="text-[#6b7280]">API Calls:</span>
-                        <span className="font-medium text-[black]">{analytics.totalCalls.toLocaleString()} / 10,000</span>
+                        <span className="text-gray-400">API Calls:</span>
+                        <span className="font-medium text-white">{analytics.totalCalls.toLocaleString()} / 10,000</span>
                     </div>
                     <div className="flex items-center justify-between">
-                        <span className="text-[#6b7280]">API Keys:</span>
-                        <span className="font-medium text-[black]">{analytics.activeKeys} / 1</span>
+                        <span className="text-gray-400">API Keys:</span>
+                        <span className="font-medium text-white">{analytics.activeKeys} / 1</span>
                     </div>
                     <div className="w-full bg-[#e5e7eb] h-1.5 rounded-full mt-2 overflow-hidden">
                         <div className="bg-[#C4ED5F] h-full rounded-full transition-all duration-500" style={{ width: `${Math.min(100, (analytics.totalCalls / 10000) * 100)}%` }}></div>
@@ -159,39 +159,39 @@ export default function BillingPage() {
 
             {/* Upgrade Options */}
             <div>
-                <h2 className="text-[20px] font-normal text-[black] mb-4">Upgrade Options</h2>
+                <h2 className="text-[20px] font-normal text-white mb-4">Upgrade Options</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {plans.map((plan) => (
-                        <div key={plan.id} className={`bg-white p-6 rounded-xl border flex flex-col h-full ${plan.id === 'professional' ? 'border-2 border-[#C4ED5F] shadow-md relative' : 'border-[#e5e7eb] shadow-[0_4px_20px_rgba(0,0,0,0.03)]'}`}>
+                        <div key={plan.id} className={`bg-white/[0.02] p-6 rounded-[24px] border backdrop-blur-sm flex flex-col h-full ${plan.id === 'professional' ? 'border-2 border-[#C4ED5F] shadow-md relative' : 'border-white/10 shadow-none'}`}>
                             {plan.id === 'professional' && (
-                                <div className="absolute top-0 right-0 bg-[#C4ED5F] text-white text-[11px] font-bold tracking-wide uppercase px-4 py-1 rounded-bl-[8px]">
+                                <div className="absolute top-0 right-0 bg-[#C4ED5F] text-black text-[11px] font-bold tracking-wide uppercase px-4 py-1 rounded-bl-[8px]">
                                     Recommended
                                 </div>
                             )}
                             
-                            <h3 className="text-[20px] font-medium text-[black] mb-2">{plan.name}</h3>
-                            <p className="text-[14px] text-[#6b7280] mb-6 min-h-[40px] leading-relaxed">{plan.description}</p>
+                            <h3 className="text-[20px] font-medium text-white mb-2">{plan.name}</h3>
+                            <p className="text-[14px] text-gray-400 mb-6 min-h-[40px] leading-relaxed">{plan.description}</p>
                             
                             <div className="flex items-baseline gap-1 mb-8">
-                                <span className="text-[40px] font-normal text-[black] tracking-tight">{plan.price}</span>
-                                <span className="text-[#6b7280] font-medium text-[16px]">{plan.period}</span>
+                                <span className="text-[40px] font-normal text-white tracking-tight">{plan.price}</span>
+                                <span className="text-gray-400 font-medium text-[16px]">{plan.period}</span>
                             </div>
                             
                             <Button
                                 onClick={() => handleUpgrade(plan.id)}
                                 disabled={loading !== null}
-                                className={`w-full mb-8 h-[48px] rounded-xl text-[15px] font-medium transition-all ${plan.id === 'professional' ? 'bg-[#C4ED5F] hover:bg-[black] text-white shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-md' : 'bg-white border border-[#e5e7eb] text-[#1f2937] hover:bg-white'}`}
+                                className={`w-full mb-8 h-[48px] rounded-xl text-[15px] font-medium transition-all ${plan.id === 'professional' ? 'bg-[#C4ED5F] hover:bg-white text-black shadow-none hover:shadow-md' : 'bg-transparent border border-white/10 text-white hover:bg-transparent'}`}
                                 variant={plan.id === 'professional' ? 'default' : 'outline'}
                             >
                                 {loading === plan.id ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <CreditCard className="w-4 h-4 mr-2" />}
                                 {loading === plan.id ? "Processing..." : `Upgrade to ${plan.name}`}
                             </Button>
                             
-                            <div className="space-y-4 flex-grow pt-6 border-t border-[#f1f3f4]">
+                            <div className="space-y-4 flex-grow pt-6 border-t border-white/10">
                                 {plan.features.map((feature, i) => (
                                     <div key={i} className="flex items-start gap-3 text-[14px]">
                                         <CheckCircle2 className="w-4 h-4 text-[#C4ED5F] flex-shrink-0 mt-0.5" />
-                                        <span className="text-[#1f2937] font-medium">{feature}</span>
+                                        <span className="text-white font-medium">{feature}</span>
                                     </div>
                                 ))}
                             </div>
@@ -201,20 +201,20 @@ export default function BillingPage() {
             </div>
 
             {/* Enterprise Custom */}
-            <div className="bg-gradient-to-r from-[#f9fafb] to-white border border-[#e5e7eb] shadow-[0_4px_20px_rgba(0,0,0,0.03)] rounded-xl p-6 sm:p-8 mt-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div className="bg-gradient-to-r bg-white/[0.02] border border-white/10 shadow-none rounded-[24px] backdrop-blur-sm p-6 sm:p-8 mt-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                 <div>
-                    <h3 className="text-[18px] font-medium text-[black] mb-2">Need an Enterprise Plan?</h3>
-                    <p className="text-[14px] text-[#6b7280] max-w-lg leading-relaxed">Unlimited calls, SOC2/HIPAA compliance, dedicated gateway instances, and 24/7 dedicated support.</p>
+                    <h3 className="text-[18px] font-medium text-white mb-2">Need an Enterprise Plan?</h3>
+                    <p className="text-[14px] text-gray-400 max-w-lg leading-relaxed">Unlimited calls, SOC2/HIPAA compliance, dedicated gateway instances, and 24/7 dedicated support.</p>
                 </div>
-                <Button variant="outline" className="bg-white border-[#e5e7eb] text-[#1f2937] hover:bg-white h-[40px] px-6 whitespace-nowrap">
+                <Button variant="outline" className="bg-transparent border-white/10 text-white hover:bg-transparent h-[40px] px-6 whitespace-nowrap">
                     Contact Sales
                 </Button>
             </div>
             
             {/* Payment History Placeholder */}
             <div className="mt-12">
-                <h2 className="text-[20px] font-normal text-[black] mb-4">Payment History</h2>
-                <div className="bg-white border border-[#e5e7eb] rounded-xl p-12 text-center text-[#6b7280] text-[14px]">
+                <h2 className="text-[20px] font-normal text-white mb-4">Payment History</h2>
+                <div className="bg-white/[0.02] border border-white/10 rounded-[24px] p-12 backdrop-blur-sm text-center text-gray-400 text-[14px]">
                     No payment history available. You are currently on the Free tier.
                 </div>
             </div>

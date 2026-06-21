@@ -1,112 +1,33 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  Menu,
-  X,
-  BookOpen,
-  Blocks,
-  ShieldCheck,
-  Cpu,
-  ArrowUpRight,
-  Code2,
-  ChevronDown,
-  LayoutDashboard,
-  Server,
-  CreditCard,
-  MessageSquare,
-  Lock
-} from "lucide-react";
+import { useState, useEffect } from "react";
+import { Menu, X, ChevronDown } from "lucide-react";
 
-type NavItem = {
-  name: string;
-  href: string;
-  external?: boolean;
-  description?: string;
-  icon?: React.ComponentType<{ className?: string }>;
-  badge?: string;
-};
-
-type NavGroup = {
-  name: string;
-  href?: string;
-  items: NavItem[];
-  footer?: { label: string; href: string };
-};
-
-const navGroups: NavGroup[] = [
+const navGroups = [
   {
     name: "Product",
-    href: "/architecture",
-    footer: { label: "View Architecture →", href: "/architecture" },
-    items: [
-      {
-        name: "Demo",
-        href: "/demo",
-        description: "Interactive API usage demo",
-        icon: Cpu,
-      },
-      {
-        name: "Architecture",
-        href: "/architecture",
-        description: "Zero-trust PQC infrastructure",
-        icon: Blocks,
-      },
-      {
-        name: "API Reference",
-        href: "/api",
-        description: "RESTful endpoint specifications",
-        icon: Server,
-        badge: "v1.0",
-      },
+    links: [
+      { label: "Overview", href: "/", desc: "The platform for post-quantum security" },
+      { label: "Architecture", href: "/architecture", desc: "How our zero-trust system works" },
+      { label: "Dashboard", href: "/dashboard", desc: "Manage API keys and settings" },
     ],
   },
   {
     name: "Resources",
-    items: [
-      {
-        name: "Documentation",
-        href: "/documentation",
-        description: "Integration guides and tutorials",
-        icon: BookOpen,
-      },
-      {
-        name: "Developer SDKs",
-        href: "/documentation#sdks",
-        description: "Official JS, Python, Go clients",
-        icon: Code2,
-      },
-      {
-        name: "Support",
-        href: "/support",
-        description: "Technical assistance and SLAs",
-        icon: MessageSquare,
-      },
+    links: [
+      { label: "Documentation", href: "/documentation", desc: "Integration guides and API reference" },
+      { label: "NPM Package", href: "https://www.npmjs.com/package/quanta-sdk", desc: "Install the Node/Browser SDK" },
+      { label: "Python PIP", href: "#", desc: "Install the Python bindings" },
     ],
   },
   {
     name: "Company",
-    items: [
-      {
-        name: "Pricing",
-        href: "/pricing",
-        description: "Transparent API usage plans",
-        icon: CreditCard,
-      },
-      {
-        name: "Security",
-        href: "/security",
-        description: "Compliance and threat models",
-        icon: ShieldCheck,
-      },
-      {
-        name: "Dashboard",
-        href: "/dashboard",
-        description: "Manage API keys and usage",
-        icon: LayoutDashboard,
-      },
+    links: [
+      { label: "About", href: "https://quantalabs.cc", desc: "Learn about QuantaLabs" },
+      { label: "Pricing", href: "/pricing", desc: "Simple, predictable pricing" },
+      { label: "Contact", href: "mailto:hello@quantacipher.com", desc: "Get in touch with our team" },
     ],
   },
 ];
@@ -115,39 +36,29 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Handle scroll effect
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mobile menu on route change
-  useEffect(() => {
-    setIsOpen(false);
-  }, []);
-
-  const handleMouseEnter = (name: string) => {
-    if (closeTimer.current) clearTimeout(closeTimer.current);
-    setActiveDropdown(name);
-  };
-
-  const handleMouseLeave = () => {
-    closeTimer.current = setTimeout(() => setActiveDropdown(null), 120);
-  };
+  const handleMouseEnter = (name: string) => setActiveDropdown(name);
+  const handleMouseLeave = () => setActiveDropdown(null);
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
-          ? "bg-white/90 backdrop-blur-xl border-b border-gray-100 shadow-sm"
-          : "bg-transparent border-b border-transparent"
-        }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${
+        scrolled
+          ? "bg-[#0a0a0a]/70 backdrop-blur-xl border-white/10 py-3 shadow-2xl"
+          : "bg-transparent border-transparent py-5"
+      }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20">
-        <div className="flex items-center justify-between h-full">
-
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-[72px]">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 flex-shrink-0 group">
             <Image
@@ -158,7 +69,7 @@ export function Navbar() {
               className="w-9 h-9 transition-transform group-hover:scale-110"
               priority
             />
-            <span className="text-xl font-bold tracking-tighter text-black">
+            <span className="text-xl font-bold tracking-tighter text-white">
               QuantaCipher<span className="text-[#C4ED5F]">.</span>
             </span>
           </Link>
@@ -173,72 +84,40 @@ export function Navbar() {
                 onMouseLeave={handleMouseLeave}
               >
                 <button
-                  className={`inline-flex items-center gap-1 px-4 py-2 text-sm font-semibold rounded-full transition-all ${activeDropdown === group.name
-                      ? "text-black bg-gray-100"
-                      : "text-gray-600 hover:text-black hover:bg-white"
-                    }`}
+                  className={`inline-flex items-center gap-1 px-4 py-2 text-sm font-semibold rounded-full transition-all ${
+                    activeDropdown === group.name
+                      ? "text-white bg-[#111]"
+                      : "text-gray-400 hover:text-white hover:bg-[#111]"
+                  }`}
                 >
                   {group.name}
                   <ChevronDown
-                    className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === group.name ? "rotate-180 text-[#C4ED5F]" : ""
+                    className={`w-4 h-4 transition-transform duration-200 ${activeDropdown === group.name ? "rotate-180" : ""
                       }`}
                   />
                 </button>
 
-                {/* Dropdown panel */}
+                {/* Dropdown Menu */}
                 {activeDropdown === group.name && (
-                  <div
-                    className="absolute top-full left-1/2 -translate-x-1/2 pt-3 z-50"
-                    style={{ minWidth: "22rem" }}
-                    onMouseEnter={() => handleMouseEnter(group.name)}
-                    onMouseLeave={handleMouseLeave}
-                  >
-                    <div className="bg-white rounded-2xl shadow-[0_24px_60px_-10px_rgba(0,0,0,0.12)] border border-black/5 overflow-hidden">
-                      <div className="p-2">
-                        {group.items.map((item) => (
+                  <div className="absolute top-full left-0 pt-2 w-[320px]">
+                    <div className="bg-[#0f0f0f] border border-[#222] rounded-2xl shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                      <div className="p-2 space-y-1">
+                        {group.links.map((link) => (
                           <Link
-                            key={item.name}
-                            href={item.href}
-                            target={item.external ? "_blank" : undefined}
-                            rel={item.external ? "noopener noreferrer" : undefined}
-                            className="group/item flex items-start gap-3 p-3 rounded-xl hover:bg-white transition-all"
+                            key={link.label}
+                            href={link.href}
+                            className="block p-3 rounded-xl hover:bg-[#1a1a1a] transition-colors group/link"
                             onClick={() => setActiveDropdown(null)}
                           >
-                            <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500 group-hover/item:bg-black group-hover/item:text-white transition-all">
-                              {item.icon && <item.icon className="w-4 h-4" />}
+                            <div className="text-sm font-bold text-white mb-0.5 group-hover/link:text-[#C4ED5F] transition-colors">
+                              {link.label}
                             </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2 mb-0.5">
-                                <span className="text-sm font-bold text-gray-900">{item.name}</span>
-                                {item.badge && (
-                                  <span className="text-[9px] font-black tracking-widest uppercase px-2 py-0.5 rounded-full border border-gray-200 text-gray-500 bg-gray-50/50">
-                                    {item.badge}
-                                  </span>
-                                )}
-                                {item.external && (
-                                  <ArrowUpRight className="w-3 h-3 text-gray-300 group-hover/item:text-gray-500 transition-colors" />
-                                )}
-                              </div>
-                              <p className="text-xs text-gray-500 font-medium leading-snug">
-                                {item.description}
-                              </p>
+                            <div className="text-xs text-gray-500 font-medium">
+                              {link.desc}
                             </div>
                           </Link>
                         ))}
                       </div>
-
-                      {/* Footer link */}
-                      {group.footer && (
-                        <div className="px-4 py-3 border-t border-gray-50 bg-white">
-                          <Link
-                            href={group.footer.href}
-                            className="text-xs font-bold text-gray-400 hover:text-[#C4ED5F] transition-colors"
-                            onClick={() => setActiveDropdown(null)}
-                          >
-                            {group.footer.label}
-                          </Link>
-                        </div>
-                      )}
                     </div>
                   </div>
                 )}
@@ -247,102 +126,71 @@ export function Navbar() {
           </div>
 
           {/* Right side actions */}
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="flex items-center gap-3 flex-shrink-0">
             <Link
               href="/signin"
-              className="hidden md:inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-black hover:bg-gray-100 rounded-full transition-all"
+              className="hidden md:inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-gray-300 hover:text-white transition-colors"
             >
               Sign In
             </Link>
             <Link
               href="/signin"
-              className="hidden md:inline-flex items-center gap-1.5 px-5 py-2.5 bg-black text-white rounded-full font-semibold text-sm hover:bg-[#C4ED5F] hover:text-black transition-all"
+              className="hidden md:inline-flex items-center gap-1.5 px-5 py-2.5 bg-white text-black rounded-full font-bold text-sm hover:bg-[#C4ED5F] transition-colors"
             >
-              Get Free API Key
+              Start for free
             </Link>
-            {/* Mobile toggle */}
+
+            {/* Mobile menu button */}
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="lg:hidden w-10 h-10 flex items-center justify-center text-gray-600 hover:text-black transition-colors rounded-full hover:bg-gray-100"
-              aria-label="Toggle menu"
+              className="lg:hidden p-2 rounded-lg text-gray-400 hover:text-white hover:bg-[#111] transition-colors"
             >
-              {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* ── MOBILE MENU ───────────────────────────────────────── */}
+      {/* Mobile nav */}
       {isOpen && (
-        <div className="lg:hidden fixed inset-x-0 top-20 bottom-0 bg-white border-t border-gray-100 overflow-y-auto z-40">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-2">
-
+        <div className="lg:hidden bg-[#000] border-b border-[#222] absolute w-full max-h-[calc(100vh-72px)] overflow-y-auto animate-in fade-in slide-in-from-top-4">
+          <div className="px-4 py-6 space-y-8">
             {navGroups.map((group) => (
-              <div key={group.name} className="border border-gray-100 rounded-2xl overflow-hidden">
-                {/* Group header */}
-                <button
-                  onClick={() =>
-                    setMobileExpanded(mobileExpanded === group.name ? null : group.name)
-                  }
-                  className="w-full flex items-center justify-between px-5 py-4 text-left"
-                >
-                  <span className="font-bold text-sm text-black uppercase tracking-wider">
-                    {group.name}
-                  </span>
-                  <ChevronDown
-                    className={`w-4 h-4 text-gray-400 transition-transform ${mobileExpanded === group.name ? "rotate-180" : ""
-                      }`}
-                  />
-                </button>
-
-                {/* Expanded items */}
-                {mobileExpanded === group.name && (
-                  <div className="border-t border-gray-50 bg-white px-3 py-2">
-                    {group.items.map((item) => (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        target={item.external ? "_blank" : undefined}
-                        rel={item.external ? "noopener noreferrer" : undefined}
-                        className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-white transition-colors"
-                        onClick={() => setIsOpen(false)}
-                      >
-                        <div className="w-8 h-8 rounded-lg bg-white border border-gray-100 flex items-center justify-center shrink-0">
-                          {item.icon && <item.icon className="w-4 h-4 text-gray-600" />}
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-bold text-gray-900">{item.name}</span>
-                            {item.badge && (
-                              <span className="text-[9px] font-black tracking-widest uppercase px-1.5 py-0.5 rounded-full border border-gray-200 text-gray-500 bg-gray-50/50">
-                                {item.badge}
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-xs text-gray-500 font-medium">{item.description}</p>
-                        </div>
-                        {item.external && <ArrowUpRight className="w-3.5 h-3.5 text-gray-300 ml-auto shrink-0" />}
-                      </Link>
-                    ))}
-                  </div>
-                )}
+              <div key={group.name}>
+                <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-500 mb-4 px-2">
+                  {group.name}
+                </h3>
+                <div className="space-y-1">
+                  {group.links.map((link) => (
+                    <Link
+                      key={link.label}
+                      href={link.href}
+                      className="block px-2 py-3 text-base font-semibold text-gray-300 hover:text-white hover:bg-[#111] rounded-xl transition-all"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
               </div>
             ))}
-
-            <Link
-              href="/signin"
-              onClick={() => setIsOpen(false)}
-              className="mt-4 block px-6 py-4 text-sm font-bold text-black bg-gray-100 rounded-2xl text-center hover:bg-gray-200 transition-all tracking-wider"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/signin"
-              onClick={() => setIsOpen(false)}
-              className="mt-2 block px-6 py-4 text-sm font-bold text-white bg-black rounded-2xl text-center hover:bg-[#C4ED5F] hover:text-black transition-all tracking-wider"
-            >
-              Get Free API Key
-            </Link>
+            
+            <div className="pt-6 border-t border-[#222] flex flex-col gap-3 px-2">
+              <Link
+                href="/signin"
+                className="w-full py-3 px-4 text-center text-sm font-bold text-white bg-[#111] rounded-xl border border-[#222]"
+                onClick={() => setIsOpen(false)}
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/signin"
+                className="w-full py-3 px-4 text-center text-sm font-bold text-black bg-white hover:bg-[#C4ED5F] rounded-xl"
+                onClick={() => setIsOpen(false)}
+              >
+                Start for free
+              </Link>
+            </div>
           </div>
         </div>
       )}
