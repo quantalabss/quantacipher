@@ -10,7 +10,7 @@ export function WhyChooseUs() {
       icon: Package,
       title: "Install the SDK",
       desc: "Add quantacipher-sdk to your project with one npm command. Works in Node.js, browsers, and any JavaScript or TypeScript codebase. Python bindings available via pip.",
-      href: "/documentation",
+      href: "https://quantachain.gitbook.io/quantacipher",
       badge: "NPM · PIP",
       color: "from-[#C4ED5F]/10 to-transparent",
       borderColor: "group-hover:border-[#C4ED5F]/40",
@@ -20,7 +20,7 @@ export function WhyChooseUs() {
       icon: Cpu,
       title: "Encrypt Locally via WASM",
       desc: "Our Rust WASM engine executes NIST Kyber-1024 (ML-KEM) directly inside your JavaScript runtime. Your plaintext data never leaves your machine unencrypted.",
-      href: "/architecture",
+      href: "/security",
       badge: "Zero-Trust",
       color: "from-[#C4ED5F]/10 to-transparent",
       borderColor: "group-hover:border-[#C4ED5F]/40",
@@ -30,7 +30,7 @@ export function WhyChooseUs() {
       icon: ShieldCheck,
       title: "Cryptographic Receipt",
       desc: "The ciphertext is transmitted to our Gateway, which validates your API key, logs the event, and issues a signed cryptographic receipt with a tamper-proof timestamp.",
-      href: "/documentation#receipts",
+      href: "https://quantachain.gitbook.io/quantacipher",
       badge: "Tamper-Proof",
       color: "from-[#C4ED5F]/10 to-transparent",
       borderColor: "group-hover:border-[#C4ED5F]/40",
@@ -103,7 +103,7 @@ export function WhyChooseUs() {
         {/* Bottom connector — "Read the full architecture" */}
         <div className="mt-10 flex justify-center">
           <Link
-            href="/architecture"
+            href="/security"
             className="inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-white transition-colors border-b-2 border-[#222] hover:border-[#C4ED5F] pb-0.5"
           >
             View full architecture →

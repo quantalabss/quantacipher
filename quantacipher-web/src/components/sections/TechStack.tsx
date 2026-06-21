@@ -58,7 +58,7 @@ async function processData(patientRecord) {
               <Link href="/signin" className="bg-white text-black px-8 py-3.5 rounded-full font-bold hover:bg-[#C4ED5F] hover:text-black transition-all text-sm uppercase tracking-wider text-center">
                 Get API Key
               </Link>
-              <Link href="/documentation" className="bg-[#111] text-white border border-[#222] px-8 py-3.5 rounded-full font-semibold hover:border-[#C4ED5F] hover:text-[#8db53a] transition-all text-sm text-center">
+              <Link href="https://quantachain.gitbook.io/quantacipher" target="_blank" rel="noopener noreferrer" className="bg-[#111] text-white border border-[#222] px-8 py-3.5 rounded-full font-semibold hover:border-[#C4ED5F] hover:text-[#8db53a] transition-all text-sm text-center">
                 Read the Docs
               </Link>
             </div>

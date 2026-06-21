@@ -77,8 +77,8 @@ export default function SupportPage() {
                             <p className="text-[14px] text-gray-400 mb-4">
                                 Browse our guides and API documentation for quick answers.
                             </p>
-                            <Link href="/documentation" className="text-[#C4ED5F] hover:underline text-[14px] font-medium">
-                                View Docs ?
+                            <Link href="https://quantachain.gitbook.io/quantacipher" target="_blank" rel="noopener noreferrer" className="text-[#C4ED5F] hover:underline text-[14px] font-medium">
+                                View Docs
                             </Link>
                         </motion.div>
                     </div>
