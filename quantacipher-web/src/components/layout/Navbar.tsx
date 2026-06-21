@@ -10,24 +10,24 @@ const navGroups = [
     name: "Product",
     links: [
       { label: "Overview", href: "/", desc: "The platform for post-quantum security" },
-      { label: "Architecture", href: "/architecture", desc: "How our zero-trust system works" },
-      { label: "Dashboard", href: "/dashboard", desc: "Manage API keys and settings" },
+      { label: "Interactive Demo", href: "/demo", desc: "Live test of Kyber-1024 encryption" },
+      { label: "Security Architecture", href: "/security", desc: "Zero-trust WASM & NIST standards" },
     ],
   },
   {
-    name: "Resources",
+    name: "Developers",
     links: [
       { label: "Documentation", href: "https://quantachain.gitbook.io/quantacipher", desc: "Integration guides and API reference" },
-      { label: "NPM Package", href: "https://www.npmjs.com/package/quanta-sdk", desc: "Install the Node/Browser SDK" },
-      { label: "Python PIP", href: "#", desc: "Install the Python bindings" },
+      { label: "API Reference", href: "/api-reference", desc: "REST API Documentation" },
+      { label: "NPM Package", href: "https://www.npmjs.com/package/quantacipher-sdk", desc: "Install the Node/Browser SDK" },
+      { label: "Python PIP", href: "https://pypi.org/project/quantacipher", desc: "Install the Python bindings" },
     ],
   },
   {
     name: "Company",
     links: [
       { label: "About", href: "https://quantalabs.cc", desc: "Learn about QuantaLabs" },
-      { label: "Pricing", href: "/pricing", desc: "Simple, predictable pricing" },
-      { label: "Contact", href: "mailto:hello@quantacipher.com", desc: "Get in touch with our team" },
+      { label: "Support", href: "/support", desc: "Get in touch with our team" },
     ],
   },
 ];
@@ -125,15 +125,16 @@ export function Navbar() {
                 )}
               </div>
             ))}
+            <Link href="/pricing" className="text-gray-400 hover:text-white px-4 py-2 text-sm font-semibold transition-all">Pricing</Link>
           </div>
 
           {/* Right side actions */}
           <div className="flex items-center gap-3 flex-shrink-0">
             <Link
-              href="/signin"
-              className="hidden md:inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-gray-300 hover:text-white transition-colors"
+              href="/demo"
+              className="hidden md:inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-gray-300 hover:text-white border border-[#333] hover:border-[#C4ED5F] rounded-full transition-colors"
             >
-              Sign In
+              Try Demo
             </Link>
             <Link
               href="/signin"
@@ -178,14 +179,17 @@ export function Navbar() {
                 </div>
               </div>
             ))}
+            <Link href="/pricing" className="block px-2 py-3 text-base font-semibold text-gray-300 hover:text-white hover:bg-[#111] rounded-xl transition-all" onClick={() => setIsOpen(false)}>
+              Pricing
+            </Link>
             
             <div className="pt-6 border-t border-[#222] flex flex-col gap-3 px-2">
               <Link
-                href="/signin"
-                className="w-full py-3 px-4 text-center text-sm font-bold text-white bg-[#111] rounded-xl border border-[#222]"
+                href="/demo"
+                className="w-full py-3 px-4 text-center text-sm font-bold text-white bg-[#111] rounded-xl border border-[#222] hover:border-[#C4ED5F] transition-colors"
                 onClick={() => setIsOpen(false)}
               >
-                Sign In
+                Try Demo
               </Link>
               <Link
                 href="/signin"

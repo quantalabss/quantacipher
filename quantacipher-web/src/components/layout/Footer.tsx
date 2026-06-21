@@ -45,20 +45,19 @@ const footerColumns = [
   {
     heading: "Product",
     links: [
-      { label: "Dashboard", href: "/dashboard", badge: null },
-      { label: "Documentation", href: "/documentation", badge: null },
-      { label: "Architecture", href: "/architecture", badge: null },
+      { label: "Overview", href: "/", badge: null },
+      { label: "Interactive Demo", href: "/demo", badge: null },
       { label: "Pricing", href: "/pricing", badge: null },
+      { label: "Security", href: "/security", badge: null },
     ],
   },
   {
     heading: "Developers",
     links: [
-      { label: "API Reference", href: "/api", badge: "Live" },
-      { label: "Node.js SDK", href: "/documentation#sdks", badge: null },
-      { label: "Python SDK", href: "/documentation#sdks", badge: null },
-      { label: "NPM: SDK", href: "https://www.npmjs.com/package/quanta-sdk", badge: "Live", external: true },
-      { label: "NPM: WASM Engine", href: "https://crates.io/crates/quanta-wasm", badge: "Live", external: true },
+      { label: "Documentation", href: "https://quantachain.gitbook.io/quantacipher", badge: null },
+      { label: "NPM: SDK", href: "https://www.npmjs.com/package/quantacipher-sdk", badge: "Live", external: true },
+      { label: "PyPI: SDK", href: "https://pypi.org/project/quantacipher", badge: "Live", external: true },
+      { label: "Crates.io: Core", href: "https://crates.io/crates/quantacipher-core", badge: "Live", external: true },
     ],
   },
   {
@@ -66,13 +65,11 @@ const footerColumns = [
     links: [
       { label: "About QuantaLabs", href: "https://quantalabs.cc", badge: "Reg", external: true },
       { label: "Support", href: "/support", badge: null },
-      { label: "Contact", href: "/support", badge: null },
     ],
   },
   {
     heading: "Legal",
     links: [
-      { label: "Security Overview", href: "/security", badge: null },
       { label: "Privacy Policy", href: "/privacy", badge: null },
       { label: "Terms of Service", href: "/terms", badge: null },
     ],
@@ -83,33 +80,7 @@ export function Footer() {
   return (
     <footer className="border-t border-white/[0.02] bg-transparent text-white">
 
-      {/* ── PRE-FOOTER CTA STRIP ────────────────────────────────── */}
-      <div className="border-b border-white/[0.02]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 flex flex-col md:flex-row items-center justify-between gap-8">
-          <div>
-            <p className="text-xs font-black uppercase tracking-widest text-gray-400 mb-2">
-              Enterprise Post-Quantum Encryption
-            </p>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight">
-              Ready to secure your data stack?
-            </h2>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-3 shrink-0">
-            <Link
-              href="/signin"
-              className="inline-flex items-center gap-2 px-7 py-3.5 bg-white text-black font-bold rounded-xl hover:bg-[#C4ED5F] transition-all text-sm uppercase tracking-wider"
-            >
-              Get Free API Key <ArrowUpRight className="w-4 h-4" />
-            </Link>
-            <Link
-              href="/documentation"
-              className="inline-flex items-center gap-2 px-7 py-3.5 border border-[#333] text-white font-bold rounded-xl hover:border-gray-500 transition-all text-sm uppercase tracking-wider"
-            >
-              Read Docs
-            </Link>
-          </div>
-        </div>
-      </div>
+
 
       {/* ── MAIN FOOTER ─────────────────────────────────────────── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">

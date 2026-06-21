@@ -76,7 +76,7 @@ const plans = [
         buttonVariant: "outline",
         popular: false,
         available: true,
-        cta: "mailto:enterprise@quantacipher.com",
+        cta: "mailto:contact@quantalabs.cc",
     },
 ];
 
@@ -192,3 +192,4 @@ export function Pricing() {
         </section>
     );
 }
+

@@ -39,16 +39,16 @@ export default function DemoPage() {
     };
 
     return (
-        <div className="min-h-screen bg-white flex flex-col">
+        <div className="min-h-screen bg-[#0a0a0a] flex flex-col">
             <Navbar />
 
             <main className="flex-grow pt-32 pb-24 px-4 sm:px-6 lg:px-8 max-w-[1440px] mx-auto w-full">
                 <div className="mb-12 text-center max-w-3xl mx-auto">
-                    <div className="inline-flex items-center gap-2 bg-[#f3f4f6] text-[#C4ED5F] px-3 py-1 rounded-full text-[13px] font-medium mb-6">
+                    <div className="inline-flex items-center gap-2 bg-[#111] text-[#C4ED5F] px-3 py-1 rounded-full text-[13px] font-medium mb-6">
                         <Activity className="w-4 h-4" />
                         Live Demo
                     </div>
-                    <h1 className="text-[32px] sm:text-[48px] font-normal text-[black] mb-4">
+                    <h1 className="text-[32px] sm:text-[48px] font-normal text-white mb-4">
                         Experience Post-Quantum Encryption
                     </h1>
                     <p className="text-[18px] text-[#6b7280]">
@@ -58,25 +58,25 @@ export default function DemoPage() {
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full">
                     {/* Left Pane: Plaintext Input */}
-                    <div className="flex flex-col bg-white border border-[#e5e7eb] rounded-[2rem] shadow-[0_4px_20px_rgba(0,0,0,0.03)] overflow-hidden h-[400px]">
-                        <div className="bg-[#f1f3f4] border-b border-[#e5e7eb] px-6 py-4 flex items-center gap-3">
+                    <div className="flex flex-col bg-[#111] border border-[#222] rounded-[2rem] shadow-[0_4px_20px_rgba(0,0,0,0.03)] overflow-hidden h-[400px]">
+                        <div className="bg-[#0f0f0f] border-b border-[#222] px-6 py-4 flex items-center gap-3">
                             <Key className="w-5 h-5 text-[#6b7280]" />
-                            <h2 className="text-[16px] font-medium text-[black]">Plaintext Payload</h2>
+                            <h2 className="text-[16px] font-medium text-white">Plaintext Payload</h2>
                         </div>
                         <div className="flex-grow p-6">
                             <textarea
                                 value={plaintext}
                                 onChange={(e) => setPlaintext(e.target.value)}
-                                className="w-full h-full resize-none outline-none font-mono text-[14px] leading-relaxed text-[black] bg-transparent"
+                                className="w-full h-full resize-none outline-none font-mono text-[14px] leading-relaxed text-white bg-transparent"
                                 placeholder="Enter JSON or text..."
                                 spellCheck={false}
                             />
                         </div>
-                        <div className="bg-white border-t border-[#e5e7eb] p-4 flex justify-end">
+                        <div className="bg-[#111] border-t border-[#222] p-4 flex justify-end">
                             <Button
                                 onClick={handleEncrypt}
                                 disabled={isEncrypting || !plaintext}
-                                className="bg-[#C4ED5F] hover:bg-[black] text-white px-8 h-[44px] rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.03)] font-medium transition-all w-full sm:w-auto"
+                                className="bg-[#C4ED5F] hover:bg-white text-black px-8 h-[44px] rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.03)] font-medium transition-all w-full sm:w-auto"
                             >
                                 {isEncrypting ? (
                                     <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Encrypting...</>
@@ -91,13 +91,13 @@ export default function DemoPage() {
                     <div className="flex flex-col bg-[black] rounded-[2rem] shadow-xl overflow-hidden h-[400px] border border-[#1f2937]">
                         <div className="bg-[#303134] border-b border-[#1f2937] px-6 py-4 flex justify-between items-center">
                             <div className="flex items-center gap-3">
-                                <Lock className="w-5 h-5 text-[#34a853]" />
+                                <Lock className="w-5 h-5 text-[#C4ED5F]" />
                                 <h2 className="text-[16px] font-medium text-white">Quantum-Safe Ciphertext</h2>
                             </div>
                             {result && (
                                 <div className="flex items-center gap-2">
-                                    <div className="w-2 h-2 rounded-full bg-[#34a853] animate-pulse" />
-                                    <span className="text-[#34a853] text-[12px] font-medium">{result.latencyMs}ms execution</span>
+                                    <div className="w-2 h-2 rounded-full bg-[#C4ED5F] animate-pulse" />
+                                    <span className="text-[#C4ED5F] text-[12px] font-medium">{result.latencyMs}ms execution</span>
                                 </div>
                             )}
                         </div>
@@ -121,9 +121,9 @@ export default function DemoPage() {
 
                         {/* Receipt Block */}
                         {result && (
-                            <div className="bg-[#137333]/10 border-t border-[#137333]/30 p-6 animate-in slide-in-from-bottom-4 duration-500">
+                            <div className="bg-[#C4ED5F]/10 border-t border-[#C4ED5F]/30 p-6 animate-in slide-in-from-bottom-4 duration-500">
                                 <div className="flex justify-between items-center mb-2">
-                                    <span className="text-[#34a853] text-[12px] font-bold uppercase tracking-wider">Cryptographic Receipt</span>
+                                    <span className="text-[#C4ED5F] text-[12px] font-bold uppercase tracking-wider">Cryptographic Receipt</span>
                                     <span className="text-[#9aa0a6] text-[12px] font-mono">{result.receiptId}</span>
                                 </div>
                                 <div className="text-[#e8eaed] text-[14px]">
@@ -136,6 +136,17 @@ export default function DemoPage() {
             </main>
 
             <Footer />
+        
+            {/* Global Noise Overlay */}
+            <div 
+              className="fixed inset-0 z-[100] pointer-events-none opacity-[0.25] mix-blend-screen"
+              style={{ 
+                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+                backgroundRepeat: 'repeat',
+                backgroundSize: '120px 120px'
+              }} 
+            />
         </div>
     );
 }
+

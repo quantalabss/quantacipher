@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Key, Activity, CreditCard, LogOut, X, BookOpen } from "lucide-react";
+import { Key, Activity, CreditCard, LogOut, X, BookOpen, HelpCircle, Home } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
 
 const navItems = [
@@ -10,6 +10,8 @@ const navItems = [
     { name: "Usage", href: "/dashboard/usage", icon: Activity },
     { name: "Billing", href: "/dashboard/billing", icon: CreditCard },
     { name: "Documentation", href: "https://quantachain.gitbook.io/quantacipher", icon: BookOpen },
+    { name: "Support", href: "/support", icon: HelpCircle },
+    { name: "Back to Home", href: "/", icon: Home },
 ];
 
 interface DashboardSidebarProps {

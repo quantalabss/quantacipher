@@ -43,7 +43,9 @@ export function Hero() {
                 Get API Keys
               </Link>
               <Link
-                href="/documentation"
+                href="https://quantachain.gitbook.io/quantacipher"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center justify-center px-8 py-3.5 bg-transparent text-white border border-white/20 font-semibold hover:bg-white/5 transition-colors text-[15px]"
               >
                 View Docs
