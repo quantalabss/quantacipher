@@ -54,7 +54,7 @@ export function Hero() {
           </div>
 
           {/* Right 3D Particle Orb */}
-          <div className="hidden lg:flex justify-center items-center mix-blend-screen pointer-events-none w-full">
+          <div className="flex justify-center items-center mix-blend-screen pointer-events-none w-full mt-12 lg:mt-0">
             <div className="scale-90 xl:scale-100">
               <ParticleOrb />
             </div>
