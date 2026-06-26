@@ -34,7 +34,7 @@ export function DashboardSidebar({ isOpen, setIsOpen }: DashboardSidebarProps) {
             )}
 
             <aside 
-                className={`fixed lg:sticky top-0 left-0 z-[120] h-screen w-[280px] flex flex-col justify-between bg-[#0a0a0a] border-r border-white/10 overflow-hidden transition-transform duration-300 ease-in-out ${
+                className={`fixed lg:sticky top-0 left-0 z-[120] h-[100dvh] w-[280px] flex flex-col justify-between bg-[#0a0a0a] border-r border-white/10 overflow-hidden transition-transform duration-300 ease-in-out ${
                     isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
                 }`}
             >
@@ -50,7 +50,7 @@ export function DashboardSidebar({ isOpen, setIsOpen }: DashboardSidebarProps) {
             {/* Lime glow */}
             <div className="absolute top-0 left-0 w-[300px] h-[300px] bg-[#C4ED5F] opacity-[0.04] rounded-full blur-[80px] pointer-events-none -translate-x-1/2 -translate-y-1/2" />
 
-            <div className="relative z-10 flex flex-col h-full p-6">
+            <div className="relative z-10 flex flex-col h-full p-6 pb-12 lg:pb-6">
                 {/* Logo & Mobile Close */}
                 <div className="mb-12 flex items-center justify-between">
                     <Link href="/" className="flex items-center gap-3 relative z-10 group w-fit" onClick={() => setIsOpen(false)}>

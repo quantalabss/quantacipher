@@ -12,7 +12,7 @@ export default function DashboardLayout({
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     return (
-        <div className="min-h-screen bg-[#0a0a0a] font-sans text-white grid lg:grid-cols-[280px_1fr]">
+        <div className="min-h-[100dvh] bg-[#0a0a0a] font-sans text-white grid lg:grid-cols-[280px_1fr]">
             {/* Global Noise Overlay */}
             <div 
                 className="fixed inset-0 z-[200] pointer-events-none opacity-[0.25] mix-blend-screen"
@@ -24,7 +24,7 @@ export default function DashboardLayout({
             />
             
             <DashboardSidebar isOpen={isMobileMenuOpen} setIsOpen={setIsMobileMenuOpen} />
-            <main className="w-full relative z-10 h-screen overflow-y-auto">
+            <main className="w-full relative z-10 h-[100dvh] overflow-y-auto">
                 {/* Mobile Header */}
                 <div className="lg:hidden flex items-center justify-between px-4 h-[64px] border-b border-white/10 sticky top-0 bg-[#0a0a0a] z-[110]">
                     <div className="flex items-center gap-3">
