@@ -1,4 +1,4 @@
-﻿import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
 /**
  * QuantaCipher API Key Authentication Middleware
@@ -71,6 +71,33 @@ export const requireApiKey = async (req: Request, res: Response, next: NextFunct
             return res.status(403).json({
                 error: 'Forbidden',
                 message: 'Invalid or revoked QuantaCipher API Key.'
+            });
+        }
+
+        // Check usage limits
+        if (keyDoc.monthlyCallLimit && keyDoc.calls >= keyDoc.monthlyCallLimit) {
+            // Only send the email exactly when they hit the limit to avoid spamming
+            if (keyDoc.calls === keyDoc.monthlyCallLimit) {
+                try {
+                    const UserSchema = new mongoose.Schema({ email: String, plan: String });
+                    const UserModel = mongoose.models?.User || mongoose.model('User', UserSchema);
+                    const user = await UserModel.findById(keyDoc.userId);
+                    
+                    if (user && user.email) {
+                        const { sendUsageLimitEmail } = await import('../utils/email');
+                        sendUsageLimitEmail(user.email, user.plan || 'Free', keyDoc.monthlyCallLimit).catch(console.error);
+                    }
+                    
+                    // Increment calls once more so we don't send the email again
+                    await ApiKey.findByIdAndUpdate(keyDoc._id, { $inc: { calls: 1 } });
+                } catch (emailErr) {
+                    console.error('[Auth Middleware] Error sending limit email:', emailErr);
+                }
+            }
+
+            return res.status(429).json({
+                error: 'Too Many Requests',
+                message: `Monthly API limit of ${keyDoc.monthlyCallLimit} reached. Please upgrade your plan.`
             });
         }
 

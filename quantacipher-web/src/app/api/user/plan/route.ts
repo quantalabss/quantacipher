@@ -22,6 +22,21 @@ export async function GET() {
                 name: session.user.name,
                 plan: 'hobbyist'
             });
+            
+            // Send welcome email asynchronously
+            if (user.email) {
+                import('@/lib/email').then(({ sendEmail }) => {
+                    import('@/components/emails/WelcomeEmail').then(({ WelcomeEmail }) => {
+                        import('react').then((React) => {
+                            sendEmail({
+                                to: user.email,
+                                subject: 'Welcome to QuantaCipher',
+                                react: React.createElement(WelcomeEmail, { name: user.name || 'Developer' })
+                            });
+                        });
+                    });
+                }).catch(console.error);
+            }
         }
 
         // Check if plan has expired
