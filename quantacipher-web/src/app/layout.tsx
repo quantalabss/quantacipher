@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
+import CookieBanner from "@/components/CookieBanner";
+import Analytics from "@/components/Analytics";
 import "./globals.css";
-
 const manrope = Manrope({
   subsets: ["latin"],
   variable: "--font-manrope",
@@ -56,6 +57,8 @@ export default function RootLayout({
         <Providers>
           {children}
         </Providers>
+        <CookieBanner />
+        <Analytics />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
