@@ -19,6 +19,15 @@ const nextConfig: NextConfig = {
             type: "webassembly/async",
         });
 
+        // Polyfill Buffer for client-side execution of quantacipher-sdk
+        if (!isServer) {
+            config.plugins.push(
+                new (require('webpack')).ProvidePlugin({
+                    Buffer: ['buffer', 'Buffer'],
+                })
+            );
+        }
+
         return config;
     },
 

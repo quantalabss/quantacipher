@@ -1,35 +1,41 @@
-# Architecture & Gateway
+# Architecture & Zero-Trust Mechanics
 
-QuantaCipher operates using a hybrid architecture that maximizes security while maintaining developer velocity.
+QuantaCipher operates using a hybrid architecture that maximizes security while maintaining high developer velocity. The platform's architecture is uniquely zero-trust by design, ensuring that your enterprise data is cryptographically sealed before it ever reaches a network interface.
 
 ## 1. The Core Cryptographic Engine
 
-At the heart of QuantaCipher is `quantacipher-core`, an underlying pure Rust cryptographic implementation of the NIST ML-KEM (Kyber) algorithm.
+At its foundational core is `quantacipher-core`, a high-performance pure Rust implementation of the NIST ML-KEM (Kyber-1024) standard. 
 
-This core is compiled down to highly optimized native bindings for Python, and lightweight WebAssembly (WASM) for Node.js and the browser. This ensures that the heavy lifting of post-quantum cryptography runs safely and efficiently inside your local environment without requiring any complex C++ dependencies.
+Rather than acting purely as an asymmetric algorithm, QuantaCipher leverages a KEM/DEM (Key Encapsulation Mechanism / Data Encapsulation Mechanism) hybrid architecture:
+1. **KEM (Kyber-1024):** Used to securely establish a cryptographic shared secret.
+2. **DEM (AES-256-GCM):** The shared secret is immediately used as the symmetric key for an AES-256-GCM cipher, which encrypts the actual data payload. 
 
-## 2. Modes of Operation
+By compiling this Rust core to WebAssembly for JavaScript and providing native bindings for Python via PyO3, the entire KEM/DEM encryption process executes **100% locally**. Plaintext never leaves the client runtime.
 
-QuantaCipher supports two distinct operational modes depending on your specific compliance and security requirements:
+## 2. Operational Modes
+
+QuantaCipher supports two distinct operational modes, allowing you to tailor the cryptographic lifecycle to your specific compliance and business requirements.
 
 ### Vault Mode (Permanent Sealing)
-Designed for audit logs and immutable data:
-1. An ephemeral keypair is generated locally.
-2. The data is encapsulated.
-3. The private key is instantly and permanently discarded.
-4. The sealed ciphertext is sent to the Gateway for storage/verification.
+Designed for immutable data, healthcare records, and non-repudiable audit logs.
+1. An ephemeral Kyber-1024 keypair is generated locally in milliseconds.
+2. The data is encapsulated and encrypted using the ephemeral public key.
+3. The private key is **instantly and permanently discarded** from memory.
+4. The sealed ciphertext is generated. No party, not even the original sender, can ever decrypt the payload once sealed.
 
-### Secure Mode (User-Held Keys)
-Designed for end-to-end encryption:
-1. You generate a persistent Keypair locally.
-2. Data is encrypted using the Public Key.
-3. You can decrypt the data locally at any time using your Private Key.
+### Secure Mode (End-to-End Encryption)
+Designed for confidential enterprise data exchange where local recovery is required.
+1. A persistent Keypair is generated locally and stored securely by the user.
+2. Data is encrypted locally using the Public Key.
+3. Only the ciphertext is transmitted over the network or stored in your database.
+4. The data can be decrypted locally at any time by supplying the original Private Key to the QuantaCipher engine.
 
-## 3. The API Gateway
+## 3. The API Gateway & Compliance
 
-While encryption happens locally, QuantaCipher provides an API Gateway to handle metadata, tracking, and compliance receipts. 
+Only the resulting ciphertext ever reaches the QuantaCipher API Gateway, unlocking enterprise-ready infrastructure out of the box without compromising the Zero-Trust mandate.
 
-When your SDK encrypts a payload, the impenetrable ciphertext is anchored to our high-availability Node.js edge network. The Gateway:
-- Validates the `QZ_VAULT_V1` format.
-- Instantly rejects any plaintext submissions to guarantee Zero-Trust.
-- Issues verifiable cryptographic receipts for HIPAA and SOC2 compliance.
+When your SDK transmits ciphertext to the Gateway, the following enterprise features are activated:
+- **Cryptographic Receipts:** The Gateway validates the binary format and issues an immutable audit trail for every payload, tracking exact timestamps, byte counts, and encryption schemes to support **HIPAA and SOC2 compliance**.
+- **Environment Isolation:** Teams can safely build with dedicated Test and Live API key environments.
+- **Telemetry & Quotas:** Built-in usage analytics, automated rate limiting, and proactive quota alerts prevent API abuse without the Gateway ever having the ability to inspect the underlying data.
+- **Advanced Dashboard:** Access turnkey audit log exports and compliance reports directly from the web interface.

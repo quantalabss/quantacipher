@@ -1,21 +1,38 @@
-# QuantaCipher Documentation
+# QuantaCipher: Post-Quantum Security for the Enterprise
 
-Welcome to the QuantaCipher developer documentation. 
+## The Existential Threat: Harvest-Now, Decrypt-Later
 
-QuantaCipher is an Enterprise-grade Zero-Trust Post-Quantum Cryptography (PQC) platform. We provide an easy-to-use SDK built on top of the NIST-standardized Kyber algorithm to protect your infrastructure against "Store Now, Decrypt Later" quantum attacks.
+The cybersecurity industry has spent decades hardening systems against classical threats, but a new existential threat class is already in motion. Nation-state adversaries are actively executing **harvest-now, decrypt-later** attacks: systematically collecting encrypted enterprise data today, intending to decrypt it once quantum computers break traditional public-key algorithms like RSA and ECC.
 
-## Why Post-Quantum Cryptography?
+Despite this looming crisis and strict cryptographic timelines mandated by regulators, most encryption tools remain entirely blind to the risk.
 
-NIST finalized the post-quantum standards in 2024. Standard cryptographic algorithms like RSA and ECC will be broken by cryptographically relevant quantum computers (CRQCs). If your encrypted data is captured today, it can be decrypted tomorrow when quantum hardware matures.
+## The Developer-Native Solution
 
-QuantaCipher allows you to upgrade your encryption to Kyber-1024 with just two lines of code, completely future-proofing your data.
+**QuantaCipher** is the world's first developer-native, API-first post-quantum encryption platform purpose-built to navigate this transition. 
 
-## Zero-Trust by Design
+Where legacy vendors offer fragmented or hardware-dependent solutions, QuantaCipher delivers NIST-standard quantum-resistant encryption that any team can deploy in under 15 minutes. It requires **no cryptography expertise** and **no infrastructure overhaul**.
 
-QuantaCipher is built on a fundamental Zero-Trust architecture:
-- **Local Execution**: All cryptographic operations happen securely inside your local runtime (using our native WebAssembly or Rust binaries).
-- **Zero Plaintext Transmission**: Your plaintext data **never** leaves your server. Only mathematically impenetrable ciphertext is transmitted over the network.
-- **Client-Side Key Generation**: You hold the private keys.
+Built on a True Zero-Trust architecture, QuantaCipher executes cryptography 100% locally. Plaintext never leaves the client runtime. 
+
+## Ecosystem & Packages
+
+QuantaCipher ships with production-ready SDKs spanning major ecosystems, all backed by a high-performance Rust core.
+
+* **TypeScript / Node.js SDK:** [quantacipher-sdk on NPM](https://www.npmjs.com/package/quantacipher-sdk)
+* **WebAssembly Engine:** [quantacipher-wasm on NPM](https://www.npmjs.com/package/quantacipher-wasm)
+* **Python SDK:** [quantacipher on PyPI](https://pypi.org/project/quantacipher)
+* **Rust Core:** [quantacipher-core on Crates.io](https://crates.io/crates/quantacipher-core)
+
+### Official Links
+* **Platform & Demo:** [https://www.quantacipher.com](https://www.quantacipher.com)
+* **API Documentation:** [https://quantachain.gitbook.io/quantacipher](https://quantachain.gitbook.io/quantacipher)
+* **QuantaLabs Research:** [https://quantalabs.cc](https://quantalabs.cc)
+
+---
+
+## About QuantaLabs
+
+QuantaCipher is built by **QuantaLabs**, a deep-tech Post-Quantum Cryptography (PQC) research company. We are recognized for published cryptographic research, an open-source post-quantum blockchain, and a proven track record of shipping production-grade tooling across Rust, Node.js, and Python. We build infrastructure for a quantum-secure future.
 
 ## Next Steps
 
