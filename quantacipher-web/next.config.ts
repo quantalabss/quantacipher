@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
     reactCompiler: true,
     turbopack: {},
+    serverExternalPackages: ["quantacipher-wasm", "quantacipher-sdk"],
 
     // Allow Next.js to handle WASM files (if SDK ever runs server-side)
     webpack(config, { isServer }) {
