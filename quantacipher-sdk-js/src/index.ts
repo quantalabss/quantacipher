@@ -1,13 +1,6 @@
 import axios from 'axios';
 // Import the compiled Rust WASM — post-quantum cryptography engine
-// Dual-mode enabled: vault_encrypt, secure_encrypt, secure_decrypt, generate_keypair
-import {
-    vault_encrypt,
-    secure_encrypt,
-    secure_decrypt,
-    generate_keypair,
-    get_wasm_version,
-} from 'quantacipher-wasm';
+// Dual-mode enabled via lazy requiring to support Next.js out-of-the-box
 
 export interface QuantaCipherConfig {
     apiKey: string;
@@ -92,8 +85,8 @@ export class QuantaCipher {
      * Result: permanently sealed — no one can decrypt it.
      */
     public encryptVault(plaintext: string): string {
-        console.log(`[QuantaCipher SDK v${get_wasm_version()}] VAULT MODE: Sealing with ephemeral Kyber-1024...`);
         const mod = require('quantacipher-wasm');
+        console.log(`[QuantaCipher SDK v${mod.get_wasm_version()}] VAULT MODE: Sealing with ephemeral Kyber-1024...`);
         return mod.vault_encrypt(plaintext);
     }
 
@@ -168,7 +161,7 @@ export class QuantaCipher {
     // UTILITIES
     // ----------------------------------------------------------
 
-    public getVersion(): string { return get_wasm_version(); }
+    public getVersion(): string { return require('quantacipher-wasm').get_wasm_version(); }
     public isDualModeAvailable(): boolean { return this.dualModeAvailable; }
 
     private requireDualMode(methodName: string): void {
