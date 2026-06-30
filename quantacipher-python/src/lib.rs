@@ -51,7 +51,7 @@ fn get_version() -> PyResult<String> {
 }
 
 #[pymodule]
-fn quantacipher(_py: Python, m: &PyModule) -> PyResult<()> {
+fn _quantacipher_core(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(generate_keypair, m)?)?;
     m.add_function(wrap_pyfunction!(vault_encrypt, m)?)?;
     m.add_function(wrap_pyfunction!(secure_encrypt, m)?)?;

@@ -4,9 +4,11 @@ build-backend = "maturin"
 
 [project]
 name = "quantacipher"
-version = "0.1.0"
+version = "0.1.1"
 description = "Zero-trust PQC encryption library for Python"
 authors = [{ name = "QuantaLabs" }]
 license = { text = "MIT" }
 urls = { Repository = "https://github.com/xaexaex/quantacipher" }
-dependencies = []
+dependencies = [
+    "requests>=2.0.0"
+]

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import crypto from "crypto";
+import { QuantaCipher } from "quantacipher-sdk";
 
 export async function POST(req: Request) {
     try {
@@ -9,23 +9,39 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Plaintext is required" }, { status: 400 });
         }
 
-        // Simulate Kyber-1024 encryption delay (2ms - 10ms for WASM locally, plus network transit logic)
-        await new Promise((resolve) => setTimeout(resolve, 300)); 
+        const API_KEY = process.env.QUANTA_API_KEY || "qz_test_demo123";
+        const GATEWAY_URL = process.env.NEXT_PUBLIC_GATEWAY_URL || "http://localhost:4000/api/v1/ingest";
 
-        // Generate a realistic looking Kyber-1024 ciphertext format
-        // Standard Kyber ciphertext is 1568 bytes, so we generate a large random hex string
-        const randomBytes = crypto.randomBytes(784).toString("hex");
-        const ciphertext = `QZ_TRUE_PQC_KEM_1024:${randomBytes}`;
+        const sdk = new QuantaCipher({
+            apiKey: API_KEY,
+            gatewayUrl: GATEWAY_URL
+        });
+
+        const start = Date.now();
+        
+        // Encrypt locally using WASM Kyber-1024
+        const ciphertext = sdk.encryptVault(plaintext);
+        
+        // Send the zero-trust ciphertext to the Gateway
+        const receipt = await sdk.sendToGateway(ciphertext, { source: "demo_page" });
+        
+        const latencyMs = Date.now() - start;
 
         return NextResponse.json({
             success: true,
-            receiptId: `req_${crypto.randomBytes(8).toString("hex")}`,
-            algorithm: "Kyber-1024 (ML-KEM)",
+            receiptId: receipt.id,
+            algorithm: receipt.encryptionScheme,
             ciphertext: ciphertext,
-            latencyMs: 1.84, // simulated WASM latency
+            latencyMs: latencyMs,
         });
 
-    } catch (error) {
-        return NextResponse.json({ error: "Failed to encrypt" }, { status: 500 });
+    } catch (error: any) {
+        console.error("Encryption failed:", error);
+        
+        if (error.message?.includes("429") || error.message?.includes("Too Many Requests") || error.message?.includes("limit")) {
+            return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
+        }
+        
+        return NextResponse.json({ error: error.message || "Failed to connect to encryption service" }, { status: 500 });
     }
 }
