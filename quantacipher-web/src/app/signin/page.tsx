@@ -23,7 +23,7 @@ function SignInContent() {
     return (
         <div className="min-h-screen grid lg:grid-cols-[60%_40%]">
             {/* Left Side — Dark panel with node grid */}
-            <div className="hidden lg:flex flex-col justify-between bg-[#0a0a0a] p-12 relative overflow-hidden">
+            <div className="hidden lg:flex flex-col justify-between bg-transparent p-12 relative overflow-hidden border-r border-[#222]">
 
                 {/* Subtle dot grid pattern */}
                 <div
@@ -92,7 +92,7 @@ function SignInContent() {
             </div>
 
             {/* Right Side - Auth Form (40%) */}
-            <div className="flex flex-col items-center justify-center p-8 bg-[#0a0a0a]">
+            <div className="flex flex-col items-center justify-center p-8 bg-transparent">
                 <div className="w-full max-w-[380px] space-y-8">
                     <div className="text-center">
                         <div className="lg:hidden mb-8 flex justify-center">
@@ -172,20 +172,11 @@ function SignInContent() {
 
 export default function SignInPage() {
     return (
-        <Suspense fallback={<div className="min-h-screen bg-[#0a0a0a]" />}>
-            <div className="relative min-h-screen bg-[#0a0a0a]">
+        <Suspense fallback={<div className="min-h-screen bg-transparent" />}>
+            <div className="relative min-h-screen bg-transparent">
                 <div className="relative z-[1]">
                     <SignInContent />
                 </div>
-                {/* Global Noise Overlay */}
-                <div 
-                  className="fixed inset-0 z-[100] pointer-events-none opacity-[0.25] mix-blend-screen"
-                  style={{ 
-                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-                    backgroundRepeat: 'repeat',
-                    backgroundSize: '120px 120px'
-                  }} 
-                />
             </div>
         </Suspense>
     );

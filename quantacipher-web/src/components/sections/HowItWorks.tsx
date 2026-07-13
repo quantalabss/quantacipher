@@ -6,36 +6,36 @@ import { UserCircle2, Key, Terminal, ShieldCheck, Receipt, ArrowRight } from "lu
 const steps = [
   {
     icon: UserCircle2,
-    title: "Sign Up",
-    desc: "Create a free account with GitHub or Google. No credit card required.",
+    title: "Authenticate",
+    desc: "Create an organization account and register your application endpoints.",
     action: "Sign up free →",
     href: "/signin",
   },
   {
     icon: Key,
-    title: "Get API Key",
-    desc: "Generate your API key from the dashboard. Instant, no approval process.",
+    title: "Provision Key",
+    desc: "Generate your API keys via the dashboard.",
     action: "View dashboard →",
     href: "/dashboard",
   },
   {
     icon: Terminal,
     title: "Install SDK",
-    desc: "npm install quantacipher-sdk or pip install quantacipher. Two lines.",
+    desc: "npm install quantacipher-sdk. Available for Node.js and browser environments.",
     action: "Read docs →",
     href: "/documentation",
   },
   {
     icon: ShieldCheck,
-    title: "Encrypt Locally",
-    desc: "WASM engine runs Kyber-1024 inside your runtime. Plaintext never leaves.",
+    title: "Encrypt Data",
+    desc: "Kyber-1024 WASM executes locally. Plaintext never leaves your memory space.",
     action: "Architecture →",
-    href: "/architecture",
+    href: "/security",
   },
   {
     icon: Receipt,
-    title: "Get Receipt",
-    desc: "Gateway validates your key and issues a signed cryptographic audit receipt.",
+    title: "Validate & Log",
+    desc: "Gateway issues a cryptographically signed receipt for audit and compliance.",
     action: "Learn more →",
     href: "/documentation#receipts",
   },
@@ -43,61 +43,51 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section className="py-24 bg-transparent">
+    <section className="py-24 bg-[#0A0A0A] border-t border-[#222]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        <div className="text-center mb-16">
-          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#8db53a] mb-4">
-            Get started in minutes
-          </p>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white tracking-tighter leading-tight">
-            From zero to quantum-safe
-          </h2>
-        </div>
-
-        {/* Timeline row */}
-        <div className="relative">
-          {/* Connector line */}
-          <div className="hidden lg:block absolute top-10 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#222] to-transparent" />
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-6">
-            {steps.map((step, i) => {
-              const Icon = step.icon;
-              return (
-                <div key={i} className="relative flex flex-col items-center text-center lg:items-start lg:text-left">
-                  {/* Step number + icon bubble */}
-                  <div className="relative mb-5">
-                    <div className="w-20 h-20 rounded-2xl bg-[#111] border border-[#222] shadow-[0_2px_12px_rgba(0,0,0,0.4)] flex items-center justify-center group-hover:border-[#C4ED5F] transition-all">
-                      <Icon className="w-8 h-8 text-gray-500" />
-                    </div>
-                    <div className="absolute -top-2.5 -right-2.5 w-6 h-6 rounded-full bg-[#C4ED5F] text-black flex items-center justify-center text-[10px] font-black">
-                      {i + 1}
-                    </div>
-                  </div>
-
-                  <h3 className="font-extrabold text-white text-base mb-2 tracking-tight">{step.title}</h3>
-                  <p className="text-sm text-gray-400 font-medium leading-relaxed mb-4 flex-1">{step.desc}</p>
-                  <Link
-                    href={step.href}
-                    className="inline-flex items-center gap-1 text-[12px] font-bold text-[#8db53a] hover:text-[#C4ED5F] transition-colors"
-                  >
-                    {step.action}
-                  </Link>
-                </div>
-              );
-            })}
+        <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-gray-500 mb-4">
+              Integration Pipeline
+            </p>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-white tracking-tight leading-tight max-w-2xl">
+              From zero to <span className="text-[#C4ED5F]">quantum-safe</span>.
+            </h2>
           </div>
+          <Link
+            href="https://quantachain.gitbook.io/quantacipher"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-2 px-4 py-2 bg-[#111] border border-[#333] hover:border-gray-500 rounded text-sm text-gray-300 hover:text-white transition-colors"
+          >
+            Read API Reference
+            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+          </Link>
         </div>
 
-        {/* Bottom CTA */}
-        <div className="mt-16 text-center">
-          <Link
-            href="/signin"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-white text-black rounded-full font-bold hover:bg-[#C4ED5F] hover:text-black transition-all text-sm uppercase tracking-wider hover:scale-105 active:scale-95"
-          >
-            Start for free — no credit card needed
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+        {/* Technical Pipeline Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-px bg-[#222] border border-[#222]">
+          {steps.map((step, i) => {
+            const Icon = step.icon;
+            return (
+              <div key={i} className="relative bg-[#000] p-6 flex flex-col group hover:bg-[#0A0A0A] transition-colors">
+                <div className="text-[10px] font-mono text-gray-600 mb-6">STEP {i + 1}</div>
+                
+                <Icon className="w-6 h-6 text-gray-400 mb-6 group-hover:text-white transition-colors" />
+
+                <h3 className="font-semibold text-white text-base mb-2 tracking-tight">{step.title}</h3>
+                <p className="text-sm text-gray-500 font-normal leading-relaxed mb-8 flex-1">{step.desc}</p>
+                
+                <Link
+                  href={step.href}
+                  className="inline-flex items-center gap-1 text-[12px] font-semibold text-gray-400 group-hover:text-[#C4ED5F] transition-colors mt-auto"
+                >
+                  {step.action}
+                </Link>
+              </div>
+            );
+          })}
         </div>
 
       </div>

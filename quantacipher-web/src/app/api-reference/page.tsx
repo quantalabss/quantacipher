@@ -7,7 +7,7 @@ import { Code, Terminal } from "lucide-react";
 
 export default function ApiReferencePage() {
     return (
-        <div className="min-h-screen bg-[#0a0a0a] text-white">
+        <div className="min-h-screen bg-[#000000] text-white relative">
             <Navbar />
 
             <main className="pt-24 pb-16">
@@ -31,7 +31,7 @@ export default function ApiReferencePage() {
                                 <p className="text-[16px] text-gray-400 leading-relaxed mb-4">
                                     All API requests must be authenticated via a Bearer token in the Authorization header. You can generate an API key from your dashboard.
                                 </p>
-                                <div className="bg-[#111] border border-[#222] rounded-[12px] p-4 font-mono text-[14px] text-gray-400">
+                                <div className="bg-[#111] border border-[#222] rounded-none p-4 font-mono text-[14px] text-gray-400">
                                     Authorization: Bearer qkc_live_xxxxxxxxxxxxxxxxx
                                 </div>
                             </section>
@@ -43,9 +43,9 @@ export default function ApiReferencePage() {
                                 </h2>
                                 
                                 {/* Encrypt */}
-                                <div className="bg-[#111] border border-[#222] rounded-[16px] overflow-hidden mb-6">
+                                <div className="bg-[#111] border border-[#222] rounded-none overflow-hidden mb-6">
                                     <div className="bg-[#0f0f0f] border-b border-[#222] px-6 py-4 flex items-center gap-4">
-                                        <span className="bg-[#C4ED5F] text-black px-3 py-1 rounded-[4px] text-[12px] font-bold">POST</span>
+                                        <span className="bg-[#C4ED5F] text-black px-3 py-1 rounded-none text-[12px] font-bold">POST</span>
                                         <span className="font-mono text-[15px] text-white">/v1/encrypt</span>
                                     </div>
                                     <div className="p-6">
@@ -53,7 +53,7 @@ export default function ApiReferencePage() {
                                             Encrypts a plaintext payload using NIST Kyber-1024.
                                         </p>
                                         <h4 className="text-[14px] font-medium text-white mb-2">Request Body</h4>
-                                        <pre className="bg-[#0a0a0a] border border-[#222] p-4 rounded-[8px] text-[13px] text-gray-400 overflow-x-auto">
+                                        <pre className="bg-[#0a0a0a] border border-[#222] p-4 rounded-none text-[13px] text-gray-400 overflow-x-auto">
 {`{
   "plaintext": "string",
   "algorithm": "kyber1024-aesgcm" // Optional, defaults to kyber1024
@@ -63,9 +63,9 @@ export default function ApiReferencePage() {
                                 </div>
 
                                 {/* Decrypt */}
-                                <div className="bg-[#111] border border-[#222] rounded-[16px] overflow-hidden">
+                                <div className="bg-[#111] border border-[#222] rounded-none overflow-hidden">
                                     <div className="bg-[#0f0f0f] border-b border-[#222] px-6 py-4 flex items-center gap-4">
-                                        <span className="bg-[#C4ED5F] text-black px-3 py-1 rounded-[4px] text-[12px] font-bold">POST</span>
+                                        <span className="bg-[#C4ED5F] text-black px-3 py-1 rounded-none text-[12px] font-bold">POST</span>
                                         <span className="font-mono text-[15px] text-white">/v1/decrypt</span>
                                     </div>
                                     <div className="p-6">
@@ -73,7 +73,7 @@ export default function ApiReferencePage() {
                                             Decrypts a quantum-safe ciphertext.
                                         </p>
                                         <h4 className="text-[14px] font-medium text-white mb-2">Request Body</h4>
-                                        <pre className="bg-[#0a0a0a] border border-[#222] p-4 rounded-[8px] text-[13px] text-gray-400 overflow-x-auto">
+                                        <pre className="bg-[#0a0a0a] border border-[#222] p-4 rounded-none text-[13px] text-gray-400 overflow-x-auto">
 {`{
   "ciphertext": "string"
 }`}
@@ -88,14 +88,13 @@ export default function ApiReferencePage() {
             </main>
             <Footer />
         
-            {/* Global Noise Overlay */}
+            {/* Subtle grid background */}
             <div 
-              className="fixed inset-0 z-[100] pointer-events-none opacity-[0.25] mix-blend-screen"
-              style={{ 
-                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-                backgroundRepeat: 'repeat',
-                backgroundSize: '120px 120px'
-              }} 
+              className="absolute inset-0 z-0 opacity-20 pointer-events-none" 
+              style={{
+                backgroundImage: 'linear-gradient(#222 1px, transparent 1px), linear-gradient(90deg, #222 1px, transparent 1px)',
+                backgroundSize: '40px 40px'
+              }}
             />
 </div>
     );

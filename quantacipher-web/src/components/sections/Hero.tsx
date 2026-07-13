@@ -1,62 +1,119 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
-import { motion } from "framer-motion";
-import { ParticleOrb } from "@/components/ui/ParticleOrb";
+import { ArrowUpRight, Terminal, Copy, CheckCircle2 } from "lucide-react";
+import { useState } from "react";
 
 export function Hero() {
+  const [copied, setCopied] = useState(false);
+
+  const codeSnippet = `import { QuantaCipher } from 'quantacipher-sdk';
+
+// Initialize with your API key
+const qc = new QuantaCipher('sk_live_...');
+
+// Zero-trust Kyber-1024 encryption (client-side)
+const { ciphertext, receipt } = await qc.encrypt(
+  "Highly sensitive enterprise payload"
+);
+
+console.log("Cryptographic receipt:", receipt.signature);`;
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(codeSnippet);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
-    <section className="relative min-h-screen bg-[#0a0a0a] flex flex-col justify-end overflow-hidden">
-      
-      {/* 1. Underlying Soft Glows (These illuminate the noise) */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute top-1/4 -left-[10%] w-[50vw] h-[50vw] bg-white opacity-[0.05] blur-[150px] rounded-full mix-blend-screen" />
-        <div className="absolute top-1/2 right-[10%] w-[40vw] h-[40vw] bg-white opacity-[0.04] blur-[150px] rounded-full mix-blend-screen" />
-        <div className="absolute -bottom-[20%] left-1/3 w-[60vw] h-[40vw] bg-white opacity-[0.03] blur-[180px] rounded-full mix-blend-screen" />
-      </div>
+    <section className="relative min-h-screen bg-[#000000] flex flex-col justify-end overflow-hidden pt-24">
+      {/* Subtle grid background */}
+      <div 
+        className="absolute inset-0 z-0 opacity-20 pointer-events-none" 
+        style={{
+          backgroundImage: 'linear-gradient(#222 1px, transparent 1px), linear-gradient(90deg, #222 1px, transparent 1px)',
+          backgroundSize: '40px 40px'
+        }}
+      />
 
       {/* Content Container */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[90vh] flex flex-col justify-center pb-20 pt-24">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-          
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[85vh] flex flex-col justify-center pb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
           {/* Left Text Content */}
-          <div className="animate-fade-in max-w-[650px]">
-            <div className="flex items-center gap-3 mb-6">
-              <span className="text-[#C4ED5F] font-mono text-xs tracking-widest uppercase">Zero-Trust · Post-Quantum</span>
+          <div className="animate-fade-in max-w-[600px]">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#111] border border-[#222] text-xs font-semibold text-gray-300 mb-8">
+              <span className="w-2 h-2 rounded-full bg-[#C4ED5F] animate-pulse" />
+              NIST FIPS 203 (ML-KEM) Ready
             </div>
 
-            <h1 className="text-[3.5rem] sm:text-[4.5rem] lg:text-[5.5rem] font-medium tracking-[-0.04em] leading-[1.05] text-white mb-8 drop-shadow-sm">
-              Secure data.<br />In two lines of code.
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.1] text-white mb-6">
+              Post-Quantum Security.<br />
+              <span className="text-gray-500">In 2 lines of code.</span>
             </h1>
 
-            <p className="text-[1.15rem] sm:text-[1.25rem] text-gray-400 leading-relaxed font-normal mb-10">
-              Enterprise post-quantum encryption API. NIST ML-KEM (Kyber-1024). 
-              Your plaintext never leaves your runtime. Deploy zero-trust security instantly.
+            <p className="text-base sm:text-lg text-gray-400 leading-relaxed font-normal mb-10 max-w-[500px]">
+              The enterprise API for cryptographic agility. Secure your data with Kyber-1024. Your plaintext never leaves your runtime.
             </p>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
               <Link
                 href="/signin"
-                className="flex items-center justify-center px-8 py-3.5 bg-white text-black font-semibold hover:bg-gray-100 transition-colors text-[15px]"
+                className="flex items-center justify-center px-6 py-3 bg-white text-black font-semibold hover:bg-gray-200 transition-colors text-sm"
               >
-                Get API Keys
+                Get API keys
               </Link>
               <Link
                 href="https://quantachain.gitbook.io/quantacipher"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center px-8 py-3.5 bg-transparent text-white border border-white/20 font-semibold hover:bg-white/5 transition-colors text-[15px]"
+                className="flex items-center justify-center px-6 py-3 bg-transparent text-white border border-[#333] font-semibold hover:bg-[#111] hover:border-gray-500 transition-colors text-sm"
               >
-                View Docs
+                Read Docs
               </Link>
             </div>
           </div>
 
-          {/* Right 3D Particle Orb */}
-          <div className="flex justify-center items-center mix-blend-screen pointer-events-none w-full mt-12 lg:mt-0">
-            <div className="scale-90 xl:scale-100">
-              <ParticleOrb />
+          {/* Right Code Snippet UI */}
+          <div className="w-full mt-10 lg:mt-0 animate-fade-in relative group">
+            {/* Ambient glow behind code */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-[#222] to-[#111] blur-2xl opacity-50 transition duration-1000 group-hover:opacity-100" />
+            
+            <div className="relative bg-[#0A0A0A] border border-[#222] rounded-xl overflow-hidden shadow-2xl">
+              {/* Fake Window Header */}
+              <div className="flex items-center justify-between px-4 py-3 border-b border-[#222] bg-[#0A0A0A]">
+                <div className="flex gap-2">
+                  <div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/50" />
+                  <div className="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/50" />
+                </div>
+                <div className="flex items-center gap-2 text-xs font-mono text-gray-500">
+                  <Terminal className="w-3.5 h-3.5" />
+                  index.ts
+                </div>
+                <button 
+                  onClick={handleCopy}
+                  className="text-gray-500 hover:text-white transition-colors"
+                >
+                  {copied ? <CheckCircle2 className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                </button>
+              </div>
+              
+              {/* Code Content */}
+              <div className="p-6 overflow-x-auto">
+                <pre className="font-mono text-sm leading-relaxed text-gray-300">
+                  <code>
+                    <span className="text-[#C4ED5F]">import</span> {"{ QuantaCipher }"} <span className="text-[#C4ED5F]">from</span> <span className="text-gray-400">'quantacipher-sdk'</span>;<br /><br />
+                    <span className="text-gray-600">{'// Initialize with your API key'}</span><br />
+                    <span className="text-[#C4ED5F]">const</span> qc = <span className="text-[#C4ED5F]">new</span> QuantaCipher(<span className="text-gray-400">'sk_live_...'</span>);<br /><br />
+                    <span className="text-gray-600">{'// Zero-trust Kyber-1024 encryption (client-side)'}</span><br />
+                    <span className="text-[#C4ED5F]">const</span> {"{ ciphertext, receipt }"} = <span className="text-[#C4ED5F]">await</span> qc.encrypt(<br />
+                    {"  "}<span className="text-gray-400">"Highly sensitive enterprise payload"</span><br />
+                    );<br /><br />
+                    console.<span className="text-blue-400">log</span>(<span className="text-gray-400">"Cryptographic receipt:"</span>, receipt.signature);
+                  </code>
+                </pre>
+              </div>
             </div>
           </div>
 

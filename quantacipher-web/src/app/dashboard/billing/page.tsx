@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { CheckCircle2, Loader2, CreditCard } from "lucide-react";
+import { CheckCircle2, Loader2, CreditCard, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const loadRazorpayScript = () => {
@@ -58,10 +58,10 @@ export default function BillingPage() {
         if (status === "unauthenticated") {
             window.location.href = "/signin?callbackUrl=/dashboard/billing";
         } else if (status === "authenticated") {
-            fetch('/api/keys')
+            fetch('/api/analytics')
                 .then(res => res.json())
                 .then(data => {
-                    if (data.analytics) setAnalytics(data.analytics);
+                    if (data.overview) setAnalytics(data.overview);
                 })
                 .catch(console.error);
         }
@@ -69,8 +69,9 @@ export default function BillingPage() {
 
     if (status === "loading") {
         return (
-            <div className="min-h-screen flex items-center justify-center">
+            <div className="min-h-[80vh] flex flex-col items-center justify-center bg-transparent gap-4">
                 <Loader2 className="w-8 h-8 animate-spin text-[#C4ED5F]" />
+                <p className="text-gray-500 text-sm font-mono uppercase tracking-widest">Loading Billing...</p>
             </div>
         );
     }
@@ -127,71 +128,84 @@ export default function BillingPage() {
     };
 
     return (
-        <div className="space-y-8 max-w-5xl pb-12 p-4 sm:p-6 md:p-8 mx-auto">
-            <h1 className="text-[28px] font-normal text-white">Billing & Plans</h1>
+        <div className="p-6 md:p-10 max-w-[1400px] mx-auto min-h-screen">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-6 border-b border-[#222] pb-6">
+                <div>
+                    <h1 className="text-3xl font-semibold text-white tracking-tight">Billing & Plans</h1>
+                    <p className="text-gray-500 mt-2 font-medium">Manage your subscription and monitor usage limits.</p>
+                </div>
+            </div>
 
             {/* Current Plan */}
-            <div className="bg-white/[0.02] p-6 rounded-[24px] border border-white/10 backdrop-blur-sm shadow-none flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div className="bg-[#000] p-8 border border-[#222] flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-12">
                 <div>
-                    <h3 className="text-[12px] font-medium text-gray-400 uppercase tracking-wider mb-2">Current Plan</h3>
-                    <div className="flex items-center gap-3 mb-2">
-                        <span className="text-[28px] font-normal text-white">Developer</span>
-                        <span className="bg-white/5 text-[#C4ED5F] text-[12px] px-2 py-1 rounded-[4px] font-medium uppercase tracking-wide">Free</span>
+                    <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Current Plan</h3>
+                    <div className="flex items-center gap-3 mb-3">
+                        <span className="text-3xl font-semibold text-white capitalize">{analytics.plan}</span>
+                        <span className="bg-[#C4ED5F]/10 text-[#C4ED5F] border border-[#C4ED5F]/30 text-[10px] px-2 py-1 font-bold uppercase tracking-widest">Active</span>
                     </div>
-                    <p className="text-[14px] text-gray-400">
-                        You are currently on the free Developer tier. Upgrade for higher limits and SLAs.
+                    <p className="text-sm text-gray-400">
+                        You are currently on the {analytics.plan} tier. Upgrade for higher limits and SLAs.
                     </p>
                 </div>
-                <div className="space-y-3 text-[14px] text-white bg-transparent p-5 rounded-xl border border-white/10 min-w-[260px] w-full md:w-auto mt-4 md:mt-0">
-                    <div className="flex items-center justify-between">
-                        <span className="text-gray-400">API Calls:</span>
-                        <span className="font-medium text-white">{analytics.totalCalls.toLocaleString()} / 10,000</span>
+                
+                <div className="w-full md:w-[320px] space-y-5">
+                    <div>
+                        <div className="flex items-center justify-between mb-2 text-xs font-mono">
+                            <span className="text-gray-500">API Calls</span>
+                            <span className="text-white">{analytics.totalCalls.toLocaleString()} <span className="text-gray-600">/ 10,000</span></span>
+                        </div>
+                        <div className="w-full bg-[#111] border border-[#222] h-2 overflow-hidden">
+                            <div className="bg-[#C4ED5F] h-full transition-all duration-500" style={{ width: `${Math.min(100, (analytics.totalCalls / 10000) * 100)}%` }}></div>
+                        </div>
                     </div>
-                    <div className="flex items-center justify-between">
-                        <span className="text-gray-400">API Keys:</span>
-                        <span className="font-medium text-white">{analytics.activeKeys} / 1</span>
-                    </div>
-                    <div className="w-full bg-[#e5e7eb] h-1.5 rounded-full mt-2 overflow-hidden">
-                        <div className="bg-[#C4ED5F] h-full rounded-full transition-all duration-500" style={{ width: `${Math.min(100, (analytics.totalCalls / 10000) * 100)}%` }}></div>
+                    
+                    <div>
+                        <div className="flex items-center justify-between mb-2 text-xs font-mono">
+                            <span className="text-gray-500">API Keys</span>
+                            <span className="text-white">{analytics.activeKeys} <span className="text-gray-600">/ 1</span></span>
+                        </div>
+                        <div className="w-full bg-[#111] border border-[#222] h-2 overflow-hidden">
+                            <div className="bg-[#C4ED5F] h-full transition-all duration-500" style={{ width: `${Math.min(100, (analytics.activeKeys / 1) * 100)}%` }}></div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             {/* Upgrade Options */}
-            <div>
-                <h2 className="text-[20px] font-normal text-white mb-4">Upgrade Options</h2>
+            <div className="mb-12">
+                <h2 className="text-sm font-bold text-white uppercase tracking-widest mb-6">Available Upgrades</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {plans.map((plan) => (
-                        <div key={plan.id} className={`bg-white/[0.02] p-6 rounded-[24px] border backdrop-blur-sm flex flex-col h-full ${plan.id === 'professional' ? 'border-2 border-[#C4ED5F] shadow-md relative' : 'border-white/10 shadow-none'}`}>
+                        <div key={plan.id} className={`bg-[#000] p-8 flex flex-col h-full ${plan.id === 'professional' ? 'border border-[#C4ED5F] relative' : 'border border-[#222]'}`}>
                             {plan.id === 'professional' && (
-                                <div className="absolute top-0 right-0 bg-[#C4ED5F] text-black text-[11px] font-bold tracking-wide uppercase px-4 py-1 rounded-bl-[8px]">
+                                <div className="absolute top-0 right-0 bg-[#C4ED5F] text-black text-[10px] font-bold tracking-widest uppercase px-3 py-1">
                                     Recommended
                                 </div>
                             )}
                             
-                            <h3 className="text-[20px] font-medium text-white mb-2">{plan.name}</h3>
-                            <p className="text-[14px] text-gray-400 mb-6 min-h-[40px] leading-relaxed">{plan.description}</p>
+                            <h3 className="text-2xl font-semibold text-white mb-2">{plan.name}</h3>
+                            <p className="text-sm text-gray-400 mb-6 min-h-[40px]">{plan.description}</p>
                             
                             <div className="flex items-baseline gap-1 mb-8">
-                                <span className="text-[40px] font-normal text-white tracking-tight">{plan.price}</span>
-                                <span className="text-gray-400 font-medium text-[16px]">{plan.period}</span>
+                                <span className="text-4xl font-semibold text-white tracking-tight">{plan.price}</span>
+                                <span className="text-gray-500 font-medium text-sm">{plan.period}</span>
                             </div>
                             
                             <Button
                                 onClick={() => handleUpgrade(plan.id)}
                                 disabled={loading !== null}
-                                className={`w-full mb-8 h-[48px] rounded-xl text-[15px] font-medium transition-all ${plan.id === 'professional' ? 'bg-[#C4ED5F] hover:bg-white text-black shadow-none hover:shadow-md' : 'bg-transparent border border-white/10 text-white hover:bg-transparent'}`}
-                                variant={plan.id === 'professional' ? 'default' : 'outline'}
+                                className={`w-full mb-8 h-12 rounded-none text-xs font-bold uppercase tracking-wider transition-colors ${plan.id === 'professional' ? 'bg-[#C4ED5F] hover:bg-white text-black' : 'bg-transparent border border-[#222] text-white hover:bg-[#111]'}`}
                             >
-                                {loading === plan.id ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <CreditCard className="w-4 h-4 mr-2" />}
+                                {loading === plan.id ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <CreditCard className="w-4 h-4 mr-2" />}
                                 {loading === plan.id ? "Processing..." : `Upgrade to ${plan.name}`}
                             </Button>
                             
-                            <div className="space-y-4 flex-grow pt-6 border-t border-white/10">
+                            <div className="space-y-4 flex-grow pt-6 border-t border-[#222]">
                                 {plan.features.map((feature, i) => (
-                                    <div key={i} className="flex items-start gap-3 text-[14px]">
-                                        <CheckCircle2 className="w-4 h-4 text-[#C4ED5F] flex-shrink-0 mt-0.5" />
-                                        <span className="text-white font-medium">{feature}</span>
+                                    <div key={i} className="flex items-start gap-3 text-sm">
+                                        <CheckCircle2 className={`w-4 h-4 flex-shrink-0 mt-0.5 ${plan.id === 'professional' ? 'text-[#C4ED5F]' : 'text-gray-500'}`} />
+                                        <span className="text-gray-300 font-medium">{feature}</span>
                                     </div>
                                 ))}
                             </div>
@@ -201,21 +215,21 @@ export default function BillingPage() {
             </div>
 
             {/* Enterprise Custom */}
-            <div className="bg-gradient-to-r bg-white/[0.02] border border-white/10 shadow-none rounded-[24px] backdrop-blur-sm p-6 sm:p-8 mt-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div className="bg-[#0a0a0a] border border-[#222] p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-12">
                 <div>
-                    <h3 className="text-[18px] font-medium text-white mb-2">Need an Enterprise Plan?</h3>
-                    <p className="text-[14px] text-gray-400 max-w-lg leading-relaxed">Unlimited calls, SOC2/HIPAA compliance, dedicated gateway instances, and 24/7 dedicated support.</p>
+                    <h3 className="text-lg font-semibold text-white mb-2">Need an Enterprise Plan?</h3>
+                    <p className="text-sm text-gray-400 max-w-xl">Unlimited API calls, dedicated gateway instances, SOC2/HIPAA compliance, and 24/7 dedicated Slack channel.</p>
                 </div>
-                <Button variant="outline" className="bg-transparent border-white/10 text-white hover:bg-transparent h-[40px] px-6 whitespace-nowrap">
+                <Button className="bg-white text-black hover:bg-gray-200 rounded-none h-10 px-8 font-bold text-xs uppercase tracking-wider whitespace-nowrap transition-colors">
                     Contact Sales
                 </Button>
             </div>
             
             {/* Payment History Placeholder */}
-            <div className="mt-12">
-                <h2 className="text-[20px] font-normal text-white mb-4">Payment History</h2>
-                <div className="bg-white/[0.02] border border-white/10 rounded-[24px] p-12 backdrop-blur-sm text-center text-gray-400 text-[14px]">
-                    No payment history available. You are currently on the Free tier.
+            <div>
+                <h2 className="text-sm font-bold text-white uppercase tracking-widest mb-6">Payment History</h2>
+                <div className="bg-[#000] border border-[#222] p-12 text-center text-gray-500 text-sm font-mono">
+                    No payment history available.
                 </div>
             </div>
         </div>

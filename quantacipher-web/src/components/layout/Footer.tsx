@@ -112,7 +112,7 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={s.label}
-                  className="w-9 h-9 rounded-full border border-[#333] flex items-center justify-center text-gray-400 hover:border-[#C4ED5F] hover:text-[#C4ED5F] transition-all hover:scale-110"
+                  className="w-9 h-9 rounded-none border border-[#333] flex items-center justify-center text-gray-400 hover:border-[#C4ED5F] hover:text-[#C4ED5F] transition-all hover:scale-110"
                 >
                   {s.icon}
                 </a>
@@ -139,7 +139,7 @@ export function Footer() {
                         {link.label}
                       </Link>
                       {link.badge && (
-                        <span className="text-[9px] font-black tracking-widest uppercase px-1.5 py-0.5 rounded-full border border-[#333] text-gray-400 bg-[#111]">
+                        <span className="text-[9px] font-black tracking-widest uppercase px-1.5 py-0.5 rounded-none border border-[#333] text-gray-400 bg-[#111]">
                           {link.badge}
                         </span>
                       )}

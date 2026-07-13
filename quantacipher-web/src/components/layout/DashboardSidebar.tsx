@@ -2,16 +2,27 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Key, Activity, CreditCard, LogOut, X, BookOpen, HelpCircle, Home } from "lucide-react";
+import {
+    LayoutDashboard,
+    BarChart3,
+    CreditCard,
+    BookOpen,
+    LifeBuoy,
+    LogOut,
+    X,
+} from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
 
-const navItems = [
-    { name: "API Keys", href: "/dashboard", icon: Key },
-    { name: "Usage", href: "/dashboard/usage", icon: Activity },
+const navigation = [
+    { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
+    { name: "Usage", href: "/dashboard/usage", icon: BarChart3 },
     { name: "Billing", href: "/dashboard/billing", icon: CreditCard },
+];
+
+const secondaryNavigation = [
     { name: "Documentation", href: "https://quantachain.gitbook.io/quantacipher", icon: BookOpen },
-    { name: "Support", href: "/support", icon: HelpCircle },
-    { name: "Back to Home", href: "/", icon: Home },
+    { name: "Support", href: "/support", icon: LifeBuoy },
+    { name: "Back to Home", href: "/", icon: LogOut },
 ];
 
 interface DashboardSidebarProps {
@@ -34,21 +45,18 @@ export function DashboardSidebar({ isOpen, setIsOpen }: DashboardSidebarProps) {
             )}
 
             <aside 
-                className={`fixed lg:sticky top-0 left-0 z-[120] h-[100dvh] w-[280px] flex flex-col justify-between bg-[#0a0a0a] border-r border-white/10 overflow-hidden transition-transform duration-300 ease-in-out ${
+                className={`fixed lg:sticky top-0 left-0 z-[120] h-[100dvh] w-[280px] flex flex-col justify-between bg-transparent border-r border-white/10 overflow-hidden transition-transform duration-300 ease-in-out ${
                     isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
                 }`}
             >
-            {/* Subtle dot grid pattern */}
+            {/* Subtle grid pattern */}
             <div
-                className="absolute inset-0 opacity-[0.15] pointer-events-none"
+                className="absolute inset-0 opacity-10 pointer-events-none"
                 style={{
-                    backgroundImage: `radial-gradient(circle, #C4ED5F 1px, transparent 1px)`,
-                    backgroundSize: "32px 32px",
+                    backgroundImage: `linear-gradient(#222 1px, transparent 1px), linear-gradient(90deg, #222 1px, transparent 1px)`,
+                    backgroundSize: "20px 20px",
                 }}
             />
-
-            {/* Lime glow */}
-            <div className="absolute top-0 left-0 w-[300px] h-[300px] bg-[#C4ED5F] opacity-[0.04] rounded-full blur-[80px] pointer-events-none -translate-x-1/2 -translate-y-1/2" />
 
             <div className="relative z-10 flex flex-col h-full p-6 pb-12 lg:pb-6">
                 {/* Logo & Mobile Close */}
@@ -76,27 +84,45 @@ export function DashboardSidebar({ isOpen, setIsOpen }: DashboardSidebarProps) {
                     <p className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-500 mb-4 px-3">
                         Menu
                     </p>
-                    {navItems.map((item) => {
-                        const Icon = item.icon;
+                    {navigation.map((item) => {
                         const isActive = pathname === item.href;
+                        const Icon = item.icon;
                         return (
                             <Link
                                 key={item.name}
                                 href={item.href}
                                 onClick={() => setIsOpen(false)}
-                                target={item.href.startsWith('http') ? "_blank" : undefined}
-                                rel={item.href.startsWith('http') ? "noopener noreferrer" : undefined}
-                                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-[14px] font-medium transition-all ${
+                                className={`flex items-center gap-3 px-3 py-2.5 rounded-none text-[13px] font-bold uppercase tracking-wider transition-colors ${
                                     isActive
-                                        ? "bg-white/10 text-white"
-                                        : "text-gray-400 hover:text-white hover:bg-white/5"
+                                        ? "bg-[#111] text-white border-l-2 border-[#C4ED5F]"
+                                        : "text-gray-500 hover:text-white hover:bg-[#0a0a0a] border-l-2 border-transparent"
                                 }`}
                             >
-                                <Icon className={`w-5 h-5 ${isActive ? "text-[#C4ED5F]" : "text-gray-400"}`} />
+                                <Icon className={`w-4 h-4 ${isActive ? "text-[#C4ED5F]" : "text-gray-500"}`} />
                                 {item.name}
                             </Link>
                         );
                     })}
+
+                    <div className="mt-8 space-y-1">
+                        <div className="px-3 mb-4 text-[10px] font-black text-gray-600 uppercase tracking-widest">Resources</div>
+                        {secondaryNavigation.map((item) => {
+                            const Icon = item.icon;
+                            return (
+                                <Link
+                                    key={item.name}
+                                    href={item.href}
+                                    onClick={() => setIsOpen(false)}
+                                    target={item.href.startsWith('http') ? "_blank" : undefined}
+                                    rel={item.href.startsWith('http') ? "noopener noreferrer" : undefined}
+                                    className="flex items-center gap-3 px-3 py-2.5 rounded-none text-[13px] font-bold uppercase tracking-wider text-gray-500 hover:text-white hover:bg-[#0a0a0a] transition-colors border-l-2 border-transparent"
+                                >
+                                    <Icon className="w-4 h-4 text-gray-500" />
+                                    {item.name}
+                                </Link>
+                            );
+                        })}
+                    </div>
                 </nav>
 
                 {/* User Profile & Logout */}
@@ -104,9 +130,9 @@ export function DashboardSidebar({ isOpen, setIsOpen }: DashboardSidebarProps) {
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             {session?.user?.image ? (
-                                <img src={session.user.image} alt="Profile" className="w-9 h-9 rounded-full border border-white/10" />
+                                <img src={session.user.image} alt="Profile" className="w-8 h-8 rounded-none border border-[#222]" />
                             ) : (
-                                <div className="w-9 h-9 rounded-full bg-[#C4ED5F] text-black flex items-center justify-center text-sm font-black">
+                                <div className="w-8 h-8 rounded-none bg-[#C4ED5F] text-black flex items-center justify-center text-sm font-black">
                                     {session?.user?.name?.[0] || "U"}
                                 </div>
                             )}
