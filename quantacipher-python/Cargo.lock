@@ -324,7 +324,7 @@ dependencies = [
 
 [[package]]
 name = "quantacipher-core"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "aes-gcm",
  "base64",
@@ -334,7 +334,7 @@ dependencies = [
 
 [[package]]
 name = "quantacipher-python"
-version = "0.1.1"
+version = "0.2.0"
 dependencies = [
  "pyo3",
  "quantacipher-core",
