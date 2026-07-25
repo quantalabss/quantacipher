@@ -10,8 +10,8 @@
 import { QuantaCipher } from './src/index';
 
 const sdk = new QuantaCipher({
-    apiKey: 'qz_live_7ii2gjkit5eaxwlhj7c2geusb3ipdbo4',
-    gatewayUrl: 'https://gateway.quantacipher.com/api/v1/ingest', // production
+    apiKey: 'qz_live_your_key_here',   // ← get yours at quantacipher.com/dashboard
+    gatewayUrl: 'https://gateway.quantacipher.com/api/v1/ingest',
 });
 
 async function main() {
