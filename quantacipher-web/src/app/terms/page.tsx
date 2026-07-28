@@ -24,7 +24,7 @@ export default function TermsPage() {
                                 <section>
                                     <h2 className="text-[24px] font-medium text-white mb-4">1. Agreement to Terms</h2>
                                     <p className="text-[16px] text-gray-400 leading-relaxed mb-4">
-                                        These Terms of Service ("Terms") constitute a legally binding agreement made between you, whether personally or on behalf of an entity ("you"), and QUANTALABS PRIVATE LIMITED ("QuantaCipher", "we", "us", or "our"), concerning your access to and use of the QuantaCipher API, SDKs, and associated web dashboard (collectively, the "Services"). By accessing the Services, you agree that you have read, understood, and agree to be bound by all of these Terms.
+                                        These Terms of Service ("Terms") constitute a legally binding agreement made between you, whether personally or on behalf of an entity ("you"), and QUANTALABS PRIVATE LIMITED ("QuantaCipher", "we", "us", or "our"), concerning your access to and use of the QuantaCipher API, SDKs, and associated web dashboard (collectively, the "Services"). By creating an account, accessing the dashboard, or utilizing our APIs, you explicitly agree that you have read, understood, and agree to be bound by all of these Terms.
                                     </p>
                                 </section>
 
@@ -47,7 +47,10 @@ export default function TermsPage() {
                                 <section>
                                     <h2 className="text-[24px] font-medium text-white mb-4">3. Subscriptions and Payments</h2>
                                     <p className="text-[16px] text-gray-400 leading-relaxed mb-4">
-                                        QuantaCipher offers both free ("Developer") and paid ("Startup", "Professional", "Enterprise") subscription tiers. By selecting a paid tier, you agree to pay the monthly or annual subscription fees indicated at the time of purchase. Fees are non-refundable except as required by law.
+                                        QuantaCipher offers both free ("Developer") and paid ("Startup", "Professional", "Enterprise") subscription tiers. By selecting a paid tier, you agree to pay the monthly or annual subscription fees indicated at the time of purchase. Subscriptions are billed on a recurring basis via our payment gateway (Razorpay).
+                                    </p>
+                                    <p className="text-[16px] text-gray-400 leading-relaxed mb-4">
+                                        <strong>Refunds:</strong> Please refer to our dedicated <a href="/refunds" className="text-[#C4ED5F] hover:underline">Cancellation and Refund Policy</a> for detailed information on subscription cancellations.
                                     </p>
                                     <p className="text-[16px] text-gray-400 leading-relaxed">
                                         We reserve the right to change our pricing or institute new charges upon 30 days' notice to you. Continued use of the Services after such changes constitutes your acceptance of the new fees.
@@ -55,9 +58,9 @@ export default function TermsPage() {
                                 </section>
 
                                 <section>
-                                    <h2 className="text-[24px] font-medium text-white mb-4">4. Service Level Agreements (SLAs)</h2>
+                                    <h2 className="text-[24px] font-medium text-white mb-4">4. Service Availability</h2>
                                     <p className="text-[16px] text-gray-400 leading-relaxed">
-                                        Paid tiers ("Startup", "Professional", "Enterprise") are subject to a 99.9% Uptime SLA. If we fail to meet this SLA in a given calendar month, you may be eligible for a service credit. The Developer (Free) tier is provided "as-is" without any warranty of uptime or availability.
+                                        While we strive to provide highly available infrastructure, QuantaCipher does not guarantee any specific uptime percentage or Service Level Agreement (SLA). All Services, including paid tiers ("Startup", "Professional", "Enterprise") and the Developer (Free) tier, are provided on an "as-is" and "as-available" basis without any warranty of continuous, uninterrupted availability.
                                     </p>
                                 </section>
 
@@ -85,7 +88,7 @@ export default function TermsPage() {
                                 <section>
                                     <h2 className="text-[24px] font-medium text-white mb-4">8. Contact Information</h2>
                                     <p className="text-[16px] text-gray-400 leading-relaxed">
-                                        For legal inquiries regarding these Terms of Service, please contact us at: <a href="mailto:contact@quantalabs.cc" className="text-[#C4ED5F] hover:underline">contact@quantalabs.cc</a>.
+                                        For legal inquiries regarding these Terms of Service, please contact us at: <a href="mailto:legal@quantacipher.com" className="text-[#C4ED5F] hover:underline">legal@quantacipher.com</a>.
                                     </p>
                                 </section>
                             </div>

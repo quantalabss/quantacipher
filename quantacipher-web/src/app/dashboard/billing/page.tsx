@@ -88,26 +88,49 @@ export default function BillingPage() {
                 return;
             }
 
-            const res = await fetch('/api/create-razorpay-order', {
+            const res = await fetch('/api/create-razorpay-subscription', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ planId })
             });
             
-            if (!res.ok) throw new Error("Failed to create order");
+            if (!res.ok) {
+                const err = await res.json();
+                throw new Error(err.error || "Failed to create subscription");
+            }
             
-            const order = await res.json();
+            const subscription = await res.json();
 
             const options = {
                 key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-                amount: order.amount,
-                currency: order.currency,
+                subscription_id: subscription.id,
                 name: "QuantaCipher",
                 description: `Upgrade to ${planId.charAt(0).toUpperCase() + planId.slice(1)} Plan`,
-                order_id: order.id,
-                handler: function (response: any) {
-                    alert(`Payment successful! Payment ID: ${response.razorpay_payment_id}`);
-                    // In a production app, verify the signature on the backend here
+                handler: async function (response: any) {
+                    try {
+                        const verifyRes = await fetch('/api/verify-payment', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                razorpay_subscription_id: response.razorpay_subscription_id,
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_signature: response.razorpay_signature,
+                                planId
+                            })
+                        });
+                        
+                        const verifyData = await verifyRes.json();
+                        
+                        if (verifyData.verified) {
+                            alert(`Payment successful! Your plan is now ${planId.toUpperCase()}.`);
+                            window.location.reload();
+                        } else {
+                            alert("Payment verification failed. Please contact support.");
+                        }
+                    } catch (err) {
+                        console.error("Verification error:", err);
+                        alert("An error occurred during payment verification.");
+                    }
                 },
                 prefill: {
                     name: "QuantaCipher User",

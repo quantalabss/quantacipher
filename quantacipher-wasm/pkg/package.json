@@ -1,10 +1,11 @@
 {
   "name": "quantacipher-wasm",
+  "type": "module",
   "collaborators": [
     "QuantaLabs"
   ],
   "description": "Zero-trust PQC (Kyber) encryption WASM bindings",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -13,8 +14,13 @@
   "files": [
     "quantacipher_wasm_bg.wasm",
     "quantacipher_wasm.js",
+    "quantacipher_wasm_bg.js",
     "quantacipher_wasm.d.ts"
   ],
   "main": "quantacipher_wasm.js",
-  "types": "quantacipher_wasm.d.ts"
+  "types": "quantacipher_wasm.d.ts",
+  "sideEffects": [
+    "./quantacipher_wasm.js",
+    "./snippets/*"
+  ]
 }

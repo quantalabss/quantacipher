@@ -35,7 +35,7 @@ export default function SecurityPage() {
                                         <h3 className="text-[20px] font-medium text-white m-0">NIST Kyber-1024 Implementation</h3>
                                     </div>
                                     <p className="text-[15px] text-[#6b7280] leading-relaxed m-0">
-                                        Our core cryptography relies on ML-KEM (Kyber-1024), the final standard approved by the National Institute of Standards and Technology (NIST) for post-quantum key encapsulation. We utilize security category 5 parameter sets, equivalent to AES-256 in classical computing, providing the highest possible margin of security against known quantum attacks.
+                                        Our core cryptography relies on ML-KEM (Kyber-1024), the final standard approved by the National Institute of Standards and Technology (NIST) for post-quantum key encapsulation. We utilize security category 5 parameter sets, equivalent to AES-256 in classical computing, providing the highest possible margin of security against known quantum attacks. However, please note that no system is 100% invulnerable. This includes both the underlying mathematical algorithms (like ML-KEM) and our software implementations across our open-source SDKs and gateway servers.
                                     </p>
                                 </div>
 
@@ -61,7 +61,7 @@ export default function SecurityPage() {
                                         <h3 className="text-[20px] font-medium text-white m-0">Hybrid Cryptography Fallback</h3>
                                     </div>
                                     <p className="text-[15px] text-[#6b7280] leading-relaxed m-0">
-                                        While we employ cutting-edge post-quantum algorithms, we follow NSA and CISA recommendations by using a hybrid cryptographic approach. All payloads are wrapped in standard ECDHE (Elliptic Curve Diffie-Hellman Ephemeral) and AES-GCM before the Kyber layer is applied, ensuring that our systems remain secure even if future mathematical vulnerabilities are found in lattice-based cryptography.
+                                        While we employ cutting-edge post-quantum algorithms, we follow NSA and CISA recommendations by using a hybrid cryptographic approach. All payloads are wrapped in standard ECDHE (Elliptic Curve Diffie-Hellman Ephemeral) and AES-GCM before the Kyber layer is applied, ensuring that our systems remain secure even if future mathematical vulnerabilities are found in lattice-based cryptography. If significant vulnerabilities are ever discovered in ML-KEM or within our SDK implementations, we will immediately initiate our incident response protocol, which includes falling back to our classical encryption layer and issuing rapid security patches to all affected open-source SDKs and gateway servers.
                                     </p>
                                 </div>
                             </div>
@@ -96,7 +96,7 @@ export default function SecurityPage() {
                                         <FileWarning className="w-6 h-6 text-[#6b7280]" /> Vulnerability Disclosure
                                     </h2>
                                     <p className="text-[16px] text-[#6b7280] leading-relaxed">
-                                        We welcome responsible disclosure of vulnerabilities from the security research community. If you believe you have found a security vulnerability in QuantaCipher's systems, APIs, or SDKs, please immediately report it to <a href="mailto:admin@quantalabs.cc" className="text-[#C4ED5F] hover:underline">admin@quantalabs.cc</a>. We offer a bug bounty program for critical cryptographic or infrastructure findings.
+                                        We welcome responsible disclosure of vulnerabilities from the security research community. If you believe you have found a security vulnerability in QuantaCipher's systems, APIs, or SDKs, please immediately report it to <a href="mailto:security@quantacipher.com" className="text-[#C4ED5F] hover:underline">security@quantacipher.com</a>. Please note that we do not currently operate a paid bug bounty program.
                                     </p>
                                 </section>
                             </div>

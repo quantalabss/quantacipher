@@ -72,7 +72,7 @@ export default function PrivacyPage() {
                                 <section>
                                     <h2 className="text-[24px] font-medium text-white mb-4">6. Your Data Rights</h2>
                                     <p className="text-[16px] text-gray-400 leading-relaxed" >
-                                        Depending on your location, you may have the right to request access to, correction of, or deletion of your personal data. You may also have the right to object to processing or request data portability. To exercise these rights, please contact our Data Protection Officer at contact@quantalabs.cc.
+                                        Depending on your location, you may have the right to request access to, correction of, or deletion of your personal data. You may also have the right to object to processing or request data portability. To exercise these rights, please contact our Data Protection Officer at legal@quantacipher.com.
                                     </p>
                                 </section>
 
@@ -82,7 +82,7 @@ export default function PrivacyPage() {
                                         If you have any questions, concerns, or requests regarding this Privacy Policy, please contact us at:{" "}
                                         <br/><br/>
                                         <strong>QUANTALABS PRIVATE LIMITED</strong><br/>
-                                        Email: <a href="mailto:contact@quantalabs.cc" className="text-[#C4ED5F] hover:underline">contact@quantalabs.cc</a>
+                                        Email: <a href="mailto:legal@quantacipher.com" className="text-[#C4ED5F] hover:underline">legal@quantacipher.com</a>
                                     </p>
                                 </section>
                             </div>

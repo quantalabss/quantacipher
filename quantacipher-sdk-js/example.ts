@@ -7,7 +7,7 @@
  *   3. Run:            npm run dev
  */
 
-import { QuantaCipher } from './src/index';
+import { QuantaCipher } from './src/index.js';
 
 const sdk = new QuantaCipher({
     apiKey: 'qz_live_your_key_here',   // ← get yours at quantacipher.com/dashboard

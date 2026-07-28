@@ -43,7 +43,7 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section className="py-24 bg-[#0A0A0A] border-t border-[#222]">
+    <section className="py-24 bg-transparent border-t border-[#222]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">

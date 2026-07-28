@@ -12,7 +12,7 @@ Install the main SDK (which automatically depends on the WASM core) via npm, yar
 npm install quantacipher-sdk
 ```
 
-*(Note for Browser/Next.js users: You may need to polyfill the Node `Buffer` global depending on your bundler configuration. See our Next.js guide for details).*
+*(Note for Next.js 15+ users: Ensure `experiments.asyncWebAssembly: true` is enabled in your `next.config.ts`. The SDK is fully ES Modules (ESM) compliant and seamlessly executes in both the browser and Node.js).*
 
 ## Initialization
 

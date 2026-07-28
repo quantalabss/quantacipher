@@ -15,9 +15,9 @@ export async function POST(req: Request) {
 
         // 2. Get Razorpay payment details from request
         const body = await req.json();
-        const { razorpay_order_id, razorpay_payment_id, razorpay_signature, planId } = body;
+        const { razorpay_subscription_id, razorpay_payment_id, razorpay_signature, planId } = body;
 
-        if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !planId) {
+        if (!razorpay_subscription_id || !razorpay_payment_id || !razorpay_signature || !planId) {
             return NextResponse.json({ error: 'Missing payment verification details' }, { status: 400 });
         }
 
@@ -28,9 +28,10 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
         }
 
+        // For subscriptions, signature payload is: payment_id + "|" + subscription_id
         const generated_signature = crypto
             .createHmac('sha256', secret)
-            .update(razorpay_order_id + "|" + razorpay_payment_id)
+            .update(razorpay_payment_id + "|" + razorpay_subscription_id)
             .digest('hex');
 
         if (generated_signature !== razorpay_signature) {

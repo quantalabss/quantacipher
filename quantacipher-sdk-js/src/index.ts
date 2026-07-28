@@ -1,6 +1,7 @@
 import axios from 'axios';
+import * as wasm from 'quantacipher-wasm';
 // Import the compiled Rust WASM — post-quantum cryptography engine
-// Dual-mode enabled via lazy requiring to support Next.js out-of-the-box
+// Dual-mode enabled natively via bundler target
 
 export interface QuantaCipherConfig {
     apiKey: string;
@@ -43,20 +44,10 @@ export interface QuantaCipherReceipt {
 export class QuantaCipher {
     private apiKey: string;
     private gatewayUrl: string;
-    // Flag: true once WASM is rebuilt with dual-mode functions
-    private readonly dualModeAvailable: boolean;
 
     constructor(config: QuantaCipherConfig) {
         this.apiKey = config.apiKey;
         this.gatewayUrl = config.gatewayUrl || 'https://api.quantacipher.com/v1/ingest';
-        // Check if the rebuilt WASM is loaded
-        try {
-            // If vault_encrypt exists on the module, dual mode is available
-            const mod = require('quantacipher-wasm');
-            this.dualModeAvailable = typeof mod.vault_encrypt === 'function';
-        } catch {
-            this.dualModeAvailable = false;
-        }
     }
 
     // ----------------------------------------------------------
@@ -69,9 +60,7 @@ export class QuantaCipher {
      * QuantaCipher never sees or stores the private key.
      */
     public generateKeypair(): QuantaCipherKeypair {
-        this.requireDualMode('generateKeypair');
-        const mod = require('quantacipher-wasm');
-        const raw = mod.generate_keypair();
+        const raw = wasm.generate_keypair();
         return JSON.parse(raw) as QuantaCipherKeypair;
     }
 
@@ -85,9 +74,8 @@ export class QuantaCipher {
      * Result: permanently sealed — no one can decrypt it.
      */
     public encryptVault(plaintext: string): string {
-        const mod = require('quantacipher-wasm');
-        console.log(`[QuantaCipher SDK v${mod.get_wasm_version()}] VAULT MODE: Sealing with ephemeral Kyber-1024...`);
-        return mod.vault_encrypt(plaintext);
+        console.log(`[QuantaCipher SDK v${wasm.get_wasm_version()}] VAULT MODE: Sealing with ephemeral Kyber-1024...`);
+        return wasm.vault_encrypt(plaintext);
     }
 
     /**
@@ -109,22 +97,17 @@ export class QuantaCipher {
      * Requires WASM rebuild.
      */
     public encryptSecure(plaintext: string, publicKeyB64: string): string {
-        this.requireDualMode('encryptSecure');
         console.log(`[QuantaCipher SDK] SECURE MODE: Encrypting with user public key (Kyber-1024)...`);
-        const mod = require('quantacipher-wasm');
-        return mod.secure_encrypt(plaintext, publicKeyB64);
+        return wasm.secure_encrypt(plaintext, publicKeyB64);
     }
 
     /**
      * SECURE MODE: Decrypts a QZ_SECURE_V1:... payload using the user's PRIVATE key.
      * Runs entirely locally — private key never leaves the user's machine.
-     * Requires WASM rebuild.
      */
     public decryptSecure(ciphertextPayload: string, privateKeyB64: string): string {
-        this.requireDualMode('decryptSecure');
         console.log(`[QuantaCipher SDK] SECURE MODE: Decrypting locally with user private key...`);
-        const mod = require('quantacipher-wasm');
-        return mod.secure_decrypt(ciphertextPayload, privateKeyB64);
+        return wasm.secure_decrypt(ciphertextPayload, privateKeyB64);
     }
 
     /**
@@ -161,18 +144,8 @@ export class QuantaCipher {
     // UTILITIES
     // ----------------------------------------------------------
 
-    public getVersion(): string { return require('quantacipher-wasm').get_wasm_version(); }
-    public isDualModeAvailable(): boolean { return this.dualModeAvailable; }
-
-    private requireDualMode(methodName: string): void {
-        if (!this.dualModeAvailable) {
-            throw new Error(
-                `[QuantaCipher SDK] ${methodName}() requires the dual-mode WASM build.\n` +
-                `Rebuild in WSL:\n  cd /mnt/e/temp/quantacipher-wasm\n  wasm-pack build --target web --out-dir pkg\n` +
-                `Then reinstall: cd ../quantacipher-sdk-js && npm install`
-            );
-        }
-    }
+    public getVersion(): string { return wasm.get_wasm_version(); }
+    public isDualModeAvailable(): boolean { return true; }
 
     /** @deprecated Use vaultData() instead */
     public async secureDataLegacy(plaintext: string, metadata: any = {}): Promise<QuantaCipherReceipt> {
@@ -181,7 +154,6 @@ export class QuantaCipher {
 
     /** @deprecated Use encryptVault() instead */
     public async encryptLocal(plaintext: string): Promise<string> {
-        const mod = require('quantacipher-wasm');
-        return mod.vault_encrypt(plaintext).replace('QZ_VAULT_V1:', 'QZ_TRUE_PQC_KEM:');
+        return wasm.vault_encrypt(plaintext).replace('QZ_VAULT_V1:', 'QZ_TRUE_PQC_KEM:');
     }
 }

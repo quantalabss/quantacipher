@@ -34,11 +34,11 @@ const plans = [
             "Basic usage analytics",
             "Up to 5 API Keys",
         ],
-        buttonText: "Coming Soon",
-        buttonVariant: "outline",
+        buttonText: "Get Started",
+        buttonVariant: "primary",
         popular: false,
-        available: false,
-        cta: "#",
+        available: true,
+        cta: "/signin?callbackUrl=/dashboard/billing",
     },
     {
         name: "Professional",
@@ -53,21 +53,20 @@ const plans = [
             "Up to 10 API Keys",
             "Audit log export",
         ],
-        buttonText: "Coming Soon",
-        buttonVariant: "outline",
+        buttonText: "Get Started",
+        buttonVariant: "primary",
         popular: true,
-        available: false,
-        cta: "#",
+        available: true,
+        cta: "/signin?callbackUrl=/dashboard/billing",
     },
     {
         name: "Enterprise",
         price: "Custom",
         period: "",
-        description: "Maximum limits, SOC2/HIPAA compliance, and white-glove onboarding.",
+        description: "Maximum limits, dedicated infrastructure, and white-glove onboarding.",
         features: [
             "Unlimited API calls",
             "Dedicated gateway instances",
-            "SOC2 / HIPAA compliance reports",
             "Dedicated Slack channel",
             "24/7 Phone support",
             "Custom integrations",
@@ -82,7 +81,7 @@ const plans = [
 
 export function Pricing() {
     return (
-        <section id="pricing" className="py-24 bg-[#000000] border-b border-[#222]">
+        <section id="pricing" className="py-24 bg-transparent border-b border-[#222]">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
                 {/* Header */}
@@ -102,7 +101,7 @@ export function Pricing() {
                 <div className="flex justify-center mb-12">
                     <div className="flex items-center gap-3 px-5 py-3 rounded-none bg-[#111] border border-[#222]">
                         <p className="text-[13px] font-medium text-gray-400">
-                            <span className="font-semibold text-gray-300">Beta period:</span> All features are currently free. Paid plans launch later in 2026.
+                            <span className="font-semibold text-gray-300">Beta period:</span> Early access pricing is now available for all plans.
                         </p>
                     </div>
                 </div>
@@ -138,7 +137,7 @@ export function Pricing() {
                             <h3 className={`text-lg font-extrabold tracking-tight mb-2 ${plan.popular ? "text-white" : "text-white"}`}>
                                 {plan.name}
                             </h3>
-                            <p className={`text-sm mb-6 min-h-[48px] leading-relaxed font-medium ${plan.popular ? "text-gray-400" : "text-gray-400"}`}>
+                            <p className={`text-sm mb-6 min-h-[72px] leading-relaxed font-medium ${plan.popular ? "text-gray-400" : "text-gray-400"}`}>
                                 {plan.description}
                             </p>
 

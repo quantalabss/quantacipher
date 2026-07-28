@@ -10,7 +10,7 @@ Rather than acting purely as an asymmetric algorithm, QuantaCipher leverages a K
 1. **KEM (Kyber-1024):** Used to securely establish a cryptographic shared secret.
 2. **DEM (AES-256-GCM):** The shared secret is immediately used as the symmetric key for an AES-256-GCM cipher, which encrypts the actual data payload. 
 
-By compiling this Rust core to WebAssembly for JavaScript and providing native bindings for Python via PyO3, the entire KEM/DEM encryption process executes **100% locally**. Plaintext never leaves the client runtime.
+By compiling this Rust core to WebAssembly via an **Isomorphic Bundler Target**, the SDK natively and seamlessly loads in both Node.js backends and modern web browsers (e.g. Next.js). The entire KEM/DEM encryption process executes **100% locally**. Plaintext never leaves the client runtime.
 
 ## 2. Operational Modes
 

@@ -26,7 +26,11 @@ console.log("Cryptographic receipt:", receipt.signature);`;
   };
 
   return (
-    <section className="relative min-h-screen bg-[#000000] flex flex-col justify-end overflow-hidden pt-24">
+    <section className="relative min-h-screen bg-transparent flex flex-col justify-end overflow-hidden pt-24">
+      {/* Ambient Glows */}
+      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[#C4ED5F]/10 rounded-full blur-[128px] pointer-events-none -z-10" />
+      <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[128px] pointer-events-none -z-10" />
+
       {/* Subtle grid background */}
       <div 
         className="absolute inset-0 z-0 opacity-20 pointer-events-none" 
@@ -42,18 +46,13 @@ console.log("Cryptographic receipt:", receipt.signature);`;
 
           {/* Left Text Content */}
           <div className="animate-fade-in max-w-[600px]">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#111] border border-[#222] text-xs font-semibold text-gray-300 mb-8">
-              <span className="w-2 h-2 rounded-full bg-[#C4ED5F] animate-pulse" />
-              NIST FIPS 203 (ML-KEM) Ready
-            </div>
-
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.1] text-white mb-6">
               Post-Quantum Security.<br />
               <span className="text-gray-500">In 2 lines of code.</span>
             </h1>
 
             <p className="text-base sm:text-lg text-gray-400 leading-relaxed font-normal mb-10 max-w-[500px]">
-              The enterprise API for cryptographic agility. Secure your data with Kyber-1024. Your plaintext never leaves your runtime.
+              The zero-trust API for post-quantum encryption. Secure your data with Kyber-1024. Your plaintext never leaves your runtime.
             </p>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">

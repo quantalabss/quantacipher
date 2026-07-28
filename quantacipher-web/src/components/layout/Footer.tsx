@@ -72,6 +72,7 @@ const footerColumns = [
     links: [
       { label: "Privacy Policy", href: "/privacy", badge: null },
       { label: "Terms of Service", href: "/terms", badge: null },
+      { label: "Refund Policy", href: "/refunds", badge: null },
     ],
   },
 ];
@@ -162,6 +163,7 @@ export function Footer() {
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-gray-500">
             <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+            <Link href="/refunds" className="hover:text-white transition-colors">Refund Policy</Link>
             <Link href="/support" className="hover:text-white transition-colors">Contact</Link>
             <a href="mailto:contact@quantalabs.cc" className="hover:text-white transition-colors">
               contact@quantalabs.cc
