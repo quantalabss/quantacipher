@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.4](https://github.com/xaexaex/quantacipher/compare/quantacipher-python-v0.3.3...quantacipher-python-v0.3.4) (2026-08-01)
+
+
+### Bug Fixes
+
+* **quantacipher-python:** use dynamic version from Cargo.toml to fix PyPI upload ([84281b0](https://github.com/xaexaex/quantacipher/commit/84281b0549a73e6e7b66008fa6565553da87795e))
+* **quantacipher-sdk-js:** force release bump for NPM ([b8278f1](https://github.com/xaexaex/quantacipher/commit/b8278f1ea314debf00aa7469034cf30ea7d4962a))
+
 ## [0.3.3](https://github.com/xaexaex/quantacipher/compare/quantacipher-python-v0.3.2...quantacipher-python-v0.3.3) (2026-08-01)
 
 

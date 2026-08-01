@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3](https://github.com/xaexaex/quantacipher/compare/quantacipher-gateway-v1.1.2...quantacipher-gateway-v1.1.3) (2026-08-01)
+
+
+### Bug Fixes
+
+* **quantacipher-sdk-js:** force release bump for NPM ([b8278f1](https://github.com/xaexaex/quantacipher/commit/b8278f1ea314debf00aa7469034cf30ea7d4962a))
+
 ## [1.1.2](https://github.com/xaexaex/quantacipher/compare/quantacipher-gateway-v1.1.1...quantacipher-gateway-v1.1.2) (2026-08-01)
 
 
