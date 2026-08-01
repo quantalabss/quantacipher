@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.2](https://github.com/xaexaex/quantacipher/compare/quantacipher-web-v1.1.1...quantacipher-web-v1.1.2) (2026-08-01)
+
+
+### Bug Fixes
+
+* **quantacipher-python:** force publish with new workflow ([fd7a489](https://github.com/xaexaex/quantacipher/commit/fd7a489d3cc66d9d800d66f79613f385c30d3a8b))
+* **quantacipher-sdk-js:** force publish with new workflow ([b57ef0c](https://github.com/xaexaex/quantacipher/commit/b57ef0c105fdb931e5491dc892b781cb78f1f741))
+
 ## [1.1.1](https://github.com/xaexaex/quantacipher/compare/quantacipher-web-v1.1.0...quantacipher-web-v1.1.1) (2026-08-01)
 
 
