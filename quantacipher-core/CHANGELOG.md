@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.5](https://github.com/xaexaex/quantacipher/compare/quantacipher-core-v0.3.4...quantacipher-core-v0.3.5) (2026-08-01)
+
+
+### Bug Fixes
+
+* **quantacipher-sdk-js:** force release bump for NPM ([b8278f1](https://github.com/xaexaex/quantacipher/commit/b8278f1ea314debf00aa7469034cf30ea7d4962a))
+
 ## [0.3.4](https://github.com/xaexaex/quantacipher/compare/quantacipher-core-v0.3.3...quantacipher-core-v0.3.4) (2026-08-01)
 
 
