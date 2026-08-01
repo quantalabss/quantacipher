@@ -1,0 +1,30 @@
+{
+  "packages": {
+    "quantacipher-core": {
+      "release-type": "rust",
+      "component": "quantacipher-core"
+    },
+    "quantacipher-wasm": {
+      "release-type": "rust",
+      "component": "quantacipher-wasm"
+    },
+    "quantacipher-python": {
+      "release-type": "rust",
+      "component": "quantacipher-python"
+    },
+    "quantacipher-sdk-js": {
+      "release-type": "node",
+      "component": "quantacipher-sdk-js"
+    },
+    "quantacipher-gateway": {
+      "release-type": "node",
+      "component": "quantacipher-gateway"
+    },
+    "quantacipher-web": {
+      "release-type": "node",
+      "component": "quantacipher-web"
+    }
+  },
+  "bump-minor-pre-major": true,
+  "bump-patch-for-minor-pre-major": true
+}

@@ -5,9 +5,15 @@
   "workspaces": [
     "quantacipher-web",
     "quantacipher-gateway",
+    "quantacipher-sdk-js",
     "quantacipher-wasm/pkg"
   ],
   "scripts": {
-    "build": "npm run build --workspaces"
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0"
   }
 }

@@ -1,0 +1,92 @@
+name: Release Please
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      sdk_release_created: ${{ steps.release.outputs['quantacipher-sdk-js--release_created'] }}
+      wasm_release_created: ${{ steps.release.outputs['quantacipher-wasm--release_created'] }}
+      python_release_created: ${{ steps.release.outputs['quantacipher-python--release_created'] }}
+      core_release_created: ${{ steps.release.outputs['quantacipher-core--release_created'] }}
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  publish-npm:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.sdk_release_created == 'true' || needs.release-please.outputs.wasm_release_created == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Build SDK
+        if: ${{ needs.release-please.outputs.sdk_release_created == 'true' }}
+        run: |
+          cd quantacipher-sdk-js
+          npm ci
+          npm run build
+      
+      - name: Publish SDK with Provenance
+        if: ${{ needs.release-please.outputs.sdk_release_created == 'true' }}
+        run: |
+          cd quantacipher-sdk-js
+          npm publish --provenance --access public
+
+      - name: Install wasm-pack
+        if: ${{ needs.release-please.outputs.wasm_release_created == 'true' }}
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+      - name: Build & Publish WASM
+        if: ${{ needs.release-please.outputs.wasm_release_created == 'true' }}
+        run: |
+          cd quantacipher-wasm
+          wasm-pack build --target web --out-dir pkg
+          cd pkg
+          npm publish --provenance --access public
+
+  publish-pypi:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.python_release_created == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - run: |
+          cd quantacipher-python
+          pip install maturin
+          maturin build --release
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: quantacipher-python/target/wheels/
+
+  publish-crates:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.core_release_created == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          cd quantacipher-core
+          cargo publish
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
