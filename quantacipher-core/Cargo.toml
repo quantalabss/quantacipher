@@ -11,7 +11,7 @@ authors = ["QuantaLabs"]
 [dependencies]
 base64 = "0.21"
 aes-gcm = "0.10"
-ml-kem = "0.1"
+ml-kem = "=0.2.3"
 hkdf = "0.12"
 sha2 = "0.10"
 zeroize = { version = "1.8", features = ["zeroize_derive"] }

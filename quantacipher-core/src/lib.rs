@@ -9,39 +9,31 @@ use hkdf::Hkdf;
 use sha2::Sha256;
 use zeroize::{Zeroize, Zeroizing};
 use rand::rngs::OsRng as RandOsRng;
-use ml_kem::MlKem1024; // Assuming ml-kem 0.1 exposes MlKem1024
-use ml_kem::kem::{Encapsulate, Decapsulate}; // RustCrypto KEM traits
+
+use ml_kem::{MlKem1024, KemCore, EncodedSizeUser};
+use ml_kem::kem::{Encapsulate, Decapsulate};
 
 pub use error::QuantaCipherError;
 
-/// ML-KEM-1024 standard sizes
 const MLKEM_PUBLICKEYBYTES: usize = 1184;
 const MLKEM_SECRETKEYBYTES: usize = 3168;
 const MLKEM_CIPHERTEXTBYTES: usize = 1568;
 
-/// Generates a base64 encoded ML-KEM-1024 keypair (publicKey, privateKey)
 pub fn generate_keypair() -> Result<(String, String), QuantaCipherError> {
     let mut rng = RandOsRng;
     
     // Generate keypair
-    let (pk, mut sk) = MlKem1024::generate(&mut rng);
+    let (dk, ek) = MlKem1024::generate(&mut rng);
     
-    let pk_bytes = pk.as_bytes();
-    let sk_bytes = sk.as_bytes();
+    let pk_bytes = ek.as_bytes();
+    let sk_bytes = dk.as_bytes();
 
-    let b64_public = general_purpose::STANDARD.encode(pk_bytes);
-    let b64_private = general_purpose::STANDARD.encode(sk_bytes);
+    let b64_public = general_purpose::STANDARD.encode(pk_bytes.as_slice());
+    let b64_private = general_purpose::STANDARD.encode(sk_bytes.as_slice());
     
-    // Build-time assertion / runtime algorithm string derivation based on compiled sizes
-    let _algo_string = format!("ML-KEM-{}", pk_bytes.len() * 8 / 1184 * 1024); // simplistic derive
-
-    // Zeroize the private key
-    sk.zeroize();
-
     Ok((b64_public, b64_private))
 }
 
-/// Helper function to derive AES key via HKDF-SHA256, binding header & ciphertext as AAD
 fn derive_aes_key(shared_secret: &[u8], context_info: &[u8]) -> Result<Key<Aes256Gcm>, QuantaCipherError> {
     let hkdf = Hkdf::<Sha256>::new(None, shared_secret);
     let mut okm = [0u8; 32];
@@ -51,22 +43,20 @@ fn derive_aes_key(shared_secret: &[u8], context_info: &[u8]) -> Result<Key<Aes25
     Ok(key)
 }
 
-/// Encrypts data in Vault Mode (ephemeral keypair, permanently sealed)
 pub fn vault_encrypt(plaintext: &str) -> Result<String, QuantaCipherError> {
     let mut rng = RandOsRng;
 
-    let (pk, mut sk) = MlKem1024::generate(&mut rng);
+    let (_dk, ek) = MlKem1024::generate(&mut rng);
 
-    let (ct, mut shared_secret) = pk.encapsulate(&mut rng).map_err(|_| QuantaCipherError::EncapsulationFailed)?;
+    let (ct, mut shared_secret) = ek.encapsulate(&mut rng).map_err(|_| QuantaCipherError::EncapsulationFailed)?;
 
     let header = b"QZ_VAULT_V1:";
     
-    // Bind header and ciphertext as AAD context for HKDF
     let mut context_info = Vec::new();
     context_info.extend_from_slice(header);
-    context_info.extend_from_slice(ct.as_bytes());
+    context_info.extend_from_slice(ct.as_slice());
 
-    let aes_key = derive_aes_key(shared_secret.as_bytes(), &context_info)?;
+    let aes_key = derive_aes_key(shared_secret.as_slice(), &context_info)?;
     let cipher = Aes256Gcm::new(&aes_key);
     let nonce = Aes256Gcm::generate_nonce(&mut OsRng);
 
@@ -74,18 +64,15 @@ pub fn vault_encrypt(plaintext: &str) -> Result<String, QuantaCipherError> {
         .encrypt(&nonce, plaintext.as_bytes())
         .map_err(|_| QuantaCipherError::EncryptionFailed)?;
 
-    // Zeroize secrets
-    sk.zeroize();
-    shared_secret.zeroize();
+    shared_secret.as_mut_slice().zeroize();
 
-    let b64_kyber_ct = general_purpose::STANDARD.encode(ct.as_bytes());
+    let b64_kyber_ct = general_purpose::STANDARD.encode(ct.as_slice());
     let b64_nonce = general_purpose::STANDARD.encode(nonce.as_slice());
     let b64_aes_ct = general_purpose::STANDARD.encode(aes_ciphertext);
 
     Ok(format!("QZ_VAULT_V1:{}:{}:{}", b64_kyber_ct, b64_nonce, b64_aes_ct))
 }
 
-/// Encrypts data using the recipient's Base64 ML-KEM public key
 pub fn secure_encrypt(plaintext: &str, public_key_b64: &str) -> Result<String, QuantaCipherError> {
     let mut rng = RandOsRng;
 
@@ -97,18 +84,18 @@ pub fn secure_encrypt(plaintext: &str, public_key_b64: &str) -> Result<String, Q
         return Err(QuantaCipherError::InvalidPublicKeyLength);
     }
 
-    // Load Public Key from bytes (assuming ml-kem has a from_bytes or try_from)
-    let pk = ml_kem::PublicKey::<MlKem1024>::try_from(public_key_bytes.as_slice())
+    let pk_array = ml_kem::array::Array::try_from(public_key_bytes.as_slice())
         .map_err(|_| QuantaCipherError::InvalidPublicKeyLength)?;
+    let ek = <MlKem1024 as KemCore>::EncapsulationKey::from_bytes(&pk_array);
 
-    let (ct, mut shared_secret) = pk.encapsulate(&mut rng).map_err(|_| QuantaCipherError::EncapsulationFailed)?;
+    let (ct, mut shared_secret) = ek.encapsulate(&mut rng).map_err(|_| QuantaCipherError::EncapsulationFailed)?;
 
     let header = b"QZ_SECURE_V1:";
     let mut context_info = Vec::new();
     context_info.extend_from_slice(header);
-    context_info.extend_from_slice(ct.as_bytes());
+    context_info.extend_from_slice(ct.as_slice());
 
-    let aes_key = derive_aes_key(shared_secret.as_bytes(), &context_info)?;
+    let aes_key = derive_aes_key(shared_secret.as_slice(), &context_info)?;
     let cipher = Aes256Gcm::new(&aes_key);
     let nonce = Aes256Gcm::generate_nonce(&mut OsRng);
 
@@ -116,16 +103,15 @@ pub fn secure_encrypt(plaintext: &str, public_key_b64: &str) -> Result<String, Q
         .encrypt(&nonce, plaintext.as_bytes())
         .map_err(|_| QuantaCipherError::EncryptionFailed)?;
 
-    shared_secret.zeroize();
+    shared_secret.as_mut_slice().zeroize();
 
-    let b64_kyber_ct = general_purpose::STANDARD.encode(ct.as_bytes());
+    let b64_kyber_ct = general_purpose::STANDARD.encode(ct.as_slice());
     let b64_nonce = general_purpose::STANDARD.encode(nonce.as_slice());
     let b64_aes_ct = general_purpose::STANDARD.encode(aes_ciphertext);
 
     Ok(format!("QZ_SECURE_V1:{}:{}:{}", b64_kyber_ct, b64_nonce, b64_aes_ct))
 }
 
-/// Decrypts data using the user's Base64 ML-KEM private key
 pub fn secure_decrypt(ciphertext_payload: &str, private_key_b64: &str) -> Result<String, QuantaCipherError> {
     if !ciphertext_payload.starts_with("QZ_SECURE_V1:") {
         return Err(QuantaCipherError::InvalidPayloadFormat);
@@ -145,24 +131,25 @@ pub fn secure_decrypt(ciphertext_payload: &str, private_key_b64: &str) -> Result
         return Err(QuantaCipherError::InvalidPrivateKeyLength);
     }
 
-    let sk = ml_kem::PrivateKey::<MlKem1024>::try_from(private_key_bytes.as_slice())
+    let sk_array = ml_kem::array::Array::try_from(private_key_bytes.as_slice())
         .map_err(|_| QuantaCipherError::InvalidPrivateKeyLength)?;
+    let dk = <MlKem1024 as KemCore>::DecapsulationKey::from_bytes(&sk_array);
 
     if kyber_ct_bytes.len() != MLKEM_CIPHERTEXTBYTES {
         return Err(QuantaCipherError::InvalidCiphertextLength);
     }
 
-    let ct = ml_kem::Ciphertext::<MlKem1024>::try_from(kyber_ct_bytes.as_slice())
+    let ct_array = ml_kem::array::Array::try_from(kyber_ct_bytes.as_slice())
         .map_err(|_| QuantaCipherError::InvalidCiphertextLength)?;
-
-    let mut shared_secret = sk.decapsulate(&ct).map_err(|_| QuantaCipherError::DecapsulationFailed)?;
+    
+    let mut shared_secret = dk.decapsulate(&ct_array).map_err(|_| QuantaCipherError::DecapsulationFailed)?;
 
     let header = b"QZ_SECURE_V1:";
     let mut context_info = Vec::new();
     context_info.extend_from_slice(header);
-    context_info.extend_from_slice(ct.as_bytes());
+    context_info.extend_from_slice(ct_array.as_slice());
 
-    let aes_key = derive_aes_key(shared_secret.as_bytes(), &context_info)?;
+    let aes_key = derive_aes_key(shared_secret.as_slice(), &context_info)?;
     let cipher = Aes256Gcm::new(&aes_key);
 
     if nonce_bytes.len() != 12 {
@@ -174,7 +161,7 @@ pub fn secure_decrypt(ciphertext_payload: &str, private_key_b64: &str) -> Result
         .decrypt(nonce, aes_ct_bytes.as_ref())
         .map_err(|_| QuantaCipherError::DecryptionFailed)?;
 
-    shared_secret.zeroize();
+    shared_secret.as_mut_slice().zeroize();
 
     String::from_utf8(plaintext_bytes).map_err(QuantaCipherError::Utf8Error)
 }
