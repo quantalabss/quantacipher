@@ -48,7 +48,7 @@ jobs:
         if: ${{ needs.release-please.outputs.sdk_release_created == 'true' }}
         run: |
           cd quantacipher-sdk-js
-          npm publish --provenance --access public
+          npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -62,7 +62,7 @@ jobs:
           cd quantacipher-wasm
           wasm-pack build --target web --out-dir pkg
           cd pkg
-          npm publish --provenance --access public
+          npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
