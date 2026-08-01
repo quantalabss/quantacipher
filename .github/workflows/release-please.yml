@@ -49,6 +49,8 @@ jobs:
         run: |
           cd quantacipher-sdk-js
           npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Install wasm-pack
         if: ${{ needs.release-please.outputs.wasm_release_created == 'true' }}
@@ -61,6 +63,8 @@ jobs:
           wasm-pack build --target web --out-dir pkg
           cd pkg
           npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   publish-pypi:
     needs: release-please
