@@ -1,6 +1,6 @@
 {
   "name": "quantacipher-sdk",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Zero-trust PQC (Kyber) encryption SDK for JS/TS",
   "repository": {
     "type": "git",
