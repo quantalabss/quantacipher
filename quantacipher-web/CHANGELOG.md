@@ -1,0 +1,15 @@
+# Changelog
+
+## [1.1.0](https://github.com/xaexaex/quantacipher/compare/quantacipher-web-v1.0.0...quantacipher-web-v1.1.0) (2026-08-01)
+
+
+### Features
+
+* complete GitBook rewrite and Demo Page UI upgrade ([1a566ba](https://github.com/xaexaex/quantacipher/commit/1a566bade807cfe93be6b7768a8ea0941b99c30a))
+* design overhaul, architecture docs, and SEO setup ([9e83f3d](https://github.com/xaexaex/quantacipher/commit/9e83f3d35e606a69dbd67ad8c796b929f97a1332))
+* trigger initial release ([e8721bd](https://github.com/xaexaex/quantacipher/commit/e8721bdd4ec52cdd561be3cc3b1362ef2382ad45))
+
+
+### Bug Fixes
+
+* replace all broken internal links with correct GitBook/existing page URLs ([396f872](https://github.com/xaexaex/quantacipher/commit/396f87202d03bfb118ae0b232b9a800dcd0c8b4f))
