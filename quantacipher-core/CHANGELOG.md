@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.2](https://github.com/xaexaex/quantacipher/compare/quantacipher-core-v0.3.1...quantacipher-core-v0.3.2) (2026-08-01)
+
+
+### Bug Fixes
+
+* downgrade ml-kem to 0.2.3 and use npm install ([37ada9f](https://github.com/xaexaex/quantacipher/commit/37ada9fb185510bbc5cb009888eb79e5afaa5386))
+
 ## [0.3.1](https://github.com/xaexaex/quantacipher/compare/quantacipher-core-v0.3.0...quantacipher-core-v0.3.1) (2026-08-01)
 
 
