@@ -41,7 +41,7 @@ jobs:
         if: ${{ needs.release-please.outputs.sdk_release_created == 'true' }}
         run: |
           cd quantacipher-sdk-js
-          npm ci
+          npm install
           npm run build
       
       - name: Publish SDK with Provenance
