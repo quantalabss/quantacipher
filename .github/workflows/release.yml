@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
 
 jobs:
   build-and-publish-npm:
@@ -18,6 +19,13 @@ jobs:
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
+      - name: Install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+      - name: Build WASM
+        run: |
+          cd quantacipher-wasm
+          wasm-pack build --target web --out-dir pkg
 
       - name: Build SDK
         run: |
@@ -28,6 +36,11 @@ jobs:
       - name: Publish SDK with Provenance
         run: |
           cd quantacipher-sdk-js
+          npm publish --provenance --access public
+
+      - name: Publish WASM with Provenance
+        run: |
+          cd quantacipher-wasm/pkg
           npm publish --provenance --access public
 
   build-and-publish-pypi:
