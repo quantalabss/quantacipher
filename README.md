@@ -3,7 +3,7 @@
 <h1>QuantaCipher</h1>
 
 <p><strong>The world's first developer-native, API-first post-quantum encryption platform.</strong><br/>
-Secure your enterprise data with NIST ML-KEM (Kyber-1024) in two lines of code.</p>
+Secure your enterprise data with NIST FIPS 203 ML-KEM-1024 in two lines of code.</p>
 
 [![npm version](https://img.shields.io/npm/v/quantacipher-sdk?label=quantacipher-sdk&color=C4ED5F&style=flat-square)](https://www.npmjs.com/package/quantacipher-sdk)
 [![npm version](https://img.shields.io/npm/v/quantacipher-wasm?label=quantacipher-wasm&color=C4ED5F&style=flat-square)](https://www.npmjs.com/package/quantacipher-wasm)
@@ -57,7 +57,7 @@ QuantaCipher is a layered monorepo. Each layer has a single, clear responsibilit
 │   Rust → WebAssembly     │      Rust → PyO3 native extension     │
 ├──────────────────────────┴──────────────────────────────────────┤
 │                  quantacipher-core (Rust)                        │
-│     ML-KEM (Kyber-1024) + AES-256-GCM · KEM/DEM Hybrid         │
+│   ML-KEM-1024 (FIPS 203) + AES-256-GCM · KEM/DEM Hybrid          │
 │              Cryptography executes 100% locally                   │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -68,7 +68,7 @@ The entire KEM/DEM encryption process executes **100% locally** inside the clien
 
 **Plaintext never leaves your machine. The gateway never has your keys.**
 
-Only the resulting ciphertext reaches the QuantaCipher API Gateway, which validates format and issues a cryptographic receipt — without ever being able to read the data.
+Only the resulting ciphertext (and any provided unencrypted metadata for billing/tracking) reaches the QuantaCipher API Gateway, which validates format and issues a cryptographic receipt — without ever being able to read the payload data.
 
 ---
 
@@ -77,15 +77,17 @@ Only the resulting ciphertext reaches the QuantaCipher API Gateway, which valida
 ### Mode 1 — Vault Mode (Permanent Sealing)
 > *For HIPAA audit logs, compliance records, tamper-proof timestamps — data you need to prove existed, but never read back.*
 
-1. An ephemeral Kyber-1024 keypair is generated locally in milliseconds
+1. An ephemeral ML-KEM-1024 keypair is generated locally in milliseconds
 2. Data is encrypted using the ephemeral public key
 3. The private key is **immediately and permanently discarded**
 4. The sealed `QZ_VAULT_V1:...` ciphertext is produced — undecryptable by anyone, including you
 
+*Note: Vault mode is irreversible sealing by design. If you need tamper-evidence for records you must later read, use a signed hash chain or timestamped digest instead.*
+
 ### Mode 2 — Secure Mode (End-to-End Encryption)
 > *For confidential enterprise data exchange where the user needs to decrypt later.*
 
-1. A persistent Kyber-1024 keypair is generated locally — user saves the private key
+1. A persistent ML-KEM-1024 keypair is generated locally — user saves the private key
 2. Data is encrypted using the public key
 3. Only ciphertext travels over the network
 4. The user decrypts locally at any time using their private key

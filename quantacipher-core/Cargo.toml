@@ -11,7 +11,10 @@ authors = ["QuantaLabs"]
 [dependencies]
 base64 = "0.21"
 aes-gcm = "0.10"
-pqc_kyber = "0.7.1"
+ml-kem = "0.1"
+hkdf = "0.12"
+sha2 = "0.10"
+zeroize = { version = "1.8", features = ["zeroize_derive"] }
 rand = "0.8"
 # Note: getrandom is removed from here so we don't force 'js' feature on Python builds.
 # It will use the OS default rng (or WASM rng if provided in the wrapper).

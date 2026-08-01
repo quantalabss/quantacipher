@@ -1,0 +1,52 @@
+name: Release & Publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-publish-npm:
+    name: Publish npm packages (SDK & WASM)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # Required for npm provenance
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Build SDK
+        run: |
+          cd quantacipher-sdk-js
+          npm ci
+          npm run build
+      
+      - name: Publish SDK with Provenance
+        run: |
+          cd quantacipher-sdk-js
+          npm publish --provenance --access public
+
+  build-and-publish-pypi:
+    name: Publish Python bindings to PyPI
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Required for PyPI Trusted Publishing
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Build wheel
+        run: |
+          cd quantacipher-python
+          pip install maturin
+          maturin build --release
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: quantacipher-python/target/wheels/

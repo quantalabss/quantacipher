@@ -26,7 +26,7 @@ pub fn generate_keypair() -> Result<String, JsValue> {
         .map_err(|e| JsValue::from_str(&format!("QuantaCipher Error: {}", e)))?;
 
     Ok(format!(
-        r#"{{"publicKey":"{}","privateKey":"{}","algorithm":"Kyber-1024","version":"1.0"}}"#,
+        r#"{{"publicKey":"{}","privateKey":"{}","algorithm":"ML-KEM-1024","version":"2.0"}}"#,
         public,
         private
     ))

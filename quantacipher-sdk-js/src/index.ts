@@ -47,7 +47,11 @@ export class QuantaCipher {
 
     constructor(config: QuantaCipherConfig) {
         this.apiKey = config.apiKey;
-        this.gatewayUrl = config.gatewayUrl || 'https://api.quantacipher.com/v1/ingest';
+        this.gatewayUrl = config.gatewayUrl || 'https://quantacipher.com/api/v1/ingest';
+        
+        if (!this.gatewayUrl.startsWith('https://') && !this.gatewayUrl.startsWith('http://localhost') && !this.gatewayUrl.startsWith('http://127.0.0.1')) {
+            throw new Error("Gateway URL must be HTTPS in production environments.");
+        }
     }
 
     // ----------------------------------------------------------
@@ -129,7 +133,7 @@ export class QuantaCipher {
             const response = await axios.post(
                 this.gatewayUrl,
                 { ciphertext, metadata, timestamp: Date.now() },
-                { headers: { 'x-api-key': this.apiKey, 'Content-Type': 'application/json' } }
+                { headers: { 'x-api-key': this.apiKey, 'Content-Type': 'application/json' }, timeout: 10000 }
             );
             return response.data.receipt as QuantaCipherReceipt;
         } catch (error: any) {

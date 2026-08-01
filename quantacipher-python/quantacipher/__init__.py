@@ -26,7 +26,9 @@ class QuantaCipher:
     QuantaCipher SDK Client
     Provides zero-trust encryption and automatic Gateway integration.
     """
-    def __init__(self, api_key: str, gateway_url: str = 'http://localhost:4000/api/v1/ingest'):
+    def __init__(self, api_key: str, gateway_url: str = 'https://quantacipher.com/api/v1/ingest'):
+        if not gateway_url.startswith('https://') and not gateway_url.startswith('http://localhost') and not gateway_url.startswith('http://127.0.0.1'):
+            raise ValueError("Gateway URL must be HTTPS in production environments.")
         self.api_key = api_key
         self.gateway_url = gateway_url
 
@@ -93,7 +95,7 @@ class QuantaCipher:
         }
         
         try:
-            response = requests.post(self.gateway_url, json=payload, headers=headers)
+            response = requests.post(self.gateway_url, json=payload, headers=headers, timeout=10)
             response.raise_for_status()
             data = response.json()
             return data.get('receipt')
