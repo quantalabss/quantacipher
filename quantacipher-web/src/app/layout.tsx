@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     images: ['/og/image.png'],
   },
   icons: {
-    icon: '/favicon.ico',
+    icon: '/icon.svg?v=2',
   },
   robots: {
     index: true,
@@ -60,23 +60,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${firaCode.variable} h-full scroll-smooth`}>
-      <body className="min-h-full flex flex-col bg-[#000000] text-[#ededed] relative antialiased selection:bg-[#C4ED5F] selection:text-black font-sans">
-        {/* Soft Global Glows */}
-        <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-          <div className="absolute top-1/4 -left-[10%] w-[50vw] h-[50vw] bg-white opacity-[0.01] blur-[150px] rounded-full" />
-          <div className="absolute bottom-1/4 -right-[10%] w-[50vw] h-[50vw] bg-white opacity-[0.02] blur-[150px] rounded-full" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] bg-[#C4ED5F] opacity-[0.01] blur-[200px] rounded-full" />
-        </div>
+      <body className="min-h-full flex flex-col bg-[#FCFBF9] text-[#111111] relative antialiased selection:bg-[#EAE6DF] selection:text-[#111111] font-sans">
         
-        {/* Global Noise Overlay */}
-        <div 
-          className="fixed inset-0 z-[999] pointer-events-none opacity-[0.25] mix-blend-screen"
-          style={{ 
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-            backgroundRepeat: 'repeat',
-            backgroundSize: '120px 120px'
-          }} 
-        />
+        {/* Very subtle noise/glow overlay for Frontier AI feel if needed later. For now, pure white. */}
         <Providers>
           {children}
         </Providers>

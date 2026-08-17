@@ -24,10 +24,10 @@ const industries = [
 
 export function TrustedBy() {
   return (
-    <div className="bg-transparent py-0 overflow-hidden">
+    <div className="bg-white py-0 overflow-hidden border-t border-gray-100">
       {/* Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-5 flex items-center justify-center">
-        <p className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400">
+        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400">
           Designed for regulated industries
         </p>
       </div>
@@ -35,8 +35,8 @@ export function TrustedBy() {
       {/* Marquee row */}
       <div className="relative overflow-hidden pb-8">
         {/* Fade masks */}
-        <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-20 z-10 bg-gradient-to-r from-[#000] to-transparent" />
-        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-20 z-10 bg-gradient-to-l from-[#000] to-transparent" />
+        <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-20 z-10 bg-gradient-to-r from-white to-transparent" />
+        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-20 z-10 bg-gradient-to-l from-white to-transparent" />
 
         <div className="flex animate-marquee" style={{ width: "max-content" }}>
           {industries.map((item, i) => {
@@ -44,12 +44,12 @@ export function TrustedBy() {
             return (
               <div
                 key={i}
-                className="flex items-center gap-2.5 px-6 py-3 mx-2 rounded-xl border border-[#222] bg-[#0a0a0a] shadow-[0_1px_4px_rgba(0,0,0,0.4)] group hover:border-[#C4ED5F]/40 hover:shadow-[0_4px_12px_rgba(196,237,95,0.08)] transition-all cursor-default whitespace-nowrap"
+                className="flex items-center gap-2.5 px-6 py-3 mx-2 rounded-xl border border-gray-200 bg-gray-50 shadow-[0_1px_2px_rgba(0,0,0,0.05)] group hover:border-orange-200 hover:bg-orange-50 hover:shadow-md transition-all cursor-default whitespace-nowrap"
               >
-                <div className="w-7 h-7 rounded-lg bg-[#111] flex items-center justify-center group-hover:bg-[#C4ED5F]/10 transition-colors">
-                  <Icon className="w-3.5 h-3.5 text-gray-500 group-hover:text-[#C4ED5F] transition-colors" />
+                <div className="w-7 h-7 rounded-lg bg-white flex items-center justify-center border border-gray-100 group-hover:border-orange-200 transition-colors">
+                  <Icon className="w-3.5 h-3.5 text-gray-500 group-hover:text-orange-500 transition-colors" />
                 </div>
-                <span className="text-[12px] font-bold text-gray-400 group-hover:text-white transition-colors tracking-tight">
+                <span className="text-[12px] font-bold text-gray-600 group-hover:text-gray-900 transition-colors tracking-tight">
                   {item.name}
                 </span>
               </div>

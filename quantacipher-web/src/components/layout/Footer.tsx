@@ -1,6 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
-import { ArrowUpRight } from "lucide-react";
+import { Logo } from "@/components/ui/Logo";
 
 const socialLinks = [
   {
@@ -79,9 +78,7 @@ const footerColumns = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-white/[0.02] bg-transparent text-white">
-
-
+    <footer className="bg-[#FCFBF9] border-t border-[#E8E5DF] text-[#111111] font-sans">
 
       {/* ── MAIN FOOTER ─────────────────────────────────────────── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -90,19 +87,13 @@ export function Footer() {
           {/* Brand */}
           <div className="lg:col-span-3">
             <Link href="/" className="flex items-center gap-3 mb-6 group w-fit">
-              <Image
-                src="/logo/quanta-transparent-bg-logo.svg"
-                alt="QuantaCipher Logo"
-                width={40}
-                height={40}
-                className="w-9 h-9 transition-transform group-hover:scale-110"
-              />
-              <span className="text-xl font-bold tracking-tighter">
-                QuantaCipher<span className="text-[#C4ED5F]">.</span>
+              <Logo size={28} className="transition-transform group-hover:scale-105 text-[#111111]" />
+              <span className="text-xl font-bold tracking-tight text-[#111111] font-serif">
+                QuantaCipher<span className="text-[#8b7355]">.</span>
               </span>
             </Link>
-            <p className="text-gray-500 text-sm leading-relaxed mb-6 max-w-xs">
-              Enterprise post-quantum encryption API. NIST ML-KEM (Kyber-1024). Zero-trust, zero complexity.
+            <p className="text-[#6B6356] text-sm font-medium leading-relaxed mb-6 max-w-xs">
+              Enterprise post-quantum encryption API. NIST ML-KEM. Zero-trust, zero complexity.
             </p>
             {/* Social links */}
             <div className="flex gap-2">
@@ -113,7 +104,7 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={s.label}
-                  className="w-9 h-9 rounded-none border border-[#333] flex items-center justify-center text-gray-400 hover:border-[#C4ED5F] hover:text-[#C4ED5F] transition-all hover:scale-110"
+                  className="w-10 h-10 rounded border border-[#E8E5DF] bg-[#FFFFFF] flex items-center justify-center text-[#6B6356] hover:bg-[#EAE6DF] hover:text-[#111111] transition-all hover:-translate-y-1 shadow-clean"
                 >
                   {s.icon}
                 </a>
@@ -125,7 +116,7 @@ export function Footer() {
           <div className="lg:col-span-9 grid grid-cols-2 md:grid-cols-4 gap-10">
             {footerColumns.map((col) => (
               <div key={col.heading}>
-                <h4 className="font-black text-xs uppercase tracking-widest text-white mb-5">
+                <h4 className="font-bold text-xs uppercase tracking-widest text-[#8b7355] mb-5">
                   {col.heading}
                 </h4>
                 <ul className="space-y-3">
@@ -135,12 +126,12 @@ export function Footer() {
                         href={link.href}
                         target={(link as { external?: boolean }).external ? "_blank" : undefined}
                         rel={(link as { external?: boolean }).external ? "noopener noreferrer" : undefined}
-                        className="text-sm text-gray-400 hover:text-white transition-colors font-medium"
+                        className="text-sm text-[#6B6356] hover:text-[#111111] transition-colors font-semibold"
                       >
                         {link.label}
                       </Link>
                       {link.badge && (
-                        <span className="text-[9px] font-black tracking-widest uppercase px-1.5 py-0.5 rounded-none border border-[#333] text-gray-400 bg-[#111]">
+                        <span className="text-[9px] font-bold tracking-widest uppercase px-1.5 py-0.5 rounded border border-[#E8E5DF] text-[#8b7355] bg-[#FFFFFF]">
                           {link.badge}
                         </span>
                       )}
@@ -155,17 +146,17 @@ export function Footer() {
       </div>
 
       {/* ── BOTTOM BAR ──────────────────────────────────────────── */}
-      <div className="border-t border-white/[0.02]">
+      <div className="border-t border-[#E8E5DF] bg-[#FCFBF9]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="font-mono text-[10px] text-gray-400">
+          <p className="font-mono text-[11px] text-[#6B6356] font-bold">
             © {new Date().getFullYear()} QuantaLabs Private Limited. All rights reserved.
           </p>
-          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-gray-500">
-            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
-            <Link href="/refunds" className="hover:text-white transition-colors">Refund Policy</Link>
-            <Link href="/support" className="hover:text-white transition-colors">Contact</Link>
-            <a href="mailto:contact@quantalabs.cc" className="hover:text-white transition-colors">
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs font-bold text-[#6B6356]">
+            <Link href="/privacy" className="hover:text-[#111111] transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-[#111111] transition-colors">Terms of Service</Link>
+            <Link href="/refunds" className="hover:text-[#111111] transition-colors">Refund Policy</Link>
+            <Link href="/support" className="hover:text-[#111111] transition-colors">Contact</Link>
+            <a href="mailto:contact@quantalabs.cc" className="hover:text-[#111111] transition-colors">
               contact@quantalabs.cc
             </a>
           </div>

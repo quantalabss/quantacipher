@@ -7,6 +7,7 @@ import { TechStack } from "@/components/sections/TechStack";
 import { CTA } from "@/components/sections/CTA";
 import { TrustedBy } from "@/components/sections/TrustedBy";
 import { HowItWorks } from "@/components/sections/HowItWorks";
+import { SecurityPartners } from "@/components/sections/SecurityPartners";
 
 export default function Home() {
     return (
@@ -15,6 +16,7 @@ export default function Home() {
             <div className="relative z-[1]">
                 <Navbar />
             <Hero />
+            <SecurityPartners />
             <WhyChooseUs />
             <HowItWorks />
             <TechStack />

@@ -1,15 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
+import { Logo } from "@/components/ui/Logo";
 
 const navGroups = [
   {
     name: "Product",
     links: [
-      { label: "Overview", href: "/", desc: "The platform for post-quantum security" },
+      { label: "Whitepaper", href: "/assets/QuantaCipher-Whitepaper.pdf", desc: "Technical overview of our zero-trust architecture" },
       { label: "Interactive Demo", href: "/demo", desc: "Live test of Kyber-1024 encryption" },
       { label: "Security Architecture", href: "/security", desc: "Zero-trust WASM & NIST standards" },
     ],
@@ -37,7 +37,6 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
-  // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -51,31 +50,24 @@ export function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 border-b ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-[#000000] border-[#222222]"
+          ? "bg-[#FCFBF9]/90 backdrop-blur-md border-b border-[#E8E5DF]"
           : "bg-transparent border-transparent"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-24">
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 flex-shrink-0 group">
-            <Image
-              src="/logo/quanta-transparent-bg-logo.svg"
-              alt="QuantaCipher Logo"
-              width={48}
-              height={48}
-              className="w-9 h-9 transition-transform group-hover:scale-110"
-              priority
-            />
-            <span className="text-xl font-bold tracking-tighter text-white">
-              QuantaCipher<span className="text-[#C4ED5F]">.</span>
+            <Logo size={28} className="transition-transform group-hover:scale-105 text-[#111111]" />
+            <span className="text-xl font-bold tracking-tight text-[#111111] font-serif">
+              QuantaCipher<span className="text-[#8b7355]">.</span>
             </span>
           </Link>
 
           {/* Desktop nav */}
-          <div className="hidden lg:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-2 font-sans">
             {navGroups.map((group) => (
               <div
                 key={group.name}
@@ -84,10 +76,10 @@ export function Navbar() {
                 onMouseLeave={handleMouseLeave}
               >
                 <button
-                  className={`inline-flex items-center gap-1 px-3 py-2 text-sm font-medium transition-colors ${
+                  className={`inline-flex items-center gap-1 px-4 py-2.5 text-sm font-medium transition-colors rounded-sm ${
                     activeDropdown === group.name
-                      ? "text-white"
-                      : "text-gray-400 hover:text-white"
+                      ? "text-[#111111] bg-[#EAE6DF]/50"
+                      : "text-[#6B6356] hover:text-[#111111]"
                   }`}
                 >
                   {group.name}
@@ -99,22 +91,22 @@ export function Navbar() {
 
                 {/* Dropdown Menu */}
                 {activeDropdown === group.name && (
-                  <div className="absolute top-full left-0 pt-4 w-[320px]">
-                    <div className="bg-[#0A0A0A] border border-[#222] shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
-                      <div className="p-3 space-y-1">
+                  <div className="absolute top-full left-0 pt-2 w-[320px]">
+                    <div className="bg-[#FFFFFF] shadow-clean rounded-md overflow-hidden border border-[#E8E5DF] animate-in fade-in slide-in-from-top-2 duration-200">
+                      <div className="p-2 space-y-1">
                         {group.links.map((link) => (
                           <Link
                             key={link.label}
                             href={link.href}
                             target={link.href.startsWith('http') ? "_blank" : undefined}
                             rel={link.href.startsWith('http') ? "noopener noreferrer" : undefined}
-                            className="block p-3 hover:bg-[#111] transition-colors group/link"
+                            className="block p-3 rounded hover:bg-[#F4F2EC] transition-colors group/link"
                             onClick={() => setActiveDropdown(null)}
                           >
-                            <div className="text-sm font-semibold text-white mb-0.5 transition-colors">
+                            <div className="text-sm font-medium text-[#111111] mb-0.5 transition-colors">
                               {link.label}
                             </div>
-                            <div className="text-xs text-gray-500 font-medium">
+                            <div className="text-xs text-[#6B6356] font-normal transition-colors">
                               {link.desc}
                             </div>
                           </Link>
@@ -125,28 +117,28 @@ export function Navbar() {
                 )}
               </div>
             ))}
-            <Link href="/pricing" className="text-gray-400 hover:text-white px-3 py-2 text-sm font-medium transition-colors">Pricing</Link>
+            <Link href="/pricing" className="text-[#6B6356] hover:text-[#111111] px-4 py-2.5 text-sm font-medium transition-colors rounded-sm">Pricing</Link>
           </div>
 
           {/* Right side actions */}
-          <div className="flex items-center gap-3 flex-shrink-0">
+          <div className="flex items-center gap-4 flex-shrink-0 font-sans">
             <Link
               href="/demo"
-              className="hidden md:inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors"
+              className="hidden md:inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-[#6B6356] hover:text-[#111111] transition-colors"
             >
               Demo
             </Link>
             <Link
               href="/signin"
-              className="hidden md:inline-flex items-center gap-1.5 px-4 py-2 bg-white text-black font-semibold text-sm hover:bg-gray-200 transition-colors"
+              className="hidden md:inline-flex items-center gap-1.5 px-6 py-2.5 bg-[#111111] text-white font-medium text-sm hover:bg-[#2c2c2c] transition-colors duration-200 shadow-clean"
             >
-              Start for free
+              Access platform
             </Link>
 
             {/* Mobile menu button */}
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="lg:hidden p-2 text-gray-400 hover:text-white transition-colors"
+              className="lg:hidden p-2 text-[#111111] transition-colors"
             >
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -156,11 +148,11 @@ export function Navbar() {
 
       {/* Mobile nav */}
       {isOpen && (
-        <div className="lg:hidden bg-[#000000] border-b border-[#222] absolute top-full left-0 w-full max-h-[calc(100vh-96px)] overflow-y-auto animate-in fade-in slide-in-from-top-4">
-          <div className="px-4 py-6 space-y-6">
+        <div className="lg:hidden bg-[#FCFBF9] border-b border-[#E8E5DF] absolute top-full left-0 w-full max-h-[calc(100vh-80px)] overflow-y-auto shadow-clean">
+          <div className="px-4 py-6 space-y-6 font-sans">
             {navGroups.map((group) => (
               <div key={group.name}>
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3 px-2">
+                <h3 className="text-xs font-semibold uppercase tracking-widest text-[#8b7355] mb-3 px-2">
                   {group.name}
                 </h3>
                 <div className="space-y-1">
@@ -170,7 +162,7 @@ export function Navbar() {
                       href={link.href}
                       target={link.href.startsWith('http') ? "_blank" : undefined}
                       rel={link.href.startsWith('http') ? "noopener noreferrer" : undefined}
-                      className="block px-2 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-[#111] transition-colors"
+                      className="block px-3 py-2 rounded text-sm font-medium text-[#111111] hover:bg-[#EAE6DF] transition-all"
                       onClick={() => setIsOpen(false)}
                     >
                       {link.label}
@@ -179,24 +171,24 @@ export function Navbar() {
                 </div>
               </div>
             ))}
-            <Link href="/pricing" className="block px-2 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-[#111] transition-colors" onClick={() => setIsOpen(false)}>
+            <Link href="/pricing" className="block px-3 py-2 rounded text-sm font-medium text-[#111111] hover:bg-[#EAE6DF] transition-all" onClick={() => setIsOpen(false)}>
               Pricing
             </Link>
             
-            <div className="pt-6 border-t border-[#222] flex flex-col gap-3 px-2">
+            <div className="pt-6 border-t border-[#E8E5DF] flex flex-col gap-3 px-2">
               <Link
                 href="/demo"
-                className="w-full py-2.5 px-4 text-center text-sm font-semibold text-white bg-[#111] border border-[#222] hover:border-gray-500 transition-colors"
+                className="w-full py-3 px-4 rounded text-center text-sm font-medium text-[#111111] border border-[#E8E5DF] hover:bg-[#EAE6DF] transition-colors"
                 onClick={() => setIsOpen(false)}
               >
                 Demo
               </Link>
               <Link
                 href="/signin"
-                className="w-full py-2.5 px-4 text-center text-sm font-semibold text-black bg-white hover:bg-gray-200 transition-colors"
+                className="w-full py-3 px-4 rounded text-center text-sm font-medium text-white bg-[#111111] hover:bg-[#2c2c2c] transition-colors shadow-clean"
                 onClick={() => setIsOpen(false)}
               >
-                Start for free
+                Access platform
               </Link>
             </div>
           </div>

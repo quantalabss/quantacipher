@@ -21,21 +21,9 @@ function SignInContent() {
     }, [status, router]);
 
     return (
-        <div className="min-h-screen grid lg:grid-cols-[60%_40%]">
-            {/* Left Side — Dark panel with node grid */}
-            <div className="hidden lg:flex flex-col justify-between bg-transparent p-12 relative overflow-hidden border-r border-[#222]">
-
-                {/* Subtle dot grid pattern */}
-                <div
-                    className="absolute inset-0 opacity-[0.15] pointer-events-none"
-                    style={{
-                        backgroundImage: `radial-gradient(circle, #C4ED5F 1px, transparent 1px)`,
-                        backgroundSize: "32px 32px",
-                    }}
-                />
-
-                {/* Lime glow */}
-                <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[400px] bg-[#C4ED5F] opacity-[0.04] rounded-full blur-[100px] pointer-events-none" />
+        <div className="min-h-screen grid lg:grid-cols-[60%_40%] bg-[#FCFBF9]">
+            {/* Left Side — Light panel with editorial look */}
+            <div className="hidden lg:flex flex-col justify-between p-12 relative overflow-hidden border-r border-[#E8E5DF] bg-[#FFFFFF]">
 
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-3 relative z-10 group w-fit">
@@ -44,8 +32,8 @@ function SignInContent() {
                         alt="QuantaCipher Logo"
                         className="w-9 h-9 transition-transform group-hover:scale-110"
                     />
-                    <span className="text-2xl font-bold tracking-tighter text-white">
-                        QuantaCipher<span className="text-[#C4ED5F]">.</span>
+                    <span className="text-2xl font-bold tracking-tighter text-[#111111] font-serif">
+                        QuantaCipher<span className="text-[#8b7355]">.</span>
                     </span>
                 </Link>
 
@@ -56,14 +44,14 @@ function SignInContent() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
                     >
-                        <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#C4ED5F] mb-6">
+                        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#8b7355] mb-6 font-sans">
                             Zero-Trust · Post-Quantum · Open Source Core
                         </p>
-                        <h2 className="text-[48px] sm:text-[56px] leading-[1.05] font-black tracking-tighter text-white mb-6">
+                        <h2 className="text-[48px] sm:text-[56px] leading-[1.05] font-bold tracking-tight text-[#111111] mb-6 font-serif">
                             Start securing<br />
-                            <span className="text-[#C4ED5F]">in seconds.</span>
+                            <span className="text-[#8b7355]">in seconds.</span>
                         </h2>
-                        <p className="text-[17px] text-gray-400 leading-relaxed mb-10 font-medium">
+                        <p className="text-[17px] text-[#6B6356] leading-relaxed mb-10 font-medium font-sans">
                             Enterprise post-quantum encryption. NIST ML-KEM (Kyber-1024).
                             Your plaintext never leaves your runtime.
                         </p>
@@ -75,24 +63,24 @@ function SignInContent() {
                                 "Zero plaintext data stored or transmitted",
                                 "Open source core — audit everything",
                             ].map((item, i) => (
-                                <div key={i} className="flex items-center gap-3">
-                                    <div className="w-5 h-5 rounded-full bg-[#C4ED5F]/10 border border-[#C4ED5F]/30 flex items-center justify-center flex-shrink-0">
-                                        <span className="text-[#C4ED5F] text-[10px] font-black">✓</span>
+                                <div key={i} className="flex items-center gap-3 font-sans">
+                                    <div className="w-5 h-5 rounded-full bg-[#FCFBF9] border border-[#8b7355]/30 flex items-center justify-center flex-shrink-0">
+                                        <span className="text-[#8b7355] text-[10px] font-bold">✓</span>
                                     </div>
-                                    <span className="text-[13px] font-semibold text-gray-400">{item}</span>
+                                    <span className="text-[13px] font-bold text-[#6B6356]">{item}</span>
                                 </div>
                             ))}
                         </div>
                     </motion.div>
                 </div>
 
-                <div className="text-[13px] text-gray-600 relative z-10 font-mono">
+                <div className="text-[13px] text-[#6B6356] relative z-10 font-mono">
                     &copy; {new Date().getFullYear()} QuantaLabs Private Limited.
                 </div>
             </div>
 
             {/* Right Side - Auth Form (40%) */}
-            <div className="flex flex-col items-center justify-center p-8 bg-transparent">
+            <div className="flex flex-col items-center justify-center p-8 bg-[#FCFBF9]">
                 <div className="w-full max-w-[380px] space-y-8">
                     <div className="text-center">
                         <div className="lg:hidden mb-8 flex justify-center">
@@ -102,13 +90,13 @@ function SignInContent() {
                                     alt="QuantaCipher Logo"
                                     className="w-9 h-9 transition-transform group-hover:scale-110"
                                 />
-                                <span className="text-3xl font-bold tracking-tighter text-white">
-                                    QuantaCipher<span className="text-[#C4ED5F]">.</span>
+                                <span className="text-3xl font-bold tracking-tighter text-[#111111] font-serif">
+                                    QuantaCipher<span className="text-[#8b7355]">.</span>
                                 </span>
                             </Link>
                         </div>
-                        <h1 className="text-[28px] font-normal text-white mb-2">Welcome back</h1>
-                        <p className="text-gray-400 text-[14px]">
+                        <h1 className="text-[28px] font-bold text-[#111111] mb-2 font-serif tracking-tight">Welcome back</h1>
+                        <p className="text-[#6B6356] text-[14px] font-medium font-sans">
                             Sign in to access your dashboard.
                         </p>
                     </div>
@@ -117,7 +105,7 @@ function SignInContent() {
                         <Button
                             onClick={() => signIn("google", { callbackUrl })}
                             variant="outline"
-                            className="w-full h-[48px] rounded-xl bg-[#0a0a0a] border border-[#222] hover:bg-[#111] hover:border-[#C4ED5F] transition-all flex items-center justify-center gap-3"
+                            className="w-full h-[48px] rounded bg-[#FFFFFF] border border-[#E8E5DF] hover:bg-[#FCFBF9] hover:border-[#8b7355] transition-all flex items-center justify-center gap-3 shadow-sm"
                         >
                             {/* Google G Logo */}
                             <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -126,41 +114,41 @@ function SignInContent() {
                                 <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.84z" fill="#FBBC05" />
                                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
                             </svg>
-                            <span className="text-[14px] font-medium text-white">Sign in with Google</span>
+                            <span className="text-[14px] font-bold text-[#111111]">Sign in with Google</span>
                         </Button>
 
                         <div className="relative">
                             <div className="absolute inset-0 flex items-center">
-                                <span className="w-full border-t border-[#222]" />
+                                <span className="w-full border-t border-[#E8E5DF]" />
                             </div>
-                            <div className="relative flex justify-center text-xs uppercase">
-                                <span className="bg-[#0a0a0a] px-2 text-gray-500">Or</span>
+                            <div className="relative flex justify-center text-xs uppercase tracking-widest font-bold">
+                                <span className="bg-[#FCFBF9] px-2 text-[#6B6356]">Or</span>
                             </div>
                         </div>
 
                         <Button
                             onClick={() => signIn("github", { callbackUrl })}
-                            className="w-full h-[48px] rounded-xl bg-[#111] border border-[#222] hover:bg-[#1f1f1f] text-white hover:shadow-md transition-all flex items-center justify-center gap-3"
+                            className="w-full h-[48px] rounded bg-[#111111] border border-[#111111] hover:bg-[#2c2c2c] text-white hover:shadow-md transition-all flex items-center justify-center gap-3 shadow-clean"
                         >
                             {/* GitHub Logo */}
                             <svg className="w-5 h-5 fill-white" viewBox="0 0 24 24">
                                 <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
                             </svg>
-                            <span className="text-[14px] font-medium">Sign in with GitHub</span>
+                            <span className="text-[14px] font-bold">Sign in with GitHub</span>
                         </Button>
                     </div>
 
-                    <div className="text-center px-4">
-                        <p className="text-[12px] text-gray-400 leading-relaxed">
+                    <div className="text-center px-4 font-sans">
+                        <p className="text-[12px] text-[#6B6356] leading-relaxed font-medium">
                             By signing in, you agree to our{" "}
-                            <Link href="/terms" className="text-[#C4ED5F] hover:underline">Terms of Service</Link>
+                            <Link href="/terms" className="text-[#8b7355] hover:underline font-bold">Terms of Service</Link>
                             {" "}and{" "}
-                            <Link href="/privacy" className="text-[#C4ED5F] hover:underline">Privacy Policy</Link>.
+                            <Link href="/privacy" className="text-[#8b7355] hover:underline font-bold">Privacy Policy</Link>.
                         </p>
                     </div>
 
                     <div className="pt-4 text-center">
-                        <Link href="/" className="inline-flex items-center text-gray-400 hover:text-white text-[14px] font-medium transition-colors">
+                        <Link href="/" className="inline-flex items-center text-[#6B6356] hover:text-[#111111] text-[14px] font-bold transition-colors">
                             <ArrowLeft className="w-4 h-4 mr-2" /> Return to homepage
                         </Link>
                     </div>
@@ -172,8 +160,8 @@ function SignInContent() {
 
 export default function SignInPage() {
     return (
-        <Suspense fallback={<div className="min-h-screen bg-transparent" />}>
-            <div className="relative min-h-screen bg-transparent">
+        <Suspense fallback={<div className="min-h-screen bg-[#FCFBF9]" />}>
+            <div className="relative min-h-screen bg-[#FCFBF9]">
                 <div className="relative z-[1]">
                     <SignInContent />
                 </div>
