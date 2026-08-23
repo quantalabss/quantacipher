@@ -1,8 +1,8 @@
 {
-  "quantacipher-core": "0.3.5",
-  "quantacipher-wasm": "0.4.4",
-  "quantacipher-python": "0.3.4",
-  "quantacipher-sdk-js": "1.4.3",
-  "quantacipher-gateway": "1.1.3",
-  "quantacipher-web": "1.1.3"
+  "quantacipher-core": "0.3.6",
+  "quantacipher-wasm": "0.4.5",
+  "quantacipher-python": "0.3.5",
+  "quantacipher-sdk-js": "1.5.0",
+  "quantacipher-gateway": "1.2.0",
+  "quantacipher-web": "1.2.0"
 }

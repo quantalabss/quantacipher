@@ -1,6 +1,6 @@
 [package]
 name = "quantacipher-wasm"
-version = "0.4.4"
+version = "0.4.5"
 edition = "2021"
 description = "Zero-trust PQC (Kyber) encryption WASM bindings"
 repository = "https://github.com/xaexaex/quantacipher"
