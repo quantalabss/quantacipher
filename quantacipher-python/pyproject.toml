@@ -1,0 +1,16 @@
+[build-system]
+requires = ["maturin>=1.0,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "quantacipher"
+dynamic = ["version"]
+description = "Zero-trust PQC encryption library for Python"
+authors = [{ name = "QuantaLabs" }]
+license = { text = "MIT" }
+license-files = ["LICENSE"]
+readme = "README.md"
+urls = { Repository = "https://github.com/quantalabss/quantacipher", Homepage = "https://www.quantacipher.com", Documentation = "https://quantachain.gitbook.io/quantacipher" }
+dependencies = [
+    "requests>=2.0.0"
+]

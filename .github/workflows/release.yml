@@ -1,0 +1,109 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+# Required for SLSA provenance attestation:
+#   id-token:write   — lets the workflow get an OIDC token for Sigstore signing
+#   attestations:write — lets GitHub store the signed attestation bundle
+#   contents:write   — lets the workflow create a GitHub Release
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+jobs:
+  # ─────────────────────────────────────────────────────────────
+  # JS SDK + WASM
+  # ─────────────────────────────────────────────────────────────
+  publish-npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+      # Build WASM first — the SDK depends on the pkg output
+      - name: Build WASM package
+        run: |
+          cd quantacipher-wasm
+          wasm-pack build --target web --scope quantalabss --out-dir pkg
+      - name: Generate provenance attestation for WASM
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: quantacipher-wasm/pkg/**
+
+      - name: Publish WASM to npm
+        run: |
+          cd quantacipher-wasm/pkg
+          npm publish --access public || echo "WASM already published, skipping."
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Build JS SDK
+        run: |
+          cd quantacipher-sdk-js
+          npm install
+          npm run build
+      - name: Generate provenance attestation for JS SDK
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: quantacipher-sdk-js/dist/**
+
+      - name: Publish JS SDK to npm
+        run: |
+          cd quantacipher-sdk-js
+          npm publish --access public || echo "JS SDK already published, skipping."
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  # ─────────────────────────────────────────────────────────────
+  # Python wheels
+  # ─────────────────────────────────────────────────────────────
+  publish-pypi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Build Python wheel with Maturin
+        run: |
+          cd quantacipher-python
+          pip install maturin
+          maturin build --release
+      - name: Generate provenance attestation for PyPI
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: quantacipher-python/target/wheels/*
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: quantacipher-python/target/wheels/
+          skip-existing: true
+
+  # ─────────────────────────────────────────────────────────────
+  # Rust crate (crates.io)
+  # ─────────────────────────────────────────────────────────────
+  publish-crates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Publish quantacipher-core to crates.io
+        run: |
+          cd quantacipher-core
+          cargo publish || echo "Crate already published, skipping."
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}

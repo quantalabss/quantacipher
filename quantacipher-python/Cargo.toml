@@ -1,0 +1,19 @@
+[package]
+name = "quantacipher-python"
+version = "2.0.0"
+edition = "2021"
+description = "Zero-trust post-quantum encryption Python bindings — ML-KEM-1024 (FIPS 203) + AES-256-GCM"
+repository = "https://github.com/quantalabss/quantacipher"
+license = "MIT"
+readme = "README.md"
+authors = ["QuantaLabs"]
+
+[lib]
+name = "_quantacipher_core"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.21", features = ["extension-module"] }
+quantacipher-core = { path = "../quantacipher-core" }
+serde_json = "1"
+base64 = "0.21"

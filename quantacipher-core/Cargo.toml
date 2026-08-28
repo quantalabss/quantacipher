@@ -1,0 +1,30 @@
+[package]
+name = "quantacipher-core"
+version = "2.0.0"
+edition = "2021"
+description = "Zero-trust post-quantum encryption core — ML-KEM-1024 (FIPS 203) + AES-256-GCM"
+repository = "https://github.com/quantalabss/quantacipher"
+license = "MIT"
+readme = "README.md"
+authors = ["QuantaLabs"]
+
+[dependencies]
+base64 = "0.21"
+aes-gcm = "0.10"
+ml-kem = "=0.2.3"
+hkdf = "0.12"
+sha2 = "0.10"
+zeroize = { version = "1.8", features = ["zeroize_derive"] }
+rand = "0.8"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+# Signing dependencies
+# ml-dsa: RustCrypto pure-Rust FIPS 204 (ML-DSA) implementation — same org as ml-kem
+# getrandom + rand_core features enable SigningKey::generate() and Signer/Verifier traits
+ml-dsa = { version = "0.1.1", features = ["getrandom", "rand_core"] }
+# falcon-rs: pure-Rust FN-DSA (FIPS 206 draft, formerly Falcon) — WASM-compatible, no C FFI
+# NOTE: pqcrypto-falcon was explicitly rejected; it requires C FFI and cannot compile to wasm32-unknown-unknown
+# The crate name on crates.io is falcon-rs but the Rust module name is `falcon`
+falcon-rs = { version = "0.2.5", features = ["std"] }
+# Note: getrandom is removed from here so we don't force 'js' feature on Python builds.
+# It will use the OS default rng (or WASM rng if provided in the wrapper).
