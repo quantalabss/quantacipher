@@ -1,6 +1,6 @@
 [package]
 name = "quantacipher-python"
-version = "2.0.0"
+version = "2.0.1"
 edition = "2021"
 description = "Zero-trust post-quantum encryption Python bindings — ML-KEM-1024 (FIPS 203) + AES-256-GCM"
 repository = "https://github.com/quantalabss/quantacipher"
