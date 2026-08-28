@@ -1,6 +1,6 @@
 [package]
 name = "quantacipher-wasm"
-version = "2.0.1"
+version = "2.0.2"
 edition = "2021"
 description = "Zero-trust post-quantum encryption WASM bindings — ML-KEM-1024 (FIPS 203) + AES-256-GCM"
 repository = "https://github.com/quantalabss/quantacipher"
