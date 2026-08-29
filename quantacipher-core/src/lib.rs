@@ -25,7 +25,7 @@ pub const KEM_ALGORITHM_LABEL: &str = "ML-KEM-1024";
 pub const KEM_STANDARD_LABEL: &str  = "FIPS 203";
 pub const KEM_SCHEME_LABEL: &str    = "ML-KEM-1024 (FIPS 203) + AES-256-GCM";
 
-const MLKEM_PUBLICKEYBYTES: usize  = 1184;
+const MLKEM_PUBLICKEYBYTES: usize  = 1568;
 const MLKEM_SECRETKEYBYTES: usize  = 3168;
 const MLKEM_CIPHERTEXTBYTES: usize = 1568;
 
