@@ -178,7 +178,7 @@ export class QuantaCipher {
         try {
             const response = await axios.post(
                 this.gatewayUrl,
-                { ciphertext, metadata, timestamp: Date.now() },
+                { ciphertext, timestamp: Date.now() },
                 { headers: { 'x-api-key': this.apiKey, 'Content-Type': 'application/json' }, timeout: 10000 }
             );
             return response.data.receipt as QuantaCipherReceipt;

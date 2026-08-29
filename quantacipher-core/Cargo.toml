@@ -1,6 +1,6 @@
 [package]
 name = "quantacipher-core"
-version = "2.0.3"
+version = "2.0.4"
 edition = "2021"
 description = "Zero-trust post-quantum encryption core — ML-KEM-1024 (FIPS 203) + AES-256-GCM"
 repository = "https://github.com/quantalabss/quantacipher"
