@@ -35,7 +35,7 @@ jobs:
       - name: Build WASM package
         run: |
           cd quantacipher-wasm
-          wasm-pack build --target web --scope quantalabss --out-dir pkg
+          wasm-pack build --target bundler --scope quantalabss --out-dir pkg
       - name: Generate provenance attestation for WASM
         uses: actions/attest-build-provenance@v1
         with:

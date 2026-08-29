@@ -7,7 +7,7 @@ cargo build
 
 echo "Building WASM..."
 cd ../quantacipher-wasm
-wasm-pack build --target web --out-dir pkg
+wasm-pack build --target bundler --out-dir pkg
 
 echo "Building JS SDK..."
 cd ../quantacipher-sdk-js
