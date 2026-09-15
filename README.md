@@ -5,6 +5,7 @@
 <p><strong>The world's first developer-native, API-first post-quantum encryption platform.</strong><br/>
 Secure your enterprise data with NIST FIPS 203 ML-KEM-1024 in two lines of code.</p>
 
+[![QuantaKrypto post-quantum audit](https://quantakrypto.com/api/badge/quantalabss/quantacipher/score.svg)](https://quantakrypto.com/audits/quantalabss/quantacipher)
 [![npm version](https://img.shields.io/npm/v/@quantalabss/quantacipher-sdk?label=quantacipher-sdk&color=C4ED5F&style=flat-square)](https://www.npmjs.com/package/@quantalabss/quantacipher-sdk)
 [![npm version](https://img.shields.io/npm/v/@quantalabss/quantacipher-wasm?label=quantacipher-wasm&color=C4ED5F&style=flat-square)](https://www.npmjs.com/package/@quantalabss/quantacipher-wasm)
 [![PyPI version](https://img.shields.io/pypi/v/quantacipher?label=quantacipher%20(PyPI)&color=C4ED5F&style=flat-square)](https://pypi.org/project/quantacipher)
