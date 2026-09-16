@@ -2,49 +2,40 @@
 QuantaCipher Python SDK Benchmark Suite
 Compares:
   - ML-KEM-1024 encryption (Vault Mode, Secure Mode) via PyO3 native bindings
-  - ML-DSA-44 / Falcon-512 signing via PyO3 native bindings
+  - Falcon-512 signing via PyO3 native bindings
 vs. classical baselines:
   - RSA-4096 (cryptography library)
-  - ECDH P-256 / ECDSA P-256 (cryptography library)
+  - ECDSA / ECDH P-256 (cryptography library)
 
 Run with:
-    pip install pytest pytest-benchmark cryptography
+    python3 -m venv .venv && source .venv/bin/activate
+    pip install maturin cryptography pytest pytest-benchmark
+    maturin develop --release
     pytest benchmarks/test_benchmark.py -v --benchmark-sort=mean
 """
 
 import pytest
+import _quantacipher_core as qc
 
-# ── QuantaCipher SDK ──────────────────────────────────────────────────────────
-# NOTE: The native extension must be built first: maturin develop --release
-try:
-    import _quantacipher_core as qc_core
-    QUANTACIPHER_AVAILABLE = True
-except ImportError:
-    QUANTACIPHER_AVAILABLE = False
-
-# ── Classical baseline: cryptography library ──────────────────────────────────
-from cryptography.hazmat.primitives.asymmetric import rsa, ec, padding
 from cryptography.hazmat.primitives.asymmetric.rsa import generate_private_key as rsa_gen
 from cryptography.hazmat.primitives.asymmetric.ec import (
-    generate_private_key as ec_gen,
-    SECP256R1, ECDH, ECDSA
+    generate_private_key as ec_gen, SECP256R1, ECDSA
 )
-from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.backends import default_backend
 
-PAYLOAD_1KB  = b"A" * 1024
-PAYLOAD_1MB  = b"A" * (1024 * 1024)
-
+PAYLOAD_1KB  = "A" * 1024
+PAYLOAD_1MB  = "A" * (1024 * 1024)
+PAYLOAD_BYTES_1KB = PAYLOAD_1KB.encode()
 
 # =============================================================================
 #  Key Generation Benchmarks
 # =============================================================================
 
-@pytest.mark.skipif(not QUANTACIPHER_AVAILABLE, reason="quantacipher native extension not built")
 def test_bench_mlkem1024_keygen(benchmark):
     """ML-KEM-1024 keypair generation (QuantaCipher)"""
     benchmark.name = "ML-KEM-1024 keygen"
-    benchmark(qc_core.generate_keypair)
+    benchmark(qc.generate_keypair)
 
 
 def test_bench_rsa4096_keygen(benchmark):
@@ -63,18 +54,10 @@ def test_bench_p256_keygen(benchmark):
 #  Signing Key Generation Benchmarks
 # =============================================================================
 
-@pytest.mark.skipif(not QUANTACIPHER_AVAILABLE, reason="quantacipher native extension not built")
 def test_bench_falcon512_keygen(benchmark):
     """Falcon-512 signing keypair generation (QuantaCipher)"""
     benchmark.name = "Falcon-512 sign keygen"
-    benchmark(qc_core.sign_generate_keypair, None)
-
-
-@pytest.mark.skipif(not QUANTACIPHER_AVAILABLE, reason="quantacipher native extension not built")
-def test_bench_mldsa44_keygen(benchmark):
-    """ML-DSA-44 signing keypair generation (QuantaCipher)"""
-    benchmark.name = "ML-DSA-44 sign keygen"
-    benchmark(qc_core.sign_generate_keypair, "ml-dsa-44")
+    benchmark(qc.generate_signing_keypair, None)
 
 
 def test_bench_ecdsa_keygen(benchmark):
@@ -87,89 +70,61 @@ def test_bench_ecdsa_keygen(benchmark):
 #  Vault Encryption Benchmarks
 # =============================================================================
 
-@pytest.mark.skipif(not QUANTACIPHER_AVAILABLE, reason="quantacipher native extension not built")
 def test_bench_vault_encrypt_1kb(benchmark):
     """ML-KEM-1024 Vault Mode encrypt 1KB (QuantaCipher)"""
     benchmark.name = "ML-KEM-1024 vault encrypt 1KB"
-    payload = PAYLOAD_1KB.decode()
-    benchmark(qc_core.vault_encrypt, payload)
+    benchmark(qc.vault_encrypt, PAYLOAD_1KB)
 
 
-@pytest.mark.skipif(not QUANTACIPHER_AVAILABLE, reason="quantacipher native extension not built")
 def test_bench_vault_encrypt_1mb(benchmark):
     """ML-KEM-1024 Vault Mode encrypt 1MB (QuantaCipher)"""
     benchmark.name = "ML-KEM-1024 vault encrypt 1MB"
-    payload = PAYLOAD_1MB.decode()
-    benchmark(qc_core.vault_encrypt, payload)
+    benchmark(qc.vault_encrypt, PAYLOAD_1MB)
 
 
 # =============================================================================
 #  Secure Encrypt / Decrypt Benchmarks
 # =============================================================================
 
-@pytest.mark.skipif(not QUANTACIPHER_AVAILABLE, reason="quantacipher native extension not built")
 def test_bench_secure_encrypt_1kb(benchmark):
     """ML-KEM-1024 Secure Mode encrypt 1KB (QuantaCipher)"""
     benchmark.name = "ML-KEM-1024 secure encrypt 1KB"
-    keys = qc_core.generate_keypair()
-    pub_key = keys["publicKey"]
-    payload = PAYLOAD_1KB.decode()
-    benchmark(qc_core.secure_encrypt, payload, pub_key)
+    keys = qc.generate_keypair()
+    benchmark(qc.secure_encrypt, PAYLOAD_1KB, keys["publicKey"])
 
 
-@pytest.mark.skipif(not QUANTACIPHER_AVAILABLE, reason="quantacipher native extension not built")
 def test_bench_secure_decrypt_1kb(benchmark):
     """ML-KEM-1024 Secure Mode decrypt 1KB (QuantaCipher)"""
     benchmark.name = "ML-KEM-1024 secure decrypt 1KB"
-    keys = qc_core.generate_keypair()
-    payload = PAYLOAD_1KB.decode()
-    ciphertext = qc_core.secure_encrypt(payload, keys["publicKey"])
-    benchmark(qc_core.secure_decrypt, ciphertext, keys["privateKey"])
+    keys = qc.generate_keypair()
+    ciphertext = qc.secure_encrypt(PAYLOAD_1KB, keys["publicKey"])
+    benchmark(qc.secure_decrypt, ciphertext, keys["privateKey"])
 
 
 # =============================================================================
 #  Sign / Verify Benchmarks
 # =============================================================================
 
-@pytest.mark.skipif(not QUANTACIPHER_AVAILABLE, reason="quantacipher native extension not built")
 def test_bench_falcon512_sign_1kb(benchmark):
     """Falcon-512 sign 1KB (QuantaCipher)"""
     benchmark.name = "Falcon-512 sign 1KB"
-    kp = qc_core.sign_generate_keypair(None)
-    benchmark(qc_core.sign, PAYLOAD_1KB, kp["private_key"], None)
+    kp = qc.generate_signing_keypair(None)
+    benchmark(qc.sign_payload, PAYLOAD_BYTES_1KB, kp["private_key"], None)
 
 
-@pytest.mark.skipif(not QUANTACIPHER_AVAILABLE, reason="quantacipher native extension not built")
 def test_bench_falcon512_verify_1kb(benchmark):
     """Falcon-512 verify 1KB (QuantaCipher)"""
     benchmark.name = "Falcon-512 verify 1KB"
-    kp = qc_core.sign_generate_keypair(None)
-    sig = qc_core.sign(PAYLOAD_1KB, kp["private_key"], None)
-    benchmark(qc_core.verify, PAYLOAD_1KB, sig, kp["public_key"])
-
-
-@pytest.mark.skipif(not QUANTACIPHER_AVAILABLE, reason="quantacipher native extension not built")
-def test_bench_mldsa44_sign_1kb(benchmark):
-    """ML-DSA-44 sign 1KB (QuantaCipher)"""
-    benchmark.name = "ML-DSA-44 sign 1KB"
-    kp = qc_core.sign_generate_keypair("ml-dsa-44")
-    benchmark(qc_core.sign, PAYLOAD_1KB, kp["private_key"], "ml-dsa-44")
-
-
-@pytest.mark.skipif(not QUANTACIPHER_AVAILABLE, reason="quantacipher native extension not built")
-def test_bench_mldsa44_verify_1kb(benchmark):
-    """ML-DSA-44 verify 1KB (QuantaCipher)"""
-    benchmark.name = "ML-DSA-44 verify 1KB"
-    kp = qc_core.sign_generate_keypair("ml-dsa-44")
-    sig = qc_core.sign(PAYLOAD_1KB, kp["private_key"], "ml-dsa-44")
-    benchmark(qc_core.verify, PAYLOAD_1KB, sig, kp["public_key"])
+    kp = qc.generate_signing_keypair(None)
+    sig = qc.sign_payload(PAYLOAD_BYTES_1KB, kp["private_key"], None)
+    benchmark(qc.verify_signature, PAYLOAD_BYTES_1KB, sig, kp["public_key"])
 
 
 def test_bench_ecdsa_sign_1kb(benchmark):
     """ECDSA P-256 sign 1KB (baseline)"""
     benchmark.name = "ECDSA P-256 sign 1KB"
     sk = ec_gen(SECP256R1(), default_backend())
-    benchmark(sk.sign, PAYLOAD_1KB, ECDSA(hashes.SHA256()))
+    benchmark(sk.sign, PAYLOAD_BYTES_1KB, ECDSA(hashes.SHA256()))
 
 
 def test_bench_ecdsa_verify_1kb(benchmark):
@@ -177,5 +132,5 @@ def test_bench_ecdsa_verify_1kb(benchmark):
     benchmark.name = "ECDSA P-256 verify 1KB"
     sk = ec_gen(SECP256R1(), default_backend())
     vk = sk.public_key()
-    sig = sk.sign(PAYLOAD_1KB, ECDSA(hashes.SHA256()))
-    benchmark(vk.verify, sig, PAYLOAD_1KB, ECDSA(hashes.SHA256()))
+    sig = sk.sign(PAYLOAD_BYTES_1KB, ECDSA(hashes.SHA256()))
+    benchmark(vk.verify, sig, PAYLOAD_BYTES_1KB, ECDSA(hashes.SHA256()))
