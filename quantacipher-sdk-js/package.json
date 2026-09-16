@@ -15,7 +15,8 @@
   "types": "dist/src/index.d.ts",
   "scripts": {
     "dev": "ts-node example.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "bench": "tsx benchmarks/index.ts"
   },
   "keywords": [
     "quantacipher",
@@ -33,6 +34,8 @@
   },
   "devDependencies": {
     "@types/node": "^25.9.1",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "mitata": "^0.1.11",
+    "tsx": "^4.0.0"
   }
 }

@@ -14,3 +14,10 @@ urls = { Repository = "https://github.com/quantalabss/quantacipher", Homepage = 
 dependencies = [
     "requests>=2.0.0"
 ]
+
+[project.optional-dependencies]
+benchmark = [
+    "pytest>=7.0",
+    "pytest-benchmark>=4.0",
+    "cryptography>=41.0",
+]
