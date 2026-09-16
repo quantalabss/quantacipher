@@ -178,6 +178,7 @@ npm run bench
 |---|---|---|
 | ECDSA P-256 (baseline, OpenSSL) | 16.2 µs | — |
 | **Falcon-512** (QuantaCipher PyO3) | **7,756.5 µs** | comparable |
+| **ML-DSA-44** (QuantaCipher PyO3) | **321.6 µs** | **128.4 µs** | ~10x slower to sign |
 
 ### Vault Encryption (ML-KEM-1024 + AES-256-GCM)
 
@@ -226,6 +227,7 @@ npm run bench
 |---|---|---|
 | ECDSA P-256 (baseline, Node.js crypto) | 30.5 µs | — |
 | **Falcon-512** (QuantaCipher WASM) | **10.4 ms** | **~4.9× faster** |
+| **ML-DSA-44** (QuantaCipher WASM) | **3,615 µs** (3.6 ms) | **453 µs** | ~50x slower to sign |
 | RSA-2048 (baseline, Node.js crypto) | 51.2 ms | — |
 
 ### Vault Encryption (ML-KEM-1024 + AES-256-GCM)
@@ -264,6 +266,8 @@ This table shows how the WASM overhead stacks up against pure Rust — useful fo
 | Secure decrypt 1 KB | 153.0 µs | 165.5 µs | 243 µs | ~1.6× |
 | Falcon-512 sign 1 KB | 544.0 µs | 522.7 µs | 716 µs | ~1.3× |
 | Falcon-512 verify 1 KB | 81.6 µs | 81.6 µs | 96.8 µs | ~1.2× |
+| ML-DSA-44 sign 1 KB | 288.7 µs | 321.6 µs | 3,615 µs | ~12.5x |
+| ML-DSA-44 verify 1 KB | 108.9 µs | 128.4 µs | 453 µs | ~4.1x |
 
 > The WASM overhead is consistently **1.2–1.6×** vs. native Rust — demonstrating that the WebAssembly compilation is highly efficient and adds negligible real-world latency. All operations remain **sub-millisecond** across all three runtimes.
 

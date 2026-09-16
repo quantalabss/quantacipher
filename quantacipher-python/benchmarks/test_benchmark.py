@@ -120,6 +120,27 @@ def test_bench_falcon512_verify_1kb(benchmark):
     benchmark(qc.verify_signature, PAYLOAD_BYTES_1KB, sig, kp["public_key"])
 
 
+def test_bench_mldsa44_keygen(benchmark):
+    """ML-DSA-44 signing keypair generation (QuantaCipher)"""
+    benchmark.name = "ML-DSA-44 sign keygen"
+    benchmark(qc.generate_signing_keypair, "ml-dsa-44")
+
+
+def test_bench_mldsa44_sign_1kb(benchmark):
+    """ML-DSA-44 sign 1KB (QuantaCipher)"""
+    benchmark.name = "ML-DSA-44 sign 1KB"
+    kp = qc.generate_signing_keypair("ml-dsa-44")
+    benchmark(qc.sign_payload, PAYLOAD_BYTES_1KB, kp["private_key"], "ml-dsa-44")
+
+
+def test_bench_mldsa44_verify_1kb(benchmark):
+    """ML-DSA-44 verify 1KB (QuantaCipher)"""
+    benchmark.name = "ML-DSA-44 verify 1KB"
+    kp = qc.generate_signing_keypair("ml-dsa-44")
+    sig = qc.sign_payload(PAYLOAD_BYTES_1KB, kp["private_key"], "ml-dsa-44")
+    benchmark(qc.verify_signature, PAYLOAD_BYTES_1KB, sig, kp["public_key"])
+
+
 def test_bench_ecdsa_sign_1kb(benchmark):
     """ECDSA P-256 sign 1KB (baseline)"""
     benchmark.name = "ECDSA P-256 sign 1KB"

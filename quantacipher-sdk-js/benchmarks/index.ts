@@ -90,16 +90,29 @@ group('Secure Encrypt / Decrypt 1KB', () => {
 // Sign / Verify
 // ─────────────────────────────────────────────────────────────────────────────
 
+const PAYLOAD_B64_1KB = Buffer.from(PAYLOAD_1KB).toString('base64');
+
 const falconKp = JSON.parse(wasm.generate_signing_keypair(undefined) as unknown as string) as { public_key: string; private_key: string };
-const falconSig = wasm.sign_payload(PAYLOAD_1KB, falconKp.private_key, undefined);
+const falconSig = wasm.sign_payload(PAYLOAD_B64_1KB, falconKp.private_key, undefined);
+
+const mldsaKp = JSON.parse(wasm.generate_signing_keypair('ml-dsa-44') as unknown as string) as { public_key: string; private_key: string };
+const mldsaSig = wasm.sign_payload(PAYLOAD_B64_1KB, mldsaKp.private_key, 'ml-dsa-44');
 
 group('Sign / Verify 1KB', () => {
     baseline('Falcon-512 sign 1KB (QuantaCipher)', () => {
-        wasm.sign_payload(PAYLOAD_1KB, falconKp.private_key, undefined);
+        wasm.sign_payload(PAYLOAD_B64_1KB, falconKp.private_key, undefined);
     });
 
     bench('Falcon-512 verify 1KB (QuantaCipher)', () => {
-        wasm.verify_signature(PAYLOAD_1KB, falconSig, falconKp.public_key);
+        wasm.verify_signature(PAYLOAD_B64_1KB, falconSig, falconKp.public_key);
+    });
+
+    bench('ML-DSA-44 sign 1KB (QuantaCipher)', () => {
+        wasm.sign_payload(PAYLOAD_B64_1KB, mldsaKp.private_key, 'ml-dsa-44');
+    });
+
+    bench('ML-DSA-44 verify 1KB (QuantaCipher)', () => {
+        wasm.verify_signature(PAYLOAD_B64_1KB, mldsaSig, mldsaKp.public_key);
     });
 
     // ECDSA P-256 baseline
