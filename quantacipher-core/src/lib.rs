@@ -1,11 +1,13 @@
 pub mod error;
 pub mod envelope;
 pub mod registry;
+pub mod profile;
 pub mod sign;
 
 use base64::{engine::general_purpose, Engine as _};
 pub use error::QuantaCipherError;
 pub use registry::KemAlgorithm;
+pub use profile::{SecurityProfile, profile_ids};
 pub use envelope::{seal_vault_v2, seal_secure_v2, open_secure};
 
 /// The default algorithm implemented by this crate.
@@ -24,6 +26,11 @@ pub fn generate_keypair_for_alg(alg: KemAlgorithm) -> Result<(String, String), Q
     alg.generate_keypair()
 }
 
+/// Generate an ML-KEM keypair according to a specified SecurityProfile.
+pub fn generate_keypair_for_profile(profile: SecurityProfile) -> Result<(String, String), QuantaCipherError> {
+    profile.generate_keypair()
+}
+
 /// Vault Mode encryption using the default algorithm (ML-KEM-1024).
 /// Generates an ephemeral keypair, encapsulates, encrypts under AES-256-GCM with AAD,
 /// and deterministically destroys the private key.
@@ -35,6 +42,11 @@ pub fn vault_encrypt(plaintext: &str) -> Result<String, QuantaCipherError> {
 /// Vault Mode encryption with a specific KEM algorithm.
 pub fn vault_encrypt_for_alg(plaintext: &str, alg: KemAlgorithm) -> Result<String, QuantaCipherError> {
     seal_vault_v2(plaintext.as_bytes(), alg)
+}
+
+/// Vault Mode encryption with a specific SecurityProfile.
+pub fn vault_encrypt_for_profile(plaintext: &str, profile: SecurityProfile) -> Result<String, QuantaCipherError> {
+    profile.vault_encrypt(plaintext)
 }
 
 /// Secure Mode encryption with caller's public key.

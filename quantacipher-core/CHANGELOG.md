@@ -12,6 +12,9 @@ All notable changes to this project will be documented in this file.
 - Cryptographic binding of signature envelope metadata in V2 signature envelopes (`QC_SIG_V2:{alg}:`).
 - NIST ACVP Known Answer Tests (KAT) for ML-KEM-768 and ML-KEM-1024.
 - Full backward compatibility with legacy V1 payloads (`QZ_VAULT_V1:`, `QZ_SECURE_V1:`, `QZ_TRUE_PQC_KEM:`) and legacy V1 signatures.
+- Selectable Security Profiles: `Standard` (NIST Level 3: ML-KEM-768 / ML-DSA-65), `High` (NIST Level 5: ML-KEM-1024 / ML-DSA-87, default), and `Hybrid` (Composite Level 5).
+- Profile helper methods: `generate_keypair_for_profile`, `vault_encrypt_for_profile`, `SecurityProfile::sign_payload`, and `SecurityProfile::generate_signing_keypair`.
+- Full profile integration across Rust Core, WASM bindings, JavaScript/TypeScript SDK, and Python bindings.
 
 ## [2.0.0] - 2026-08-28
 

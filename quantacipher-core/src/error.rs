@@ -26,6 +26,8 @@ pub enum QuantaCipherError {
     /// Sign keygen failed for the given algorithm
     SignKeygenFailed,
     SerializationError(serde_json::Error),
+    /// Invalid security profile name or specification
+    InvalidSecurityProfile(String),
 }
 
 impl fmt::Display for QuantaCipherError {
@@ -50,6 +52,7 @@ impl fmt::Display for QuantaCipherError {
             Self::MissingAlgorithmId => write!(f, "Signature envelope is missing the 'alg' field — rejecting to prevent algorithm confusion"),
             Self::SignKeygenFailed => write!(f, "Signing keypair generation failed"),
             Self::SerializationError(e) => write!(f, "Serialization error: {}", e),
+            Self::InvalidSecurityProfile(p) => write!(f, "Invalid security profile: '{}'. Expected 'standard', 'high', or 'hybrid'", p),
         }
     }
 }

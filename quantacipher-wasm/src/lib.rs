@@ -2,14 +2,17 @@ use wasm_bindgen::prelude::*;
 use quantacipher_core::{
     generate_keypair as core_generate_keypair,
     generate_keypair_for_alg as core_generate_keypair_for_alg,
+    generate_keypair_for_profile as core_generate_keypair_for_profile,
     vault_encrypt as core_vault_encrypt,
     vault_encrypt_for_alg as core_vault_encrypt_for_alg,
+    vault_encrypt_for_profile as core_vault_encrypt_for_profile,
     secure_encrypt as core_secure_encrypt,
     secure_decrypt as core_secure_decrypt,
     get_version as core_get_version,
     get_algorithm as core_get_algorithm,
     get_scheme as core_get_scheme,
     KemAlgorithm,
+    SecurityProfile,
     KEM_ALGORITHM_LABEL,
 };
 use quantacipher_core::sign::registry::{self, AlgorithmId};
@@ -30,6 +33,14 @@ pub fn vault_encrypt_for_alg(plaintext: &str, algorithm: &str) -> Result<String,
     let kem_alg = KemAlgorithm::from_id(algorithm)
         .map_err(|e| JsValue::from_str(&format!("QuantaCipher Error: {}", e)))?;
     core_vault_encrypt_for_alg(plaintext, kem_alg)
+        .map_err(|e| JsValue::from_str(&format!("QuantaCipher Error: {}", e)))
+}
+
+#[wasm_bindgen]
+pub fn vault_encrypt_for_profile(plaintext: &str, profile: &str) -> Result<String, JsValue> {
+    let p = SecurityProfile::from_name(profile)
+        .map_err(|e| JsValue::from_str(&format!("QuantaCipher Error: {}", e)))?;
+    core_vault_encrypt_for_profile(plaintext, p)
         .map_err(|e| JsValue::from_str(&format!("QuantaCipher Error: {}", e)))
 }
 
@@ -62,6 +73,38 @@ pub fn generate_keypair_for_alg(algorithm: &str) -> Result<String, JsValue> {
         public,
         private,
         kem_alg.display_name(),
+    ))
+}
+
+#[wasm_bindgen]
+pub fn generate_keypair_for_profile(profile: &str) -> Result<String, JsValue> {
+    let p = SecurityProfile::from_name(profile)
+        .map_err(|e| JsValue::from_str(&format!("QuantaCipher Error: {}", e)))?;
+    let (public, private) = core_generate_keypair_for_profile(p)
+        .map_err(|e| JsValue::from_str(&format!("QuantaCipher Error: {}", e)))?;
+
+    Ok(format!(
+        r#"{{"publicKey":"{}","privateKey":"{}","algorithm":"{}","profile":"{}","nistLevel":{},"version":"2.0"}}"#,
+        public,
+        private,
+        p.kem_algorithm().display_name(),
+        p.as_str(),
+        p.nist_level(),
+    ))
+}
+
+#[wasm_bindgen]
+pub fn get_profile_info(profile: &str) -> Result<String, JsValue> {
+    let p = SecurityProfile::from_name(profile)
+        .map_err(|e| JsValue::from_str(&format!("QuantaCipher Error: {}", e)))?;
+    Ok(format!(
+        r#"{{"profile":"{}","displayName":"{}","nistLevel":{},"kem":"{}","sign":"{}","symmetric":"{}"}}"#,
+        p.as_str(),
+        p.display_name(),
+        p.nist_level(),
+        p.kem_algorithm().as_str(),
+        p.sign_algorithm().as_str(),
+        p.symmetric_algorithm(),
     ))
 }
 
@@ -123,6 +166,17 @@ pub fn get_scheme() -> String {
 pub fn generate_signing_keypair(algorithm: Option<String>) -> Result<String, JsValue> {
     let alg_id = parse_alg_opt(algorithm)?;
     let kp = registry::generate_keypair(alg_id)
+        .map_err(|e| JsValue::from_str(&format!("QuantaCipher Sign Error: {}", e)))?;
+    serde_json::to_string(&kp)
+        .map_err(|e| JsValue::from_str(&format!("QuantaCipher Serialization Error: {}", e)))
+}
+
+/// Generate a signing keypair according to a named SecurityProfile ("standard" | "high" | "hybrid").
+#[wasm_bindgen]
+pub fn generate_signing_keypair_for_profile(profile: &str) -> Result<String, JsValue> {
+    let p = SecurityProfile::from_name(profile)
+        .map_err(|e| JsValue::from_str(&format!("QuantaCipher Error: {}", e)))?;
+    let kp = p.generate_signing_keypair()
         .map_err(|e| JsValue::from_str(&format!("QuantaCipher Sign Error: {}", e)))?;
     serde_json::to_string(&kp)
         .map_err(|e| JsValue::from_str(&format!("QuantaCipher Serialization Error: {}", e)))

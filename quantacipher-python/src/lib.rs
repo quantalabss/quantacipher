@@ -3,39 +3,71 @@ use pyo3::exceptions::PyValueError;
 use pyo3::types::{PyBytes, PyDict};
 use quantacipher_core::{
     generate_keypair as core_generate_keypair,
+    generate_keypair_for_profile as core_generate_keypair_for_profile,
     vault_encrypt as core_vault_encrypt,
+    vault_encrypt_for_profile as core_vault_encrypt_for_profile,
     secure_encrypt as core_secure_encrypt,
     secure_decrypt as core_secure_decrypt,
     get_version as core_get_version,
     get_algorithm as core_get_algorithm,
+    SecurityProfile,
     KEM_ALGORITHM_LABEL,
 };
 use quantacipher_core::sign::registry::{self, AlgorithmId};
 use quantacipher_core::sign::types::SignatureEnvelope;
-use base64::{engine::general_purpose, Engine as _};
 
 
 /// Generates a keypair and returns it as a dictionary
 #[pyfunction]
-fn generate_keypair() -> PyResult<PyObject> {
-    let (public, private) = core_generate_keypair()
-        .map_err(|e| PyValueError::new_err(format!("QuantaCipher Error: {}", e)))?;
+#[pyo3(signature = (profile=None))]
+fn generate_keypair(profile: Option<String>) -> PyResult<PyObject> {
+    let (public, private, alg_label, prof_label, nist_level) = match profile {
+        Some(ref p_str) => {
+            let p = SecurityProfile::from_name(p_str)
+                .map_err(|e| PyValueError::new_err(format!("QuantaCipher Error: {}", e)))?;
+            let (pub_k, priv_k) = core_generate_keypair_for_profile(p)
+                .map_err(|e| PyValueError::new_err(format!("QuantaCipher Error: {}", e)))?;
+            (pub_k, priv_k, p.kem_algorithm().display_name().to_string(), Some(p.as_str()), Some(p.nist_level()))
+        }
+        None => {
+            let (pub_k, priv_k) = core_generate_keypair()
+                .map_err(|e| PyValueError::new_err(format!("QuantaCipher Error: {}", e)))?;
+            (pub_k, priv_k, KEM_ALGORITHM_LABEL.to_string(), None, None)
+        }
+    };
 
     Python::with_gil(|py| {
         let dict = pyo3::types::PyDict::new(py);
         dict.set_item("publicKey", public)?;
         dict.set_item("privateKey", private)?;
-        dict.set_item("algorithm", KEM_ALGORITHM_LABEL)?;
-        dict.set_item("version", "1.0")?;
+        dict.set_item("algorithm", alg_label)?;
+        if let Some(prof) = prof_label {
+            dict.set_item("profile", prof)?;
+        }
+        if let Some(lvl) = nist_level {
+            dict.set_item("nistLevel", lvl)?;
+        }
+        dict.set_item("version", "2.0")?;
         Ok(dict.into())
     })
 }
 
 /// Vault encrypt
 #[pyfunction]
-fn vault_encrypt(plaintext: &str) -> PyResult<String> {
-    core_vault_encrypt(plaintext)
-        .map_err(|e| PyValueError::new_err(format!("QuantaCipher Error: {}", e)))
+#[pyo3(signature = (plaintext, profile=None))]
+fn vault_encrypt(plaintext: &str, profile: Option<String>) -> PyResult<String> {
+    match profile {
+        Some(ref p_str) => {
+            let p = SecurityProfile::from_name(p_str)
+                .map_err(|e| PyValueError::new_err(format!("QuantaCipher Error: {}", e)))?;
+            core_vault_encrypt_for_profile(plaintext, p)
+                .map_err(|e| PyValueError::new_err(format!("QuantaCipher Error: {}", e)))
+        }
+        None => {
+            core_vault_encrypt(plaintext)
+                .map_err(|e| PyValueError::new_err(format!("QuantaCipher Error: {}", e)))
+        }
+    }
 }
 
 /// Secure encrypt

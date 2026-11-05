@@ -3,15 +3,43 @@ import * as wasm from '@quantalabss/quantacipher-wasm';
 // Import the compiled Rust WASM — post-quantum cryptography engine
 // Dual-mode enabled natively via bundler target
 
+/**
+ * Selectable Security Profiles for QuantaCipher:
+ * - STANDARD: NIST Security Level 3 (ML-KEM-768 for KEM, ML-DSA-65 for Sign, AES-256-GCM)
+ * - HIGH: NIST Security Level 5 (ML-KEM-1024 for KEM, ML-DSA-87 for Sign, AES-256-GCM) — DEFAULT
+ * - HYBRID: NIST Security Level 5 Composite (X-Wing / X25519 + ML-KEM-768 for KEM, ML-DSA-87 for Sign)
+ */
+export const SecurityProfile = {
+    STANDARD: 'standard',
+    HIGH: 'high',
+    HYBRID: 'hybrid',
+} as const;
+
+export type SecurityProfile = typeof SecurityProfile[keyof typeof SecurityProfile];
+
+/**
+ * Supported KEM algorithms in QuantaCipher
+ */
+export const KemAlgorithm = {
+    ML_KEM_768: 'ml-kem-768',
+    ML_KEM_1024: 'ml-kem-1024',
+} as const;
+
+export type KemAlgorithm = typeof KemAlgorithm[keyof typeof KemAlgorithm];
+
 export interface QuantaCipherConfig {
     apiKey: string;
     gatewayUrl?: string;
+    /** Security profile (defaults to SecurityProfile.HIGH) */
+    profile?: SecurityProfile;
 }
 
 export interface QuantaCipherKeypair {
-    publicKey: string;   // base64 ML-KEM-1024 (FIPS 203) public key
-    privateKey: string;  // base64 ML-KEM-1024 private key — NEVER share this
+    publicKey: string;   // base64 public key
+    privateKey: string;  // base64 private key — NEVER share this
     algorithm: string;
+    profile?: SecurityProfile;
+    nistLevel?: number;
     version: string;
 }
 
@@ -32,10 +60,14 @@ export interface QuantaCipherReceipt {
  * Use these instead of raw strings to avoid typos.
  */
 export const AlgorithmId = {
-    /** Falcon-512 / FN-DSA implementing FIPS 206 draft. Default. */
+    /** Falcon-512 / FN-DSA implementing FIPS 206 draft. Default for legacy. */
     FALCON_512_DRAFT: 'falcon-512-fips206-draft',
-    /** ML-DSA-44 implementing FIPS 204 (finalized). */
+    /** ML-DSA-44 implementing FIPS 204 (finalized, NIST Level 2). */
     ML_DSA_44: 'ml-dsa-44',
+    /** ML-DSA-65 implementing FIPS 204 (finalized, NIST Level 3). */
+    ML_DSA_65: 'ml-dsa-65',
+    /** ML-DSA-87 implementing FIPS 204 (finalized, NIST Level 5). */
+    ML_DSA_87: 'ml-dsa-87',
 } as const;
 
 export type AlgorithmId = typeof AlgorithmId[keyof typeof AlgorithmId];
@@ -47,16 +79,16 @@ export type AlgorithmId = typeof AlgorithmId[keyof typeof AlgorithmId];
  *
  * Wire format:
  * ```json
- * { "alg": "falcon-512-fips206-draft", "sig": "<base64>", "ver": 1 }
+ * { "alg": "ml-dsa-87", "sig": "<base64>", "ver": 2 }
  * ```
  */
 export interface SignatureEnvelope {
     /** Versioned algorithm ID. Never assume the caller's current default. */
-    alg: AlgorithmId;
+    alg: AlgorithmId | string;
     /** Base64-encoded raw signature bytes. */
     sig: string;
-    /** Envelope format version (currently always 1). */
-    ver: 1;
+    /** Envelope format version (1 for legacy raw signatures, 2 for authenticated envelope). */
+    ver: number;
 }
 
 /** A signing keypair returned by generateSigningKeyPair(). */
@@ -66,7 +98,7 @@ export interface SigningKeyPair {
     /** Base64-encoded private key. NEVER share or store insecurely. */
     private_key: string;
     /** The algorithm ID this keypair is valid for. */
-    algorithm: AlgorithmId;
+    algorithm: AlgorithmId | string;
 }
 
 // ============================================================
@@ -82,35 +114,78 @@ export interface SigningKeyPair {
 //    sdk.secureData(myData, keys.publicKey)   ← encrypt + send
 //    sdk.decryptSecure(ciphertext, privateKey) ← decrypt locally
 //    Use for: encrypted user data the user needs to read back
-//
-//  REQUIRES WASM REBUILD for Mode 2:
-//    cd /mnt/e/temp/quantacipher-wasm && wasm-pack build --target web --out-dir pkg
 // ============================================================
 
 export class QuantaCipher {
     private apiKey: string;
     private gatewayUrl: string;
+    private profile: SecurityProfile;
 
     constructor(config: QuantaCipherConfig) {
         this.apiKey = config.apiKey;
         this.gatewayUrl = config.gatewayUrl || 'https://quantacipher.com/api/v1/ingest';
+        this.profile = config.profile || SecurityProfile.HIGH;
         
         if (!this.gatewayUrl.startsWith('https://') && !this.gatewayUrl.startsWith('http://localhost') && !this.gatewayUrl.startsWith('http://127.0.0.1')) {
             throw new Error("Gateway URL must be HTTPS in production environments.");
         }
     }
 
+    /**
+     * Gets the current security profile (defaults to 'high').
+     */
+    public getProfile(): SecurityProfile {
+        return this.profile;
+    }
+
+    /**
+     * Sets the active security profile ('standard', 'high', or 'hybrid').
+     */
+    public setProfile(profile: SecurityProfile): void {
+        this.profile = profile;
+    }
+
+    /**
+     * Inspects configuration and primitive details of a security profile.
+     */
+    public getProfileInfo(profile?: SecurityProfile): {
+        profile: string;
+        displayName: string;
+        nistLevel: number;
+        kem: string;
+        sign: string;
+        symmetric: string;
+    } {
+        const raw = wasm.get_profile_info(profile || this.profile);
+        return JSON.parse(raw);
+    }
+
     // ----------------------------------------------------------
-    // KEYPAIR MANAGEMENT (requires rebuilt WASM)
+    // KEYPAIR MANAGEMENT
     // ----------------------------------------------------------
 
     /**
-     * Generates an ML-KEM-1024 (FIPS 203) keypair inside the WASM engine (locally).
+     * Generates a post-quantum KEM keypair locally inside the WASM engine.
+     * Uses the active security profile (defaulting to High / ML-KEM-1024),
+     * or an explicitly provided profile.
      * The private key NEVER leaves this call — you must save it yourself.
-     * QuantaCipher never sees or stores the private key.
      */
-    public generateKeypair(): QuantaCipherKeypair {
-        const raw = wasm.generate_keypair();
+    public generateKeypair(profile?: SecurityProfile): QuantaCipherKeypair {
+        const targetProfile = profile || this.profile;
+        if (targetProfile === SecurityProfile.HIGH && !profile) {
+            // Backward-compatible default path
+            const raw = wasm.generate_keypair();
+            return JSON.parse(raw) as QuantaCipherKeypair;
+        }
+        const raw = wasm.generate_keypair_for_profile(targetProfile);
+        return JSON.parse(raw) as QuantaCipherKeypair;
+    }
+
+    /**
+     * Generates a keypair for an explicit KEM algorithm ("ml-kem-768" or "ml-kem-1024").
+     */
+    public generateKeypairForAlgorithm(algorithm: KemAlgorithm | string): QuantaCipherKeypair {
+        const raw = wasm.generate_keypair_for_alg(algorithm);
         return JSON.parse(raw) as QuantaCipherKeypair;
     }
 
@@ -119,21 +194,26 @@ export class QuantaCipher {
     // ----------------------------------------------------------
 
     /**
-     * VAULT MODE: Encrypts data using an ephemeral ML-KEM-1024 (FIPS 203) keypair.
-     * Private key is generated and immediately discarded.
+     * VAULT MODE: Encrypts data using an ephemeral post-quantum keypair.
+     * Ephemeral private key is generated and immediately zeroized.
      * Result: permanently sealed — no one can decrypt it.
      */
-    public encryptVault(plaintext: string): string {
-        console.log(`[QuantaCipher SDK v${wasm.get_wasm_version()}] VAULT MODE: Sealing with ephemeral ML-KEM-1024 (FIPS 203)...`);
-        return wasm.vault_encrypt(plaintext);
+    public encryptVault(plaintext: string, profile?: SecurityProfile): string {
+        const targetProfile = profile || this.profile;
+        console.log(`[QuantaCipher SDK v${wasm.get_wasm_version()}] VAULT MODE: Sealing under profile '${targetProfile}'...`);
+        return wasm.vault_encrypt_for_profile(plaintext, targetProfile);
     }
 
     /**
      * Encrypts in VAULT MODE and sends to the gateway.
      * One-liner for permanent zero-trust sealing.
      */
-    public async vaultData(plaintext: string, metadata: any = {}): Promise<QuantaCipherReceipt> {
-        const ciphertext = this.encryptVault(plaintext);
+    public async vaultData(
+        plaintext: string,
+        metadata: any = {},
+        profile?: SecurityProfile,
+    ): Promise<QuantaCipherReceipt> {
+        const ciphertext = this.encryptVault(plaintext, profile);
         return this.sendToGateway(ciphertext, metadata);
     }
 
@@ -142,18 +222,19 @@ export class QuantaCipher {
     // ----------------------------------------------------------
 
     /**
-     * SECURE MODE: Encrypts data using the caller's ML-KEM-1024 (FIPS 203) public key.
-     * Only the holder of the matching private key can decrypt this.
-     * Requires WASM rebuild.
+     * SECURE MODE: Encrypts data using the recipient's public key.
+     * Automatically adapts to the recipient's algorithm (ML-KEM-768 or ML-KEM-1024)
+     * based on the public key length. Header is cryptographically authenticated as AAD.
      */
     public encryptSecure(plaintext: string, publicKeyB64: string): string {
-        console.log(`[QuantaCipher SDK] SECURE MODE: Encrypting with user public key (ML-KEM-1024, FIPS 203)...`);
+        console.log(`[QuantaCipher SDK] SECURE MODE: Encrypting with user public key (authenticated V2 envelope)...`);
         return wasm.secure_encrypt(plaintext, publicKeyB64);
     }
 
     /**
-     * SECURE MODE: Decrypts a QZ_SECURE_V1:... payload using the user's PRIVATE key.
-     * Runs entirely locally — private key never leaves the user's machine.
+     * SECURE MODE: Decrypts a ciphertext payload using the user's private key.
+     * Runs entirely locally — private key never leaves the caller's process.
+     * Supports both authenticated V2 envelopes and legacy V1 payloads.
      */
     public decryptSecure(ciphertextPayload: string, privateKeyB64: string): string {
         console.log(`[QuantaCipher SDK] SECURE MODE: Decrypting locally with user private key...`);
@@ -162,7 +243,7 @@ export class QuantaCipher {
 
     /**
      * Encrypts in SECURE MODE and sends to the gateway.
-     * Only the user (who holds privateKey) can decrypt later.
+     * Only the user (holding matching privateKey) can decrypt later.
      */
     public async secureData(plaintext: string, publicKeyB64: string, metadata: any = {}): Promise<QuantaCipherReceipt> {
         const ciphertext = this.encryptSecure(plaintext, publicKeyB64);
@@ -211,18 +292,13 @@ export class QuantaCipher {
 // ============================================================
 //  QuantaCipherSign — Signing Module (v2.0)
 //
-//  Crypto-agile signing with two algorithms:
-//  - AlgorithmId.FALCON_512_DRAFT  (default, matches QuantaChain behavior)
-//  - AlgorithmId.ML_DSA_44         (FIPS 204 finalized, lower-risk alternative)
+//  Crypto-agile signing supporting selectable profiles and algorithms:
+//  - SecurityProfile.STANDARD (ML-DSA-65, NIST Level 3)
+//  - SecurityProfile.HIGH     (ML-DSA-87, NIST Level 5)
+//  - Legacy Falcon-512 draft  (AlgorithmId.FALCON_512_DRAFT)
+//  - ML-DSA-44                (AlgorithmId.ML_DSA_44)
 //
-//  USAGE:
-//    const signer = new QuantaCipherSign();
-//    const kp = signer.generateSigningKeyPair();     // uses default Falcon-512
-//    const sig = signer.signPayload(data, kp.private_key);
-//    const ok  = signer.verifySignature(data, sig, kp.public_key);
-//
-//  The SignatureEnvelope self-describes its algorithm, so verifySignature()
-//  never needs to know which algorithm was used at sign time.
+//  Envelope format version 2 cryptographically locks metadata to the signature.
 // ============================================================
 
 export class QuantaCipherSign {
@@ -232,9 +308,7 @@ export class QuantaCipherSign {
     // ----------------------------------------------------------
 
     /**
-     * Converts a Uint8Array to a base64 string without spreading the entire
-     * array into function arguments (which crashes on payloads > ~64 KB in V8).
-     * Processes in 8 KB chunks to stay well within the call-stack argument limit.
+     * Converts a Uint8Array to a base64 string without stack overflow on large buffers.
      */
     private static uint8ToBase64(bytes: Uint8Array): string {
         let binary = '';
@@ -250,14 +324,23 @@ export class QuantaCipherSign {
     // ----------------------------------------------------------
 
     /**
-     * Generate a signing keypair.
-     * @param algorithm - Algorithm to use (defaults to Falcon-512 draft).
+     * Generate a signing keypair according to a SecurityProfile or specific AlgorithmId.
+     * @param profileOrAlgorithm - Profile ('standard' | 'high') or specific algorithm (defaults to Falcon-512 draft).
      * @returns SigningKeyPair with public_key, private_key, and algorithm.
      */
     public generateSigningKeyPair(
-        algorithm?: AlgorithmId
+        profileOrAlgorithm?: SecurityProfile | AlgorithmId | string
     ): SigningKeyPair {
-        const raw = wasm.generate_signing_keypair(algorithm ?? null);
+        if (
+            profileOrAlgorithm === SecurityProfile.STANDARD ||
+            profileOrAlgorithm === SecurityProfile.HIGH ||
+            profileOrAlgorithm === SecurityProfile.HYBRID
+        ) {
+            const raw = wasm.generate_signing_keypair_for_profile(profileOrAlgorithm);
+            return JSON.parse(raw) as SigningKeyPair;
+        }
+
+        const raw = wasm.generate_signing_keypair(profileOrAlgorithm ?? null);
         return JSON.parse(raw) as SigningKeyPair;
     }
 
@@ -270,13 +353,13 @@ export class QuantaCipherSign {
      *
      * @param payload - The data to sign. Accepts string (UTF-8 encoded) or Uint8Array.
      * @param privateKeyB64 - Base64-encoded private signing key from generateSigningKeyPair().
-     * @param options.algorithm - Algorithm to use (defaults to Falcon-512 draft).
+     * @param options.algorithm - Specific algorithm or profile to use.
      * @returns A self-describing SignatureEnvelope containing the alg ID.
      */
     public signPayload(
         payload: string | Uint8Array,
         privateKeyB64: string,
-        options?: { algorithm?: AlgorithmId }
+        options?: { algorithm?: AlgorithmId | string }
     ): SignatureEnvelope {
         const payloadBytes = typeof payload === 'string'
             ? new TextEncoder().encode(payload)
