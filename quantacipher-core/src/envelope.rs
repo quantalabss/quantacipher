@@ -96,12 +96,17 @@ pub fn seal_secure_v2(plaintext: &[u8], pk_bytes: &[u8], alg: KemAlgorithm) -> R
     Ok(format!("QZ_SECURE_V2:{}:{}:{}:{}", alg.id(), b64_kem_ct, b64_nonce, b64_aes_ct))
 }
 
-/// Decrypts both V2 authenticated envelopes and V1 legacy ciphertexts.
-///
-/// If ciphertext starts with `QZ_SECURE_V2:`, the header is parsed and authenticated as AAD.
-/// If ciphertext starts with `QZ_SECURE_V1:` or `QZ_TRUE_PQC_KEM:`, it falls back to
-/// legacy V1 mode with implicit ML-KEM-1024.
+/// Decrypts both V2 authenticated envelopes and V1 legacy ciphertexts with default policy.
 pub fn open_secure(ciphertext_payload: &str, private_key_b64: &str) -> Result<String, QuantaCipherError> {
+    open_secure_with_policy(ciphertext_payload, private_key_b64, &crate::policy::SecurityPolicy::default())
+}
+
+/// Decrypts both V2 authenticated envelopes and V1 legacy ciphertexts, enforcing a SecurityPolicy.
+pub fn open_secure_with_policy(
+    ciphertext_payload: &str,
+    private_key_b64: &str,
+    policy: &crate::policy::SecurityPolicy,
+) -> Result<String, QuantaCipherError> {
     let sk_bytes = Zeroizing::new(
         general_purpose::STANDARD
             .decode(private_key_b64)
@@ -117,6 +122,8 @@ pub fn open_secure(ciphertext_payload: &str, private_key_b64: &str) -> Result<St
 
         let alg_id = parts[1];
         let alg = KemAlgorithm::from_id(alg_id)?;
+        policy.check_level(alg.nist_level())?;
+
         let header = format!("QZ_SECURE_V2:{}:", alg.id());
 
         let kem_ct_bytes = general_purpose::STANDARD.decode(parts[2]).map_err(QuantaCipherError::DecodeError)?;
@@ -153,6 +160,12 @@ pub fn open_secure(ciphertext_payload: &str, private_key_b64: &str) -> Result<St
 
     // Branch 2: Legacy V1 Format (Implicit ML-KEM-1024, no AAD)
     if ciphertext_payload.starts_with(PREFIX_SECURE_V1) || ciphertext_payload.starts_with(PREFIX_LEGACY_PQC) {
+        if policy.reject_legacy {
+            return Err(QuantaCipherError::LegacyPayloadRejected);
+        }
+        let alg = KemAlgorithm::MlKem1024;
+        policy.check_level(alg.nist_level())?;
+
         let parts: Vec<&str> = ciphertext_payload.splitn(4, ':').collect();
         if parts.len() != 4 {
             return Err(QuantaCipherError::InvalidPayloadFormat);

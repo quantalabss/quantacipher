@@ -41,6 +41,16 @@ impl AlgorithmId {
             other => Err(QuantaCipherError::UnknownAlgorithm(other.to_string())),
         }
     }
+
+    /// Returns the NIST security level (1, 2, 3, or 5).
+    pub fn nist_level(&self) -> u8 {
+        match self {
+            Self::Falcon512Draft => 1,
+            Self::MlDsa44 => 2,
+            Self::MlDsa65 => 3,
+            Self::MlDsa87 => 5,
+        }
+    }
 }
 
 // =============================================================================
@@ -75,13 +85,27 @@ pub fn sign(
     }
 }
 
-/// Verify a `SignatureEnvelope` against `payload` and `public_key_b64`.
+/// Verify a `SignatureEnvelope` against `payload` and `public_key_b64` using default policy.
 pub fn verify(
     payload: &[u8],
     envelope: &SignatureEnvelope,
     public_key_b64: &str,
 ) -> Result<bool, QuantaCipherError> {
+    verify_with_policy(payload, envelope, public_key_b64, &crate::policy::SecurityPolicy::default())
+}
+
+/// Verify a `SignatureEnvelope` against `payload` and `public_key_b64` enforcing a SecurityPolicy.
+pub fn verify_with_policy(
+    payload: &[u8],
+    envelope: &SignatureEnvelope,
+    public_key_b64: &str,
+    policy: &crate::policy::SecurityPolicy,
+) -> Result<bool, QuantaCipherError> {
+    if policy.reject_legacy && envelope.ver < 2 {
+        return Err(QuantaCipherError::LegacyPayloadRejected);
+    }
     let alg = AlgorithmId::from_str(&envelope.alg)?;
+    policy.check_level(alg.nist_level())?;
     match alg {
         AlgorithmId::Falcon512Draft => falcon512::verify(payload, envelope, public_key_b64),
         AlgorithmId::MlDsa44 => mldsa44::verify(payload, envelope, public_key_b64),

@@ -2,13 +2,15 @@ pub mod error;
 pub mod envelope;
 pub mod registry;
 pub mod profile;
+pub mod policy;
 pub mod sign;
 
 use base64::{engine::general_purpose, Engine as _};
 pub use error::QuantaCipherError;
 pub use registry::KemAlgorithm;
 pub use profile::{SecurityProfile, profile_ids};
-pub use envelope::{seal_vault_v2, seal_secure_v2, open_secure};
+pub use policy::SecurityPolicy;
+pub use envelope::{seal_vault_v2, seal_secure_v2, open_secure, open_secure_with_policy};
 
 /// The default algorithm implemented by this crate.
 pub const KEM_ALGORITHM_LABEL: &str = "ML-KEM-1024";
@@ -75,10 +77,19 @@ pub fn secure_encrypt_for_alg(
     seal_secure_v2(plaintext.as_bytes(), &pk_bytes, alg)
 }
 
-/// Decrypts a secure mode payload locally using the user's private key.
+/// Decrypts a secure mode payload locally using the user's private key with default policy.
 /// Supports both versioned V2 envelopes (with AAD verification) and legacy V1 payloads.
 pub fn secure_decrypt(ciphertext_payload: &str, private_key_b64: &str) -> Result<String, QuantaCipherError> {
     open_secure(ciphertext_payload, private_key_b64)
+}
+
+/// Decrypts a secure mode payload enforcing a minimum SecurityPolicy (downgrade prevention).
+pub fn secure_decrypt_with_policy(
+    ciphertext_payload: &str,
+    private_key_b64: &str,
+    policy: &SecurityPolicy,
+) -> Result<String, QuantaCipherError> {
+    open_secure_with_policy(ciphertext_payload, private_key_b64, policy)
 }
 
 pub fn get_version() -> String {

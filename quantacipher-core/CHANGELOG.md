@@ -15,6 +15,10 @@ All notable changes to this project will be documented in this file.
 - Selectable Security Profiles: `Standard` (NIST Level 3: ML-KEM-768 / ML-DSA-65), `High` (NIST Level 5: ML-KEM-1024 / ML-DSA-87, default), and `Hybrid` (Composite Level 5).
 - Profile helper methods: `generate_keypair_for_profile`, `vault_encrypt_for_profile`, `SecurityProfile::sign_payload`, and `SecurityProfile::generate_signing_keypair`.
 - Full profile integration across Rust Core, WASM bindings, JavaScript/TypeScript SDK, and Python bindings.
+- Configurable `SecurityPolicy` enforcing minimum NIST security levels (`min_level`) and legacy envelope rejection (`reject_legacy`).
+- Downgrade attack protection across KEM decryption (`secure_decrypt_with_policy`) and signature verification (`verify_with_policy`).
+- Explicit fail-closed rejection on downgrade attempts with `QuantaCipherError::SecurityLevelBelowMinimum`.
+- Comprehensive downgrade attack test suites in Rust Core and JS/TS SDK.
 
 ## [2.0.0] - 2026-08-28
 

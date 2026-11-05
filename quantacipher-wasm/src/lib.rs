@@ -8,11 +8,13 @@ use quantacipher_core::{
     vault_encrypt_for_profile as core_vault_encrypt_for_profile,
     secure_encrypt as core_secure_encrypt,
     secure_decrypt as core_secure_decrypt,
+    secure_decrypt_with_policy as core_secure_decrypt_with_policy,
     get_version as core_get_version,
     get_algorithm as core_get_algorithm,
     get_scheme as core_get_scheme,
     KemAlgorithm,
     SecurityProfile,
+    SecurityPolicy,
     KEM_ALGORITHM_LABEL,
 };
 use quantacipher_core::sign::registry::{self, AlgorithmId};
@@ -128,6 +130,18 @@ pub fn secure_decrypt(ciphertext_payload: &str, private_key_b64: &str) -> Result
         .map_err(|e| JsValue::from_str(&format!("QuantaCipher Error: {}", e)))
 }
 
+#[wasm_bindgen]
+pub fn secure_decrypt_with_policy(
+    ciphertext_payload: &str,
+    private_key_b64: &str,
+    min_level: u8,
+    reject_legacy: bool,
+) -> Result<String, JsValue> {
+    let policy = SecurityPolicy::new(min_level, reject_legacy);
+    core_secure_decrypt_with_policy(ciphertext_payload, private_key_b64, &policy)
+        .map_err(|e| JsValue::from_str(&format!("QuantaCipher Error: {}", e)))
+}
+
 // ============================================================
 // BACKWARD COMPATIBILITY
 // ============================================================
@@ -210,6 +224,23 @@ pub fn verify_signature(
     let envelope = registry::envelope_from_json(signature_json)
         .map_err(|e| JsValue::from_str(&format!("QuantaCipher Envelope Error: {}", e)))?;
     registry::verify(&payload, &envelope, public_key_b64)
+        .map_err(|e| JsValue::from_str(&format!("QuantaCipher Verify Error: {}", e)))
+}
+
+/// Verify a signature enforcing a minimum SecurityPolicy (downgrade prevention).
+#[wasm_bindgen]
+pub fn verify_signature_with_policy(
+    payload_b64: &str,
+    signature_json: &str,
+    public_key_b64: &str,
+    min_level: u8,
+    reject_legacy: bool,
+) -> Result<bool, JsValue> {
+    let payload = decode_b64(payload_b64)?;
+    let envelope = registry::envelope_from_json(signature_json)
+        .map_err(|e| JsValue::from_str(&format!("QuantaCipher Envelope Error: {}", e)))?;
+    let policy = SecurityPolicy::new(min_level, reject_legacy);
+    registry::verify_with_policy(&payload, &envelope, public_key_b64, &policy)
         .map_err(|e| JsValue::from_str(&format!("QuantaCipher Verify Error: {}", e)))
 }
 

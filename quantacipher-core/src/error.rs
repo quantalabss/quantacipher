@@ -28,6 +28,10 @@ pub enum QuantaCipherError {
     SerializationError(serde_json::Error),
     /// Invalid security profile name or specification
     InvalidSecurityProfile(String),
+    /// Attempted operation violates minimum security level policy (downgrade prevention)
+    SecurityLevelBelowMinimum { actual: u8, minimum: u8 },
+    /// Legacy unversioned payload rejected by strict policy
+    LegacyPayloadRejected,
 }
 
 impl fmt::Display for QuantaCipherError {
@@ -53,6 +57,8 @@ impl fmt::Display for QuantaCipherError {
             Self::SignKeygenFailed => write!(f, "Signing keypair generation failed"),
             Self::SerializationError(e) => write!(f, "Serialization error: {}", e),
             Self::InvalidSecurityProfile(p) => write!(f, "Invalid security profile: '{}'. Expected 'standard', 'high', or 'hybrid'", p),
+            Self::SecurityLevelBelowMinimum { actual, minimum } => write!(f, "Security level policy violation: actual level {} is below required minimum level {}", actual, minimum),
+            Self::LegacyPayloadRejected => write!(f, "Legacy unversioned payload rejected by strict policy"),
         }
     }
 }

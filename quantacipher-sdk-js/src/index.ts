@@ -27,11 +27,23 @@ export const KemAlgorithm = {
 
 export type KemAlgorithm = typeof KemAlgorithm[keyof typeof KemAlgorithm];
 
+/**
+ * Security policy for enforcing minimum cryptographic strength (downgrade prevention).
+ */
+export interface SecurityPolicy {
+    /** Minimum NIST security level required (1, 2, 3, or 5). Defaults to 1. */
+    minLevel?: number;
+    /** Whether to reject legacy unversioned payloads or signatures (defaults to false). */
+    rejectLegacy?: boolean;
+}
+
 export interface QuantaCipherConfig {
     apiKey: string;
     gatewayUrl?: string;
     /** Security profile (defaults to SecurityProfile.HIGH) */
     profile?: SecurityProfile;
+    /** Security policy for enforcing minimum security levels and preventing downgrade attacks */
+    policy?: SecurityPolicy;
 }
 
 export interface QuantaCipherKeypair {
@@ -120,11 +132,13 @@ export class QuantaCipher {
     private apiKey: string;
     private gatewayUrl: string;
     private profile: SecurityProfile;
+    private policy?: SecurityPolicy;
 
     constructor(config: QuantaCipherConfig) {
         this.apiKey = config.apiKey;
         this.gatewayUrl = config.gatewayUrl || 'https://quantacipher.com/api/v1/ingest';
         this.profile = config.profile || SecurityProfile.HIGH;
+        this.policy = config.policy;
         
         if (!this.gatewayUrl.startsWith('https://') && !this.gatewayUrl.startsWith('http://localhost') && !this.gatewayUrl.startsWith('http://127.0.0.1')) {
             throw new Error("Gateway URL must be HTTPS in production environments.");
@@ -143,6 +157,20 @@ export class QuantaCipher {
      */
     public setProfile(profile: SecurityProfile): void {
         this.profile = profile;
+    }
+
+    /**
+     * Gets the active security policy (if configured).
+     */
+    public getPolicy(): SecurityPolicy | undefined {
+        return this.policy;
+    }
+
+    /**
+     * Sets the active security policy for downgrade prevention.
+     */
+    public setPolicy(policy: SecurityPolicy | undefined): void {
+        this.policy = policy;
     }
 
     /**
@@ -235,8 +263,23 @@ export class QuantaCipher {
      * SECURE MODE: Decrypts a ciphertext payload using the user's private key.
      * Runs entirely locally — private key never leaves the caller's process.
      * Supports both authenticated V2 envelopes and legacy V1 payloads.
+     * Enforces the active or provided SecurityPolicy (downgrade prevention).
      */
-    public decryptSecure(ciphertextPayload: string, privateKeyB64: string): string {
+    public decryptSecure(
+        ciphertextPayload: string,
+        privateKeyB64: string,
+        policy?: SecurityPolicy,
+    ): string {
+        const activePolicy = policy || this.policy;
+        if (activePolicy) {
+            console.log(`[QuantaCipher SDK] SECURE MODE: Decrypting with policy (minLevel=${activePolicy.minLevel ?? 1})...`);
+            return wasm.secure_decrypt_with_policy(
+                ciphertextPayload,
+                privateKeyB64,
+                activePolicy.minLevel ?? 1,
+                activePolicy.rejectLegacy ?? false,
+            );
+        }
         console.log(`[QuantaCipher SDK] SECURE MODE: Decrypting locally with user private key...`);
         return wasm.secure_decrypt(ciphertextPayload, privateKeyB64);
     }
@@ -389,13 +432,23 @@ export class QuantaCipherSign {
     public verifySignature(
         payload: string | Uint8Array,
         signature: SignatureEnvelope,
-        publicKeyB64: string
+        publicKeyB64: string,
+        policy?: SecurityPolicy,
     ): boolean {
         const payloadBytes = typeof payload === 'string'
             ? new TextEncoder().encode(payload)
             : payload;
         const payloadB64 = QuantaCipherSign.uint8ToBase64(payloadBytes);
         const signatureJson = JSON.stringify(signature);
+        if (policy) {
+            return wasm.verify_signature_with_policy(
+                payloadB64,
+                signatureJson,
+                publicKeyB64,
+                policy.minLevel ?? 1,
+                policy.rejectLegacy ?? false,
+            );
+        }
         return wasm.verify_signature(payloadB64, signatureJson, publicKeyB64);
     }
 
