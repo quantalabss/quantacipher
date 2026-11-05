@@ -26,6 +26,7 @@ pub fn generate_keypair() -> Result<SigningKeyPair, QuantaCipherError> {
 }
 
 /// Sign `payload` with an ML-DSA-44 private key (stored as a 32-byte seed).
+/// Produces an authenticated V2 SignatureEnvelope binding `alg` and `ver` into the signature.
 pub fn sign(payload: &[u8], private_key_b64: &str) -> Result<SignatureEnvelope, QuantaCipherError> {
     // Zeroizing ensures the raw seed bytes are securely wiped from heap
     // memory when this scope exits — consistent with how the KEM path
@@ -45,18 +46,23 @@ pub fn sign(payload: &[u8], private_key_b64: &str) -> Result<SignatureEnvelope, 
         .map_err(|_| QuantaCipherError::InvalidPrivateKeyLength)?;
     let sk = SigningKey::<MlDsa44>::from_seed(seed);
 
-    let sig: Signature<MlDsa44> = sk.sign(payload);
+    // V2 envelope authenticates header by binding it into the signed message
+    let mut bound_msg = format!("QC_SIG_V2:{}:", alg_ids::ML_DSA_44).into_bytes();
+    bound_msg.extend_from_slice(payload);
+
+    let sig: Signature<MlDsa44> = sk.sign(&bound_msg);
     // to_bytes() returns EncodedSignature<P> = Array<u8, N>; .as_slice() makes it unambiguous
     let encoded = sig.to_bytes();
 
     Ok(SignatureEnvelope {
         alg: alg_ids::ML_DSA_44.to_string(),
         sig: general_purpose::STANDARD.encode(encoded.as_slice()),
-        ver: 1,
+        ver: 2,
     })
 }
 
-/// Verify an ML-DSA-44 signature.
+/// Verify an ML-DSA-44 signature against `payload`.
+/// Handles both V2 bound envelopes and V1 legacy envelopes.
 pub fn verify(
     payload: &[u8],
     envelope: &SignatureEnvelope,
@@ -80,5 +86,13 @@ pub fn verify(
     let sig = Signature::<MlDsa44>::try_from(sig_bytes.as_slice())
         .map_err(|_| QuantaCipherError::InvalidSignatureFormat)?;
 
-    Ok(vk.verify(payload, &sig).is_ok())
+    let bound_msg = if envelope.ver >= 2 {
+        let mut m = format!("QC_SIG_V2:{}:", envelope.alg).into_bytes();
+        m.extend_from_slice(payload);
+        m
+    } else {
+        payload.to_vec()
+    };
+
+    Ok(vk.verify(&bound_msg, &sig).is_ok())
 }

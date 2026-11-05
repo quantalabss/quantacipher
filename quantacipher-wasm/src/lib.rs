@@ -1,12 +1,15 @@
 use wasm_bindgen::prelude::*;
 use quantacipher_core::{
     generate_keypair as core_generate_keypair,
+    generate_keypair_for_alg as core_generate_keypair_for_alg,
     vault_encrypt as core_vault_encrypt,
+    vault_encrypt_for_alg as core_vault_encrypt_for_alg,
     secure_encrypt as core_secure_encrypt,
     secure_decrypt as core_secure_decrypt,
     get_version as core_get_version,
     get_algorithm as core_get_algorithm,
     get_scheme as core_get_scheme,
+    KemAlgorithm,
     KEM_ALGORITHM_LABEL,
 };
 use quantacipher_core::sign::registry::{self, AlgorithmId};
@@ -20,6 +23,14 @@ use base64::{engine::general_purpose, Engine as _};
 #[wasm_bindgen]
 pub fn vault_encrypt(plaintext: &str) -> Result<String, JsValue> {
     core_vault_encrypt(plaintext).map_err(|e| JsValue::from_str(&format!("QuantaCipher Error: {}", e)))
+}
+
+#[wasm_bindgen]
+pub fn vault_encrypt_for_alg(plaintext: &str, algorithm: &str) -> Result<String, JsValue> {
+    let kem_alg = KemAlgorithm::from_id(algorithm)
+        .map_err(|e| JsValue::from_str(&format!("QuantaCipher Error: {}", e)))?;
+    core_vault_encrypt_for_alg(plaintext, kem_alg)
+        .map_err(|e| JsValue::from_str(&format!("QuantaCipher Error: {}", e)))
 }
 
 // ============================================================
@@ -36,6 +47,21 @@ pub fn generate_keypair() -> Result<String, JsValue> {
         public,
         private,
         KEM_ALGORITHM_LABEL,
+    ))
+}
+
+#[wasm_bindgen]
+pub fn generate_keypair_for_alg(algorithm: &str) -> Result<String, JsValue> {
+    let kem_alg = KemAlgorithm::from_id(algorithm)
+        .map_err(|e| JsValue::from_str(&format!("QuantaCipher Error: {}", e)))?;
+    let (public, private) = core_generate_keypair_for_alg(kem_alg)
+        .map_err(|e| JsValue::from_str(&format!("QuantaCipher Error: {}", e)))?;
+
+    Ok(format!(
+        r#"{{"publicKey":"{}","privateKey":"{}","algorithm":"{}","version":"2.0"}}"#,
+        public,
+        private,
+        kem_alg.display_name(),
     ))
 }
 

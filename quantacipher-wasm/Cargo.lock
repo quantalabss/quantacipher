@@ -487,7 +487,7 @@ dependencies = [
 
 [[package]]
 name = "quantacipher-core"
-version = "2.0.0"
+version = "2.0.6"
 dependencies = [
  "aes-gcm",
  "base64",
@@ -504,7 +504,7 @@ dependencies = [
 
 [[package]]
 name = "quantacipher-wasm"
-version = "2.0.0"
+version = "2.0.6"
 dependencies = [
  "base64",
  "getrandom 0.2.17",

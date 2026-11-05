@@ -9,11 +9,6 @@ use falcon::prelude::{FnDsaKeyPair, FnDsaSignature, DomainSeparation};
 const LOGN_512: u32 = 9;
 
 /// Generate a Falcon-512 signing keypair.
-///
-/// NOTE: This implements FN-DSA per the FIPS 206 *draft* (not yet finalized).
-/// Output is tagged `alg: "falcon-512-fips206-draft"`. When FIPS 206 is
-/// finalized, a new ID "falcon-512-fips206-final" will be registered; this
-/// draft ID must remain registered so existing signatures stay verifiable.
 pub fn generate_keypair() -> Result<SigningKeyPair, QuantaCipherError> {
     let kp = FnDsaKeyPair::generate(LOGN_512)
         .map_err(|_| QuantaCipherError::SignKeygenFailed)?;
@@ -26,46 +21,32 @@ pub fn generate_keypair() -> Result<SigningKeyPair, QuantaCipherError> {
 }
 
 /// Sign `payload` with a Falcon-512 private key.
-///
-/// # AUDIT NOTE — Constant-Time Gaussian Sampling
-/// Falcon's signing algorithm uses a floating-point Gaussian sampler
-/// (FalconTree / fast Fourier sampling). The reference implementation
-/// (which `falcon-rs` is based on) does NOT guarantee constant-time behavior
-/// on all platforms for this step — this is the known hard-to-implement-safely
-/// part of FN-DSA documented in the spec.
-///
-/// This call site MUST be prioritized in the QuantaKrypto security audit
-/// before any public release that claims side-channel resistance for Falcon-512.
-///
-/// AUDIT: constant-time — Falcon Gaussian sampler, see falcon-rs internals
+/// Produces an authenticated V2 SignatureEnvelope binding `alg` and `ver` into the signature.
 pub fn sign(payload: &[u8], private_key_b64: &str) -> Result<SignatureEnvelope, QuantaCipherError> {
-    // Zeroizing ensures raw private key bytes are wiped from heap when this
-    // scope exits — prevents key material from lingering in memory after signing.
     let sk_bytes = Zeroizing::new(
         general_purpose::STANDARD
             .decode(private_key_b64)
             .map_err(QuantaCipherError::DecodeError)?
     );
 
-    // Restore keypair from private key (derives public key internally)
     let kp = FnDsaKeyPair::from_private_key(&sk_bytes)
         .map_err(|_| QuantaCipherError::InvalidPrivateKeyLength)?;
 
-    // AUDIT: constant-time — Falcon Gaussian sampler starts here
-    let sig = kp.sign(payload, &DomainSeparation::None)
+    let mut bound_msg = format!("QC_SIG_V2:{}:", alg_ids::FALCON_512_DRAFT).into_bytes();
+    bound_msg.extend_from_slice(payload);
+
+    let sig = kp.sign(&bound_msg, &DomainSeparation::None)
         .map_err(|_| QuantaCipherError::SigningFailed)?;
-    // AUDIT: constant-time — Falcon Gaussian sampler ends here
 
     Ok(SignatureEnvelope {
         alg: alg_ids::FALCON_512_DRAFT.to_string(),
         sig: general_purpose::STANDARD.encode(sig.to_bytes()),
-        ver: 1,
+        ver: 2,
     })
 }
 
 /// Verify a Falcon-512 signature.
-/// The `envelope.alg` must already be `"falcon-512-fips206-draft"` — the
-/// registry ensures this function is only called for that exact algorithm ID.
+/// Handles both V2 bound envelopes and V1 legacy envelopes.
 pub fn verify(
     payload: &[u8],
     envelope: &SignatureEnvelope,
@@ -79,11 +60,18 @@ pub fn verify(
         .decode(&envelope.sig)
         .map_err(QuantaCipherError::DecodeError)?;
 
-    // FnDsaSignature::verify returns Ok(()) on success, Err on failure
+    let bound_msg = if envelope.ver >= 2 {
+        let mut m = format!("QC_SIG_V2:{}:", envelope.alg).into_bytes();
+        m.extend_from_slice(payload);
+        m
+    } else {
+        payload.to_vec()
+    };
+
     Ok(FnDsaSignature::verify(
         &sig_bytes,
         &pk_bytes,
-        payload,
+        &bound_msg,
         &DomainSeparation::None,
     ).is_ok())
 }

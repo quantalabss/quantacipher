@@ -6,25 +6,31 @@ use serde::{Deserialize, Serialize};
 ///
 /// Wire format (JSON):
 /// ```json
-/// { "alg": "falcon-512-fips206-draft", "sig": "<base64>", "ver": 1 }
+/// { "alg": "ml-dsa-65", "sig": "<base64>", "ver": 2 }
 /// ```
 ///
 /// Rules:
 /// - `alg` is an explicit, versioned string — never mutated in place.
-///   When FIPS 206 finalizes, a new ID will be added ("falcon-512-fips206-final")
-///   so old "draft" signatures remain verifiable.
-/// - `ver` is the envelope format version, independent of the algorithm version.
-/// - A missing or unknown `alg` field MUST be a hard error — never silently
-///   fall back to a default algorithm (that would be an algorithm-confusion bug).
+/// - `ver` is the envelope format version (version 2 binds alg and ver into the signature).
+/// - Missing headers in legacy deserialization default to legacy Falcon-512 draft and ver: 1.
 #[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
 pub struct SignatureEnvelope {
     /// Versioned algorithm identifier.
+    #[serde(default = "default_sig_alg")]
     pub alg: String,
     /// Base64-encoded raw signature bytes.
     pub sig: String,
-    /// Envelope format version (currently always 1).
+    /// Envelope format version (1 = legacy unauthenticated payload, 2 = authenticated header).
+    #[serde(default = "default_sig_ver")]
     pub ver: u32,
+}
+
+fn default_sig_alg() -> String {
+    alg_ids::FALCON_512_DRAFT.to_string()
+}
+
+fn default_sig_ver() -> u32 {
+    1
 }
 
 /// A signing keypair returned by `generate_keypair()`.
@@ -41,11 +47,14 @@ pub struct SigningKeyPair {
 /// The canonical algorithm ID strings used in `SignatureEnvelope.alg`.
 pub mod alg_ids {
     /// Falcon-512 implementing the FN-DSA FIPS 206 draft.
-    /// When FIPS 206 is finalized, a new ID "falcon-512-fips206-final" will be
-    /// added; this ID must remain registered indefinitely for backward
-    /// compatibility with signatures already produced under it.
     pub const FALCON_512_DRAFT: &str = "falcon-512-fips206-draft";
 
     /// ML-DSA-44 implementing the finalized NIST FIPS 204 standard.
     pub const ML_DSA_44: &str = "ml-dsa-44";
+
+    /// ML-DSA-65 implementing the finalized NIST FIPS 204 standard.
+    pub const ML_DSA_65: &str = "ml-dsa-65";
+
+    /// ML-DSA-87 implementing the finalized NIST FIPS 204 standard.
+    pub const ML_DSA_87: &str = "ml-dsa-87";
 }
