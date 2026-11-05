@@ -66,7 +66,7 @@ impl SecurityProfile {
         match self {
             Self::Standard => KemAlgorithm::MlKem768,
             Self::High => KemAlgorithm::MlKem1024,
-            Self::Hybrid => KemAlgorithm::MlKem768, // In Phase 4, Hybrid KEM will be X-Wing (X25519 + ML-KEM-768)
+            Self::Hybrid => KemAlgorithm::HybridXWing,
         }
     }
 

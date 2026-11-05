@@ -26,8 +26,9 @@ ml-dsa = { version = "0.1.1", features = ["getrandom", "rand_core"] }
 # NOTE: pqcrypto-falcon was explicitly rejected; it requires C FFI and cannot compile to wasm32-unknown-unknown
 # The crate name on crates.io is falcon-rs but the Rust module name is `falcon`
 falcon-rs = { version = "0.2.5", features = ["std"] }
-# Note: getrandom is removed from here so we don't force 'js' feature on Python builds.
-# It will use the OS default rng (or WASM rng if provided in the wrapper).
+# Hybrid KEM dependencies (X-Wing / draft-connolly-cfrg-xwing-kem: X25519 + ML-KEM-768)
+x25519-dalek = { version = "2.0", default-features = false, features = ["static_secrets"] }
+sha3 = "0.10"
 
 [dev-dependencies]
 criterion = "0.5"

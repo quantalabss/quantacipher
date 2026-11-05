@@ -4,11 +4,35 @@ use ml_kem::kem::{Encapsulate, Decapsulate};
 use zeroize::{Zeroize, Zeroizing};
 use rand::rngs::OsRng as RandOsRng;
 use base64::{engine::general_purpose, Engine as _};
+use x25519_dalek::{StaticSecret, PublicKey as X25519PublicKey};
+use sha3::{Digest, Sha3_256};
 
 /// Canonical KEM algorithm labels
 pub mod kem_ids {
     pub const ML_KEM_768: &str = "ml-kem-768";
     pub const ML_KEM_1024: &str = "ml-kem-1024";
+    pub const HYBRID_XWING: &str = "hybrid-xwing";
+}
+
+/// Domain separation label for X-Wing combiner: `\./^\\` (6 bytes: 0x5c, 0x2e, 0x2f, 0x2f, 0x5e, 0x5c)
+pub const XWING_LABEL: &[u8; 6] = &[0x5c, 0x2e, 0x2f, 0x2f, 0x5e, 0x5c];
+
+/// Derives the X-Wing hybrid shared secret per draft-connolly-cfrg-xwing-kem:
+/// `ss = SHA3-256(ss_M || ss_X || ct_X || pk_X || XWingLabel)`
+pub fn xwing_combine_secrets(
+    ss_m: &[u8],
+    ss_x: &[u8],
+    ct_x: &[u8],
+    pk_x: &[u8],
+) -> Zeroizing<Vec<u8>> {
+    let mut hasher = Sha3_256::new();
+    hasher.update(ss_m);
+    hasher.update(ss_x);
+    hasher.update(ct_x);
+    hasher.update(pk_x);
+    hasher.update(XWING_LABEL);
+    let output = hasher.finalize();
+    Zeroizing::new(output.to_vec())
 }
 
 /// Supported KEM algorithms in QuantaCipher
@@ -16,6 +40,7 @@ pub mod kem_ids {
 pub enum KemAlgorithm {
     MlKem768,
     MlKem1024,
+    HybridXWing,
 }
 
 impl KemAlgorithm {
@@ -23,6 +48,7 @@ impl KemAlgorithm {
         match self {
             Self::MlKem768 => kem_ids::ML_KEM_768,
             Self::MlKem1024 => kem_ids::ML_KEM_1024,
+            Self::HybridXWing => kem_ids::HYBRID_XWING,
         }
     }
 
@@ -34,6 +60,7 @@ impl KemAlgorithm {
         match self {
             Self::MlKem768 => "ML-KEM-768",
             Self::MlKem1024 => "ML-KEM-1024",
+            Self::HybridXWing => "Hybrid X-Wing (X25519 + ML-KEM-768)",
         }
     }
 
@@ -41,6 +68,7 @@ impl KemAlgorithm {
         match self {
             Self::MlKem768 => "ML-KEM-768 (FIPS 203) + AES-256-GCM",
             Self::MlKem1024 => "ML-KEM-1024 (FIPS 203) + AES-256-GCM",
+            Self::HybridXWing => "Hybrid X-Wing (X25519 + ML-KEM-768) + AES-256-GCM",
         }
     }
 
@@ -48,6 +76,7 @@ impl KemAlgorithm {
         match self {
             Self::MlKem768 => 3,
             Self::MlKem1024 => 5,
+            Self::HybridXWing => 5,
         }
     }
 
@@ -55,6 +84,7 @@ impl KemAlgorithm {
         match id.to_lowercase().trim() {
             kem_ids::ML_KEM_768 | "mlkem768" => Ok(Self::MlKem768),
             kem_ids::ML_KEM_1024 | "mlkem1024" => Ok(Self::MlKem1024),
+            kem_ids::HYBRID_XWING | "xwing" | "hybrid" | "x-wing" => Ok(Self::HybridXWing),
             other => Err(QuantaCipherError::UnknownAlgorithm(other.to_string())),
         }
     }
@@ -63,6 +93,7 @@ impl KemAlgorithm {
         match self {
             Self::MlKem768 => 1184,
             Self::MlKem1024 => 1568,
+            Self::HybridXWing => 1216, // 1184 (ML-KEM-768 ek) + 32 (X25519 pk)
         }
     }
 
@@ -70,6 +101,7 @@ impl KemAlgorithm {
         match self {
             Self::MlKem768 => 2400,
             Self::MlKem1024 => 3168,
+            Self::HybridXWing => 2432, // 2400 (ML-KEM-768 dk) + 32 (X25519 sk)
         }
     }
 
@@ -81,12 +113,14 @@ impl KemAlgorithm {
         match self {
             Self::MlKem768 => 1088,
             Self::MlKem1024 => 1568,
+            Self::HybridXWing => 1120, // 1088 (ML-KEM-768 ct) + 32 (X25519 ephemeral pk)
         }
     }
 
     pub fn from_public_key_len(len: usize) -> Result<Self, QuantaCipherError> {
         match len {
             1184 => Ok(Self::MlKem768),
+            1216 => Ok(Self::HybridXWing),
             1568 => Ok(Self::MlKem1024),
             _ => Err(QuantaCipherError::InvalidPublicKeyLength),
         }
@@ -95,6 +129,7 @@ impl KemAlgorithm {
     pub fn from_secret_key_len(len: usize) -> Result<Self, QuantaCipherError> {
         match len {
             2400 => Ok(Self::MlKem768),
+            2432 => Ok(Self::HybridXWing),
             3168 => Ok(Self::MlKem1024),
             _ => Err(QuantaCipherError::InvalidPrivateKeyLength),
         }
@@ -115,6 +150,23 @@ impl KemAlgorithm {
                 let (dk, ek) = MlKem1024::generate(&mut rng);
                 let b64_pub = general_purpose::STANDARD.encode(ek.as_bytes().as_slice());
                 let b64_priv = general_purpose::STANDARD.encode(dk.as_bytes().as_slice());
+                Ok((b64_pub, b64_priv))
+            }
+            Self::HybridXWing => {
+                let (dk_m, ek_m) = MlKem768::generate(&mut rng);
+                let sk_x = StaticSecret::random_from_rng(&mut rng);
+                let pk_x = X25519PublicKey::from(&sk_x);
+
+                let mut pk_bytes = Vec::with_capacity(1216);
+                pk_bytes.extend_from_slice(ek_m.as_bytes().as_slice());
+                pk_bytes.extend_from_slice(pk_x.as_bytes());
+
+                let mut sk_bytes = Zeroizing::new(Vec::with_capacity(2432));
+                sk_bytes.extend_from_slice(dk_m.as_bytes().as_slice());
+                sk_bytes.extend_from_slice(&sk_x.to_bytes());
+
+                let b64_pub = general_purpose::STANDARD.encode(&pk_bytes);
+                let b64_priv = general_purpose::STANDARD.encode(sk_bytes.as_slice());
                 Ok((b64_pub, b64_priv))
             }
         }
@@ -139,6 +191,32 @@ impl KemAlgorithm {
                 let ss_bytes = Zeroizing::new(ss.as_slice().to_vec());
                 ss.as_mut_slice().zeroize();
                 Ok((ct.as_slice().to_vec(), ss_bytes))
+            }
+            Self::HybridXWing => {
+                let (_dk_m, ek_m) = MlKem768::generate(&mut rng);
+                let sk_x = StaticSecret::random_from_rng(&mut rng);
+                let pk_x = X25519PublicKey::from(&sk_x);
+
+                let (ct_m, mut ss_m) = ek_m.encapsulate(&mut rng).map_err(|_| QuantaCipherError::EncapsulationFailed)?;
+
+                let sk_e_x = StaticSecret::random_from_rng(&mut rng);
+                let ct_x = X25519PublicKey::from(&sk_e_x);
+                let ss_x = sk_e_x.diffie_hellman(&pk_x);
+
+                let ss = xwing_combine_secrets(
+                    ss_m.as_slice(),
+                    ss_x.as_bytes(),
+                    ct_x.as_bytes(),
+                    pk_x.as_bytes(),
+                );
+
+                ss_m.as_mut_slice().zeroize();
+
+                let mut ct = Vec::with_capacity(1120);
+                ct.extend_from_slice(ct_m.as_slice());
+                ct.extend_from_slice(ct_x.as_bytes());
+
+                Ok((ct, ss))
             }
         }
     }
@@ -168,6 +246,37 @@ impl KemAlgorithm {
                 let ss_bytes = Zeroizing::new(ss.as_slice().to_vec());
                 ss.as_mut_slice().zeroize();
                 Ok((ct.as_slice().to_vec(), ss_bytes))
+            }
+            Self::HybridXWing => {
+                let pk_m_bytes = &pk_bytes[..1184];
+                let pk_x_bytes: [u8; 32] = pk_bytes[1184..1216]
+                    .try_into()
+                    .map_err(|_| QuantaCipherError::InvalidPublicKeyLength)?;
+                let pk_x = X25519PublicKey::from(pk_x_bytes);
+
+                let pk_array = ml_kem::array::Array::try_from(pk_m_bytes)
+                    .map_err(|_| QuantaCipherError::InvalidPublicKeyLength)?;
+                let ek_m = <MlKem768 as KemCore>::EncapsulationKey::from_bytes(&pk_array);
+                let (ct_m, mut ss_m) = ek_m.encapsulate(&mut rng).map_err(|_| QuantaCipherError::EncapsulationFailed)?;
+
+                let sk_e_x = StaticSecret::random_from_rng(&mut rng);
+                let ct_x = X25519PublicKey::from(&sk_e_x);
+                let ss_x = sk_e_x.diffie_hellman(&pk_x);
+
+                let ss = xwing_combine_secrets(
+                    ss_m.as_slice(),
+                    ss_x.as_bytes(),
+                    ct_x.as_bytes(),
+                    pk_x.as_bytes(),
+                );
+
+                ss_m.as_mut_slice().zeroize();
+
+                let mut ct = Vec::with_capacity(1120);
+                ct.extend_from_slice(ct_m.as_slice());
+                ct.extend_from_slice(ct_x.as_bytes());
+
+                Ok((ct, ss))
             }
         }
     }
@@ -204,9 +313,44 @@ impl KemAlgorithm {
                 ss.as_mut_slice().zeroize();
                 Ok(ss_bytes)
             }
+            Self::HybridXWing => {
+                let sk_m_bytes = &sk_bytes[..2400];
+                let sk_x_bytes: [u8; 32] = sk_bytes[2400..2432]
+                    .try_into()
+                    .map_err(|_| QuantaCipherError::InvalidPrivateKeyLength)?;
+                let sk_x = StaticSecret::from(sk_x_bytes);
+                let pk_x = X25519PublicKey::from(&sk_x);
+
+                let ct_m_bytes = &ct_bytes[..1088];
+                let ct_x_bytes: [u8; 32] = ct_bytes[1088..1120]
+                    .try_into()
+                    .map_err(|_| QuantaCipherError::InvalidCiphertextLength)?;
+                let ct_x = X25519PublicKey::from(ct_x_bytes);
+
+                let sk_array = ml_kem::array::Array::try_from(sk_m_bytes)
+                    .map_err(|_| QuantaCipherError::InvalidPrivateKeyLength)?;
+                let dk_m = <MlKem768 as KemCore>::DecapsulationKey::from_bytes(&sk_array);
+                let ct_array = ml_kem::array::Array::try_from(ct_m_bytes)
+                    .map_err(|_| QuantaCipherError::InvalidCiphertextLength)?;
+                let mut ss_m = dk_m.decapsulate(&ct_array).map_err(|_| QuantaCipherError::DecapsulationFailed)?;
+
+                let ss_x = sk_x.diffie_hellman(&ct_x);
+
+                let ss = xwing_combine_secrets(
+                    ss_m.as_slice(),
+                    ss_x.as_bytes(),
+                    ct_x.as_bytes(),
+                    pk_x.as_bytes(),
+                );
+
+                ss_m.as_mut_slice().zeroize();
+
+                Ok(ss)
+            }
         }
     }
 }
+
 
 /// Symmetric Data Encryption Mechanism (DEM)
 pub mod aead {

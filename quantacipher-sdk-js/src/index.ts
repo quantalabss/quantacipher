@@ -23,6 +23,7 @@ export type SecurityProfile = typeof SecurityProfile[keyof typeof SecurityProfil
 export const KemAlgorithm = {
     ML_KEM_768: 'ml-kem-768',
     ML_KEM_1024: 'ml-kem-1024',
+    HYBRID_XWING: 'hybrid-xwing',
 } as const;
 
 export type KemAlgorithm = typeof KemAlgorithm[keyof typeof KemAlgorithm];
