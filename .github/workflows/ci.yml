@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  core-tests:
+    name: Rust Core Tests (NIST KAT, Agility, Profiles, Policy, Hybrid, Rewrap)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Run Core Unit & Integration Tests
+        run: |
+          cd quantacipher-core
+          cargo test --verbose
+
+  sdk-tests:
+    name: WASM Build & JS SDK Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+      - name: Build WASM Package
+        run: |
+          cd quantacipher-wasm
+          wasm-pack build --target bundler --scope quantalabss --out-dir pkg --no-opt
+      - name: Build JS SDK
+        run: |
+          cd quantacipher-sdk-js
+          npm install
+          npm run build
+      - name: Run SDK Integration Test Suites
+        run: |
+          cd quantacipher-sdk-js
+          npx tsx test_profiles.ts
+          npx tsx test_downgrade.ts
+          npx tsx test_hybrid.ts
+          npx tsx test_rewrap.ts
