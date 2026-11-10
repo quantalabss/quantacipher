@@ -1,17 +1,31 @@
-//! Official NIST ACVP Known Answer Tests (KAT) for ML-KEM (FIPS 203).
+//! Official NIST ACVP Known Answer Tests (KAT) for ML-KEM (FIPS 203) and ML-DSA (FIPS 204).
 //!
-//! Source: usnistgov/ACVP-Server
+//! Sources: usnistgov/ACVP-Server
 //! - gen-val/json-files/ML-KEM-encapDecap-FIPS203/internalProjection.json
 //! - gen-val/json-files/ML-KEM-keyGen-FIPS203/internalProjection.json
+//! - gen-val/json-files/ML-DSA-keyGen-FIPS204/internalProjection.json
+//! - gen-val/json-files/ML-DSA-sigVer-FIPS204/internalProjection.json
 //!
 //! Covers every test case in each designated NIST ACVP test group:
 //! - FIPS 203 ML-KEM-768 Decapsulation (all 25 test cases in ACVP Test Group 2: tcId 26–50)
 //! - FIPS 203 ML-KEM-1024 Decapsulation (all 25 test cases in ACVP Test Group 3: tcId 51–75)
 //! - FIPS 203 ML-KEM-768 Key Generation (all 25 test cases in ACVP KeyGen Test Group 2)
 //! - FIPS 203 ML-KEM-1024 Key Generation (all 25 test cases in ACVP KeyGen Test Group 3)
+//! - FIPS 204 ML-DSA-44 Key Generation & Sign/Verify (all 25 test cases in ACVP KeyGen Test Group 1)
+//! - FIPS 204 ML-DSA-65 Key Generation & Sign/Verify (all 25 test cases in ACVP KeyGen Test Group 2)
+//! - FIPS 204 ML-DSA-87 Key Generation & Sign/Verify (all 25 test cases in ACVP KeyGen Test Group 3)
+//! - FIPS 204 ML-DSA-44 Signature Verification (all 15 test cases in ACVP SigVer Test Group 1: positive & negative)
+//! - FIPS 204 ML-DSA-65 Signature Verification (all 15 test cases in ACVP SigVer Test Group 3: positive & negative)
+//! - FIPS 204 ML-DSA-87 Signature Verification (all 15 test cases in ACVP SigVer Test Group 5: positive & negative)
+//! Total: 220 official NIST ACVP test cases executed.
 
 use quantacipher_core::KemAlgorithm;
 use ml_kem::{MlKem768, MlKem1024, KemCore, EncodedSizeUser};
+use ml_dsa::{
+    MlDsa44, MlDsa65, MlDsa87,
+    SigningKey, Keypair, Signer, Verifier,
+    EncodedVerifyingKey, VerifyingKey, Signature,
+};
 use rand::{RngCore, CryptoRng};
 use serde::Deserialize;
 
@@ -25,13 +39,35 @@ struct DecapTestCase {
 }
 
 #[derive(Deserialize)]
-struct KeygenTestCase {
+struct KemKeygenTestCase {
     #[serde(rename = "tcId")]
     tc_id: u32,
     d: String,
     z: String,
     ek: String,
     dk: String,
+}
+
+#[derive(Deserialize)]
+struct DsaKeygenTestCase {
+    #[serde(rename = "tcId")]
+    tc_id: u32,
+    seed: String,
+    pk: String,
+}
+
+#[derive(Deserialize)]
+struct DsaSigVerTestCase {
+    #[serde(rename = "tcId")]
+    tc_id: u32,
+    #[serde(rename = "testPassed")]
+    test_passed: bool,
+    #[allow(dead_code)]
+    reason: String,
+    context: String,
+    message: String,
+    pk: String,
+    signature: String,
 }
 
 /// Mock RNG to supply deterministic entropy (d || z) for ACVP KeyGen tests.
@@ -120,7 +156,7 @@ fn test_nist_acvp_mlkem1024_all_25_decapsulations() {
 #[test]
 fn test_nist_acvp_mlkem768_all_25_keygens() {
     let raw = include_str!("data/mlkem768_acvp_keygen.json");
-    let cases: Vec<KeygenTestCase> = serde_json::from_str(raw).expect("Valid JSON");
+    let cases: Vec<KemKeygenTestCase> = serde_json::from_str(raw).expect("Valid JSON");
     assert_eq!(cases.len(), 25, "Must test all 25 keygen cases in ACVP Group 2");
 
     for tc in cases {
@@ -138,7 +174,7 @@ fn test_nist_acvp_mlkem768_all_25_keygens() {
 #[test]
 fn test_nist_acvp_mlkem1024_all_25_keygens() {
     let raw = include_str!("data/mlkem1024_acvp_keygen.json");
-    let cases: Vec<KeygenTestCase> = serde_json::from_str(raw).expect("Valid JSON");
+    let cases: Vec<KemKeygenTestCase> = serde_json::from_str(raw).expect("Valid JSON");
     assert_eq!(cases.len(), 25, "Must test all 25 keygen cases in ACVP Group 3");
 
     for tc in cases {
@@ -150,6 +186,177 @@ fn test_nist_acvp_mlkem1024_all_25_keygens() {
 
         assert_eq!(ek_hex.to_uppercase(), tc.ek.to_uppercase(), "EK mismatch on keygen tcId {}", tc.tc_id);
         assert_eq!(dk_hex.to_uppercase(), tc.dk.to_uppercase(), "DK mismatch on keygen tcId {}", tc.tc_id);
+    }
+}
+
+#[test]
+fn test_nist_acvp_mldsa44_all_25_keygens_and_sign_verify() {
+    let raw = include_str!("data/mldsa44_acvp_keygen.json");
+    let cases: Vec<DsaKeygenTestCase> = serde_json::from_str(raw).expect("Valid JSON");
+    assert_eq!(cases.len(), 25, "Must test all 25 keygen cases in ACVP Group 1 for ML-DSA-44");
+
+    let test_msg = b"QuantaCipher NIST ACVP ML-DSA-44 test message verification";
+
+    for tc in cases {
+        let seed_bytes = hex::decode(&tc.seed).expect("Valid seed hex");
+        let seed_array = seed_bytes.as_slice().try_into().expect("32-byte seed");
+
+        let sk = SigningKey::<MlDsa44>::from_seed(seed_array);
+        let vk = sk.verifying_key();
+
+        let pk_encoded = vk.encode();
+        let pk_hex = hex::encode(pk_encoded.as_slice());
+
+        assert_eq!(pk_hex.to_uppercase(), tc.pk.to_uppercase(), "Mismatch on ML-DSA-44 tcId {}", tc.tc_id);
+
+        let sig = sk.sign(test_msg);
+        assert!(vk.verify(test_msg, &sig).is_ok(), "Verification failed on ML-DSA-44 tcId {}", tc.tc_id);
+    }
+}
+
+#[test]
+fn test_nist_acvp_mldsa65_all_25_keygens_and_sign_verify() {
+    let raw = include_str!("data/mldsa65_acvp_keygen.json");
+    let cases: Vec<DsaKeygenTestCase> = serde_json::from_str(raw).expect("Valid JSON");
+    assert_eq!(cases.len(), 25, "Must test all 25 keygen cases in ACVP Group 2 for ML-DSA-65");
+
+    let test_msg = b"QuantaCipher NIST ACVP ML-DSA-65 test message verification";
+
+    for tc in cases {
+        let seed_bytes = hex::decode(&tc.seed).expect("Valid seed hex");
+        let seed_array = seed_bytes.as_slice().try_into().expect("32-byte seed");
+
+        let sk = SigningKey::<MlDsa65>::from_seed(seed_array);
+        let vk = sk.verifying_key();
+
+        let pk_encoded = vk.encode();
+        let pk_hex = hex::encode(pk_encoded.as_slice());
+
+        assert_eq!(pk_hex.to_uppercase(), tc.pk.to_uppercase(), "Mismatch on ML-DSA-65 tcId {}", tc.tc_id);
+
+        let sig = sk.sign(test_msg);
+        assert!(vk.verify(test_msg, &sig).is_ok(), "Verification failed on ML-DSA-65 tcId {}", tc.tc_id);
+    }
+}
+
+#[test]
+fn test_nist_acvp_mldsa87_all_25_keygens_and_sign_verify() {
+    let raw = include_str!("data/mldsa87_acvp_keygen.json");
+    let cases: Vec<DsaKeygenTestCase> = serde_json::from_str(raw).expect("Valid JSON");
+    assert_eq!(cases.len(), 25, "Must test all 25 keygen cases in ACVP Group 3 for ML-DSA-87");
+
+    let test_msg = b"QuantaCipher NIST ACVP ML-DSA-87 test message verification";
+
+    for tc in cases {
+        let seed_bytes = hex::decode(&tc.seed).expect("Valid seed hex");
+        let seed_array = seed_bytes.as_slice().try_into().expect("32-byte seed");
+
+        let sk = SigningKey::<MlDsa87>::from_seed(seed_array);
+        let vk = sk.verifying_key();
+
+        let pk_encoded = vk.encode();
+        let pk_hex = hex::encode(pk_encoded.as_slice());
+
+        assert_eq!(pk_hex.to_uppercase(), tc.pk.to_uppercase(), "Mismatch on ML-DSA-87 tcId {}", tc.tc_id);
+
+        let sig = sk.sign(test_msg);
+        assert!(vk.verify(test_msg, &sig).is_ok(), "Verification failed on ML-DSA-87 tcId {}", tc.tc_id);
+    }
+}
+
+#[test]
+fn test_nist_acvp_mldsa44_all_15_signature_verifications() {
+    let raw = include_str!("data/mldsa_acvp_sigver.json");
+    let map: std::collections::HashMap<String, Vec<DsaSigVerTestCase>> =
+        serde_json::from_str(raw).expect("Valid JSON");
+
+    let cases = &map["ML-DSA-44"];
+    assert_eq!(cases.len(), 15, "Must test all 15 sigVer cases in ACVP Group 1 for ML-DSA-44");
+
+    for tc in cases {
+        let pk_bytes = hex::decode(&tc.pk).expect("hex pk");
+        let msg_bytes = hex::decode(&tc.message).expect("hex msg");
+        let ctx_bytes = hex::decode(&tc.context).expect("hex ctx");
+        let sig_bytes = hex::decode(&tc.signature).expect("hex sig");
+
+        let enc_vk: EncodedVerifyingKey<MlDsa44> = pk_bytes.as_slice().try_into().expect("pk len");
+        let vk = VerifyingKey::<MlDsa44>::decode(&enc_vk);
+
+        let sig_res = Signature::<MlDsa44>::try_from(sig_bytes.as_slice());
+        let is_valid = match sig_res {
+            Ok(sig) => vk.verify_with_context(&msg_bytes, &ctx_bytes, &sig),
+            Err(_) => false,
+        };
+
+        assert_eq!(
+            is_valid, tc.test_passed,
+            "ML-DSA-44 tcId {} expected testPassed={} but got {}",
+            tc.tc_id, tc.test_passed, is_valid
+        );
+    }
+}
+
+#[test]
+fn test_nist_acvp_mldsa65_all_15_signature_verifications() {
+    let raw = include_str!("data/mldsa_acvp_sigver.json");
+    let map: std::collections::HashMap<String, Vec<DsaSigVerTestCase>> =
+        serde_json::from_str(raw).expect("Valid JSON");
+
+    let cases = &map["ML-DSA-65"];
+    assert_eq!(cases.len(), 15, "Must test all 15 sigVer cases in ACVP Group 3 for ML-DSA-65");
+
+    for tc in cases {
+        let pk_bytes = hex::decode(&tc.pk).expect("hex pk");
+        let msg_bytes = hex::decode(&tc.message).expect("hex msg");
+        let ctx_bytes = hex::decode(&tc.context).expect("hex ctx");
+        let sig_bytes = hex::decode(&tc.signature).expect("hex sig");
+
+        let enc_vk: EncodedVerifyingKey<MlDsa65> = pk_bytes.as_slice().try_into().expect("pk len");
+        let vk = VerifyingKey::<MlDsa65>::decode(&enc_vk);
+
+        let sig_res = Signature::<MlDsa65>::try_from(sig_bytes.as_slice());
+        let is_valid = match sig_res {
+            Ok(sig) => vk.verify_with_context(&msg_bytes, &ctx_bytes, &sig),
+            Err(_) => false,
+        };
+
+        assert_eq!(
+            is_valid, tc.test_passed,
+            "ML-DSA-65 tcId {} expected testPassed={} but got {}",
+            tc.tc_id, tc.test_passed, is_valid
+        );
+    }
+}
+
+#[test]
+fn test_nist_acvp_mldsa87_all_15_signature_verifications() {
+    let raw = include_str!("data/mldsa_acvp_sigver.json");
+    let map: std::collections::HashMap<String, Vec<DsaSigVerTestCase>> =
+        serde_json::from_str(raw).expect("Valid JSON");
+
+    let cases = &map["ML-DSA-87"];
+    assert_eq!(cases.len(), 15, "Must test all 15 sigVer cases in ACVP Group 5 for ML-DSA-87");
+
+    for tc in cases {
+        let pk_bytes = hex::decode(&tc.pk).expect("hex pk");
+        let msg_bytes = hex::decode(&tc.message).expect("hex msg");
+        let ctx_bytes = hex::decode(&tc.context).expect("hex ctx");
+        let sig_bytes = hex::decode(&tc.signature).expect("hex sig");
+
+        let enc_vk: EncodedVerifyingKey<MlDsa87> = pk_bytes.as_slice().try_into().expect("pk len");
+        let vk = VerifyingKey::<MlDsa87>::decode(&enc_vk);
+
+        let sig_res = Signature::<MlDsa87>::try_from(sig_bytes.as_slice());
+        let is_valid = match sig_res {
+            Ok(sig) => vk.verify_with_context(&msg_bytes, &ctx_bytes, &sig),
+            Err(_) => false,
+        };
+
+        assert_eq!(
+            is_valid, tc.test_passed,
+            "ML-DSA-87 tcId {} expected testPassed={} but got {}",
+            tc.tc_id, tc.test_passed, is_valid
+        );
     }
 }
 
