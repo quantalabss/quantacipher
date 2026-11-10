@@ -76,7 +76,7 @@ impl KemAlgorithm {
         match self {
             Self::MlKem768 => 3,
             Self::MlKem1024 => 5,
-            Self::HybridXWing => 5,
+            Self::HybridXWing => 3, // Bound by post-quantum component ML-KEM-768 (NIST Level 3) + Classical X25519
         }
     }
 

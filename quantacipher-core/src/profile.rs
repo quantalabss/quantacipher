@@ -18,7 +18,7 @@ pub mod profile_ids {
 /// Profiles bundle NIST-standardized PQC primitive suites:
 /// - `Standard`: NIST Security Level 3 (ML-KEM-768 for KEM, ML-DSA-65 for Sign, AES-256-GCM)
 /// - `High` (Default): NIST Security Level 5 (ML-KEM-1024 for KEM, ML-DSA-87 for Sign, AES-256-GCM)
-/// - `Hybrid`: NIST Security Level 5 Composite (X-Wing / X25519 + ML-KEM-768 for KEM, ML-DSA-87 for Sign)
+/// - `Hybrid`: NIST Security Level 3 + Classical X25519 (X-Wing / X25519 + ML-KEM-768 for KEM, ML-DSA-87 for Sign)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum SecurityProfile {
@@ -27,7 +27,7 @@ pub enum SecurityProfile {
     /// NIST Level 5: ML-KEM-1024 / ML-DSA-87 / AES-256-GCM (Default)
     #[default]
     High,
-    /// Composite / Dual-layer: Hybrid post-quantum + classical (prepared for Phase 4)
+    /// Dual-layer: Hybrid post-quantum (ML-KEM-768, Level 3) + classical (X25519)
     Hybrid,
 }
 
@@ -50,7 +50,7 @@ impl SecurityProfile {
         match self {
             Self::Standard => "Standard (NIST Level 3)",
             Self::High => "High (NIST Level 5)",
-            Self::Hybrid => "Hybrid (Composite Level 5)",
+            Self::Hybrid => "Hybrid (NIST Level 3 + X25519)",
         }
     }
 
@@ -58,7 +58,7 @@ impl SecurityProfile {
         match self {
             Self::Standard => 3,
             Self::High => 5,
-            Self::Hybrid => 5,
+            Self::Hybrid => 3, // Bound by post-quantum component ML-KEM-768 (Level 3)
         }
     }
 

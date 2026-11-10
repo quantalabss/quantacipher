@@ -17,8 +17,8 @@ async function runHybridTests() {
 
     const info = sdkHybrid.getProfileInfo();
     console.log("[+] Hybrid Profile Info:", info);
-    if (info.kem !== 'hybrid-xwing' || info.nistLevel !== 5) {
-        throw new Error(`Hybrid profile info incorrect: expected kem 'hybrid-xwing', level 5`);
+    if (info.kem !== 'hybrid-xwing' || info.nistLevel !== 3) {
+        throw new Error(`Hybrid profile info incorrect: expected kem 'hybrid-xwing', level 3, got level ${info.nistLevel}`);
     }
 
     // 2. Generate Keypair for Hybrid Profile
@@ -73,13 +73,30 @@ async function runHybridTests() {
     }
     console.log("[+] Hybrid Envelope Tamper Detection: SUCCESS");
 
-    // 6. SecurityPolicy Enforcement (Level 5 requirement accepts Hybrid X-Wing)
-    sdkHybrid.setPolicy({ minLevel: 5, rejectLegacy: true });
+    // 6. SecurityPolicy Enforcement:
+    // Level 3 policy accepts Hybrid X-Wing
+    sdkHybrid.setPolicy({ minLevel: 3, rejectLegacy: true });
     const policyDecrypted = sdkHybrid.decryptSecure(secureCiphertext, hybridKeys.privateKey);
     if (policyDecrypted !== message) {
         throw new Error("Policy decryption mismatch!");
     }
-    console.log("[+] Hybrid SecurityPolicy Level 5 Compliance: SUCCESS");
+    console.log("[+] Hybrid SecurityPolicy Level 3 Compliance: SUCCESS");
+
+    // Level 5 policy MUST reject Hybrid X-Wing (downgrade prevention)
+    sdkHybrid.setPolicy({ minLevel: 5, rejectLegacy: true });
+    let rejectedByLevel5 = false;
+    try {
+        sdkHybrid.decryptSecure(secureCiphertext, hybridKeys.privateKey);
+    } catch (err: any) {
+        const errStr = String(err.message || err);
+        if (errStr.toLowerCase().includes("security level")) {
+            rejectedByLevel5 = true;
+        }
+    }
+    if (!rejectedByLevel5) {
+        throw new Error("Level 5 policy failed to reject Level 3 Hybrid ciphertext!");
+    }
+    console.log("[+] Hybrid SecurityPolicy Level 5 Rejection (Downgrade Prevention): SUCCESS");
 
     console.log("\n[✔] All QuantaCipher JS/TS SDK Hybrid Mode Tests Passed!");
 }

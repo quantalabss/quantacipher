@@ -7,7 +7,7 @@ import * as wasm from '@quantalabss/quantacipher-wasm';
  * Selectable Security Profiles for QuantaCipher:
  * - STANDARD: NIST Security Level 3 (ML-KEM-768 for KEM, ML-DSA-65 for Sign, AES-256-GCM)
  * - HIGH: NIST Security Level 5 (ML-KEM-1024 for KEM, ML-DSA-87 for Sign, AES-256-GCM) — DEFAULT
- * - HYBRID: NIST Security Level 5 Composite (X-Wing / X25519 + ML-KEM-768 for KEM, ML-DSA-87 for Sign)
+ * - HYBRID: NIST Security Level 3 + Classical X25519 (X-Wing / X25519 + ML-KEM-768 for KEM, ML-DSA-87 for Sign)
  */
 export const SecurityProfile = {
     STANDARD: 'standard',

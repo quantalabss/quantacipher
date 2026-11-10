@@ -36,7 +36,7 @@ fn test_hybrid_xwing_metadata_and_lengths() {
     let alg = KemAlgorithm::HybridXWing;
     assert_eq!(alg.id(), kem_ids::HYBRID_XWING);
     assert_eq!(alg.id(), "hybrid-xwing");
-    assert_eq!(alg.nist_level(), 5);
+    assert_eq!(alg.nist_level(), 3);
     assert_eq!(alg.public_key_len(), 1216); // 1184 (ML-KEM-768) + 32 (X25519)
     assert_eq!(alg.secret_key_len(), 2432); // 2400 (ML-KEM-768) + 32 (X25519)
     assert_eq!(alg.ciphertext_len(), 1120); // 1088 (ML-KEM-768) + 32 (X25519)
@@ -48,7 +48,7 @@ fn test_hybrid_xwing_metadata_and_lengths() {
     // Profile mapping
     let profile = SecurityProfile::Hybrid;
     assert_eq!(profile.kem_algorithm(), KemAlgorithm::HybridXWing);
-    assert_eq!(profile.nist_level(), 5);
+    assert_eq!(profile.nist_level(), 3);
 }
 
 #[test]
@@ -126,9 +126,22 @@ fn test_hybrid_xwing_tamper_and_downgrade_protection() {
     corrupted.push(replacement);
     assert!(secure_decrypt(&corrupted, &sk_b64).is_err());
 
-    // 3. SecurityPolicy enforcement: Level 5 required -> Hybrid X-Wing is Level 5, so it passes!
-    let strict_policy = SecurityPolicy::new(5, true);
-    let decrypted = secure_decrypt_with_policy(&ciphertext, &sk_b64, &strict_policy)
-        .expect("Level 5 policy should accept Hybrid X-Wing");
+    // 3. SecurityPolicy enforcement:
+    // Level 3 requirement -> Hybrid X-Wing has Level 3 PQ hardness, so it passes!
+    let level3_policy = SecurityPolicy::new(3, true);
+    let decrypted = secure_decrypt_with_policy(&ciphertext, &sk_b64, &level3_policy)
+        .expect("Level 3 policy should accept Hybrid X-Wing");
     assert_eq!(decrypted, message);
+
+    // Level 5 requirement -> Hybrid X-Wing is based on ML-KEM-768 (Level 3), so it must be REJECTED to prevent downgrade!
+    let strict_level5_policy = SecurityPolicy::new(5, true);
+    let err = secure_decrypt_with_policy(&ciphertext, &sk_b64, &strict_level5_policy)
+        .expect_err("Level 5 policy must reject Level 3 Hybrid X-Wing");
+    match err {
+        quantacipher_core::QuantaCipherError::SecurityLevelBelowMinimum { actual, minimum } => {
+            assert_eq!(actual, 3);
+            assert_eq!(minimum, 5);
+        }
+        other => panic!("Expected SecurityLevelBelowMinimum, got: {:?}", other),
+    }
 }
