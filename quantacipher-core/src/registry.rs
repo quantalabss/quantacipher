@@ -14,7 +14,7 @@ pub mod kem_ids {
     pub const HYBRID_XWING: &str = "hybrid-xwing";
 }
 
-/// Domain separation label for X-Wing combiner: `\./^\\` (6 bytes: 0x5c, 0x2e, 0x2f, 0x2f, 0x5e, 0x5c)
+/// Domain separation label for X-Wing combiner: `\\.//^\\` (6 bytes: 0x5c, 0x2e, 0x2f, 0x2f, 0x5e, 0x5c)
 pub const XWING_LABEL: &[u8; 6] = &[0x5c, 0x2e, 0x2f, 0x2f, 0x5e, 0x5c];
 
 /// Derives the X-Wing hybrid shared secret per draft-connolly-cfrg-xwing-kem:

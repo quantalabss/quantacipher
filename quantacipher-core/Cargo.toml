@@ -18,10 +18,9 @@ zeroize = { version = "1.8", features = ["zeroize_derive"] }
 rand = "0.8"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-# Signing dependencies
-# ml-dsa: RustCrypto pure-Rust FIPS 204 (ML-DSA) implementation — same org as ml-kem
-# getrandom + rand_core features enable SigningKey::generate() and Signer/Verifier traits
-ml-dsa = { version = "0.1.1", features = ["getrandom", "rand_core"] }
+# ml-dsa: RustCrypto pure-Rust FIPS 204 (ML-DSA) implementation.
+# EXACT version pinned (=0.1.1) pending upstream independent audit; flagged for QuantaKrypto re-review.
+ml-dsa = { version = "=0.1.1", features = ["getrandom", "rand_core"] }
 # falcon-rs: pure-Rust FN-DSA (FIPS 206 draft, formerly Falcon) — WASM-compatible, no C FFI
 # NOTE: pqcrypto-falcon was explicitly rejected; it requires C FFI and cannot compile to wasm32-unknown-unknown
 # The crate name on crates.io is falcon-rs but the Rust module name is `falcon`

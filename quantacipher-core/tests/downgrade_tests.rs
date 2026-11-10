@@ -160,3 +160,30 @@ fn test_strict_policy_rejects_legacy_signatures() {
     let res = sign_registry::verify_with_policy(payload, &legacy_envelope, "AA==", &strict_policy);
     assert!(matches!(res, Err(QuantaCipherError::LegacyPayloadRejected)));
 }
+
+#[test]
+fn test_header_overrides_key_length_and_rejects_mismatch() {
+    // 1. Ciphertext header says ml-kem-1024, but caller provides an ml-kem-768 key:
+    let (pk1024, _sk1024) = generate_keypair_for_alg(KemAlgorithm::MlKem1024).unwrap();
+    let (_pk768, sk768) = generate_keypair_for_alg(KemAlgorithm::MlKem768).unwrap();
+    let ct_1024 = secure_encrypt("Secret 1024", &pk1024).unwrap();
+    assert!(ct_1024.starts_with("QZ_SECURE_V2:ml-kem-1024:"));
+
+    let res = quantacipher_core::secure_decrypt(&ct_1024, &sk768);
+    match res {
+        Err(QuantaCipherError::InvalidPrivateKeyLength) => (),
+        other => panic!("Expected InvalidPrivateKeyLength when key length doesn't match header alg, got {:?}", other),
+    }
+
+    // 2. Ciphertext header says ml-kem-768, but caller provides an ml-kem-1024 key:
+    let (pk768, _sk768) = generate_keypair_for_alg(KemAlgorithm::MlKem768).unwrap();
+    let (_pk1024, sk1024) = generate_keypair_for_alg(KemAlgorithm::MlKem1024).unwrap();
+    let ct_768 = secure_encrypt("Secret 768", &pk768).unwrap();
+    assert!(ct_768.starts_with("QZ_SECURE_V2:ml-kem-768:"));
+
+    let res = quantacipher_core::secure_decrypt(&ct_768, &sk1024);
+    match res {
+        Err(QuantaCipherError::InvalidPrivateKeyLength) => (),
+        other => panic!("Expected InvalidPrivateKeyLength when key length doesn't match header alg, got {:?}", other),
+    }
+}

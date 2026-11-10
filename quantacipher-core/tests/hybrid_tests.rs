@@ -9,7 +9,7 @@ use sha3::{Digest, Sha3_256};
 
 #[test]
 fn test_xwing_combiner_spec_domain_separation() {
-    // Verify exact CFRG draft label bytes: \./^\
+    // Verify exact CFRG draft label bytes: \.//^\ (ASCII \./ + /^\)
     assert_eq!(XWING_LABEL, &[0x5c, 0x2e, 0x2f, 0x2f, 0x5e, 0x5c]);
 
     let ss_m = [0x11u8; 32];

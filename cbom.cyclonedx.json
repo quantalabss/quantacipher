@@ -57,8 +57,8 @@
       "bom-ref": "quantacipher-asset-ml-kem-768",
       "type": "cryptographic-asset",
       "name": "ml-kem-768",
-      "version": "FIPS 203",
-      "description": "Module-Lattice-Based Key-Encapsulation Mechanism (NIST Security Level 3)",
+      "version": "Implements FIPS 203",
+      "description": "Module-Lattice-Based Key-Encapsulation Mechanism (implements FIPS 203, NIST Security Level 3)",
       "cryptoProperties": {
         "assetType": "algorithm",
         "algorithmProperties": {
@@ -67,9 +67,6 @@
           "curve": "ml-kem",
           "executionEnvironment": "software-plain",
           "implementationPlatform": "rust/wasm",
-          "certificationLevel": [
-            "fips203"
-          ],
           "cryptoFunctions": [
             "encapsulate",
             "decapsulate",
@@ -83,8 +80,8 @@
       "bom-ref": "quantacipher-asset-ml-kem-1024",
       "type": "cryptographic-asset",
       "name": "ml-kem-1024",
-      "version": "FIPS 203",
-      "description": "Module-Lattice-Based Key-Encapsulation Mechanism (NIST Security Level 5)",
+      "version": "Implements FIPS 203",
+      "description": "Module-Lattice-Based Key-Encapsulation Mechanism (implements FIPS 203, NIST Security Level 5)",
       "cryptoProperties": {
         "assetType": "algorithm",
         "algorithmProperties": {
@@ -93,9 +90,6 @@
           "curve": "ml-kem",
           "executionEnvironment": "software-plain",
           "implementationPlatform": "rust/wasm",
-          "certificationLevel": [
-            "fips203"
-          ],
           "cryptoFunctions": [
             "encapsulate",
             "decapsulate",
@@ -109,8 +103,8 @@
       "bom-ref": "quantacipher-asset-hybrid-xwing",
       "type": "cryptographic-asset",
       "name": "hybrid-xwing",
-      "version": "draft-connolly-cfrg-xwing-kem-03",
-      "description": "Hybrid Post-Quantum Key Encapsulation Mechanism combining X25519 and ML-KEM-768 (NIST Security Level 3 + Classical 128-bit)",
+      "version": "draft-connolly-cfrg-xwing-kem",
+      "description": "Hybrid Post-Quantum KEM combining X25519 and ML-KEM-768 (NIST Security Level 3 + Classical 128-bit security)",
       "cryptoProperties": {
         "assetType": "algorithm",
         "algorithmProperties": {
@@ -141,8 +135,8 @@
       "bom-ref": "quantacipher-asset-ml-dsa-65",
       "type": "cryptographic-asset",
       "name": "ml-dsa-65",
-      "version": "FIPS 204",
-      "description": "Module-Lattice-Based Digital Signature Standard (NIST Security Level 3)",
+      "version": "Implements FIPS 204",
+      "description": "Module-Lattice-Based Digital Signature Standard (implements FIPS 204, NIST Security Level 3)",
       "cryptoProperties": {
         "assetType": "algorithm",
         "algorithmProperties": {
@@ -150,9 +144,6 @@
           "parameterSetIdentifier": "ml-dsa-65",
           "executionEnvironment": "software-plain",
           "implementationPlatform": "rust",
-          "certificationLevel": [
-            "fips204"
-          ],
           "cryptoFunctions": [
             "sign",
             "verify",
@@ -166,8 +157,8 @@
       "bom-ref": "quantacipher-asset-ml-dsa-87",
       "type": "cryptographic-asset",
       "name": "ml-dsa-87",
-      "version": "FIPS 204",
-      "description": "Module-Lattice-Based Digital Signature Standard (NIST Security Level 5)",
+      "version": "Implements FIPS 204",
+      "description": "Module-Lattice-Based Digital Signature Standard (implements FIPS 204, NIST Security Level 5)",
       "cryptoProperties": {
         "assetType": "algorithm",
         "algorithmProperties": {
@@ -175,9 +166,6 @@
           "parameterSetIdentifier": "ml-dsa-87",
           "executionEnvironment": "software-plain",
           "implementationPlatform": "rust",
-          "certificationLevel": [
-            "fips204"
-          ],
           "cryptoFunctions": [
             "sign",
             "verify",
@@ -191,8 +179,8 @@
       "bom-ref": "quantacipher-asset-aes-256-gcm",
       "type": "cryptographic-asset",
       "name": "aes-256",
-      "version": "FIPS 197 / SP 800-38D",
-      "description": "AES-256 Authenticated Encryption with Associated Data (GCM Mode)",
+      "version": "Implements AES",
+      "description": "Implements AES authenticated encryption in GCM mode (256-bit key strength, 128-bit post-quantum strength against Grover's algorithm)",
       "cryptoProperties": {
         "assetType": "algorithm",
         "algorithmProperties": {
@@ -201,9 +189,6 @@
           "mode": "gcm",
           "executionEnvironment": "software-plain",
           "implementationPlatform": "rust/wasm",
-          "certificationLevel": [
-            "fips197"
-          ],
           "cryptoFunctions": [
             "encrypt",
             "decrypt"
