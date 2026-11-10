@@ -295,6 +295,99 @@ export class QuantaCipher {
     }
 
     // ----------------------------------------------------------
+    // RE-WRAP UTILITIES (MIGRATION & SUPER-ENCRYPTION)
+    // ----------------------------------------------------------
+
+    /**
+     * Re-wraps an existing SECURE MODE ciphertext to a new target public key.
+     * Decapsulates and encapsulates entirely locally within WASM memory.
+     * Intermediate plaintext is deterministically zeroized without ever escaping to heap or network.
+     *
+     * @param ciphertextPayload The existing ciphertext (V1 legacy or V2 versioned envelope).
+     * @param currentPrivateKeyB64 The current private key matching the existing ciphertext.
+     * @param targetPublicKeyB64 The new recipient/target public key (e.g. upgraded to Level 5 or Hybrid).
+     * @param policy Optional policy governing the re-wrap operation.
+     * @returns A new versioned V2 ciphertext encrypted under the target public key.
+     */
+    public rewrapSecure(
+        ciphertextPayload: string,
+        currentPrivateKeyB64: string,
+        targetPublicKeyB64: string,
+        policy?: SecurityPolicy,
+    ): string {
+        const activePolicy = policy || this.policy;
+        if (activePolicy) {
+            console.log(`[QuantaCipher SDK] RE-WRAP: Re-wrapping secure ciphertext with policy (minLevel=${activePolicy.minLevel ?? 1})...`);
+            return wasm.rewrap_secure_with_policy(
+                ciphertextPayload,
+                currentPrivateKeyB64,
+                targetPublicKeyB64,
+                activePolicy.minLevel ?? 1,
+                activePolicy.rejectLegacy ?? false,
+            );
+        }
+        console.log(`[QuantaCipher SDK] RE-WRAP: Re-wrapping secure ciphertext to target public key...`);
+        return wasm.rewrap_secure(ciphertextPayload, currentPrivateKeyB64, targetPublicKeyB64);
+    }
+
+    /**
+     * Re-wraps an existing SECURE MODE ciphertext and returns a comprehensive migration report.
+     */
+    public rewrapSecureReport(
+        ciphertextPayload: string,
+        currentPrivateKeyB64: string,
+        targetPublicKeyB64: string,
+        policy?: SecurityPolicy,
+    ): {
+        newCiphertext: string;
+        sourceAlgorithm: string;
+        targetAlgorithm: string;
+        sourceNistLevel: number;
+        targetNistLevel: number;
+        wasLegacy: boolean;
+    } {
+        const activePolicy = policy || this.policy;
+        const minLevel = activePolicy?.minLevel ?? 1;
+        const rejectLegacy = activePolicy?.rejectLegacy ?? false;
+
+        const rawReport = wasm.rewrap_secure_report(
+            ciphertextPayload,
+            currentPrivateKeyB64,
+            targetPublicKeyB64,
+            minLevel,
+            rejectLegacy,
+        );
+        const parsed = JSON.parse(rawReport);
+        return {
+            newCiphertext: parsed.new_ciphertext,
+            sourceAlgorithm: parsed.source_algorithm,
+            targetAlgorithm: parsed.target_algorithm,
+            sourceNistLevel: parsed.source_nist_level,
+            targetNistLevel: parsed.target_nist_level,
+            wasLegacy: parsed.was_legacy,
+        };
+    }
+
+    /**
+     * Re-wraps a VAULT MODE ciphertext into a new versioned Vault envelope (super-encryption / archive migration).
+     * Encrypts the existing sealed ciphertext under the target algorithm or profile using an ephemeral keypair.
+     *
+     * @param vaultCiphertext Existing sealed vault ciphertext.
+     * @param targetAlgorithmOrProfile Target algorithm (e.g. 'hybrid-xwing') or SecurityProfile. Defaults to active profile.
+     */
+    public rewrapVault(
+        vaultCiphertext: string,
+        targetAlgorithmOrProfile?: string | SecurityProfile,
+    ): string {
+        const target = targetAlgorithmOrProfile || this.profile;
+        console.log(`[QuantaCipher SDK] RE-WRAP: Re-wrapping vault ciphertext under '${target}'...`);
+        if (target === SecurityProfile.STANDARD || target === SecurityProfile.HIGH || target === SecurityProfile.HYBRID) {
+            return wasm.rewrap_vault_for_profile(vaultCiphertext, target);
+        }
+        return wasm.rewrap_vault(vaultCiphertext, target as string);
+    }
+
+    // ----------------------------------------------------------
     // GATEWAY
     // ----------------------------------------------------------
 

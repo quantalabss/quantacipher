@@ -4,13 +4,18 @@ pub mod registry;
 pub mod profile;
 pub mod policy;
 pub mod sign;
+pub mod rewrap;
 
 use base64::{engine::general_purpose, Engine as _};
 pub use error::QuantaCipherError;
 pub use registry::KemAlgorithm;
 pub use profile::{SecurityProfile, profile_ids};
 pub use policy::SecurityPolicy;
-pub use envelope::{seal_vault_v2, seal_secure_v2, open_secure, open_secure_with_policy};
+pub use envelope::{seal_vault_v2, seal_secure_v2, open_secure, open_secure_with_policy, open_secure_raw_with_policy};
+pub use rewrap::{
+    rewrap_secure, rewrap_secure_with_policy, rewrap_secure_for_alg, rewrap_secure_report,
+    rewrap_vault, rewrap_vault_for_profile, RewrapReport,
+};
 
 /// The default algorithm implemented by this crate.
 pub const KEM_ALGORITHM_LABEL: &str = "ML-KEM-1024";

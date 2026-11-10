@@ -107,6 +107,17 @@ pub fn open_secure_with_policy(
     private_key_b64: &str,
     policy: &crate::policy::SecurityPolicy,
 ) -> Result<String, QuantaCipherError> {
+    let (plaintext_bytes, _alg, _is_legacy) = open_secure_raw_with_policy(ciphertext_payload, private_key_b64, policy)?;
+    String::from_utf8(plaintext_bytes.to_vec()).map_err(QuantaCipherError::Utf8Error)
+}
+
+/// Decrypts a secure ciphertext returning a zeroizing byte buffer, the source algorithm, and legacy flag.
+/// Used by re-wrap utilities to ensure intermediate plaintext bytes are zeroized immediately.
+pub fn open_secure_raw_with_policy(
+    ciphertext_payload: &str,
+    private_key_b64: &str,
+    policy: &crate::policy::SecurityPolicy,
+) -> Result<(Zeroizing<Vec<u8>>, KemAlgorithm, bool), QuantaCipherError> {
     let sk_bytes = Zeroizing::new(
         general_purpose::STANDARD
             .decode(private_key_b64)
@@ -155,7 +166,7 @@ pub fn open_secure_with_policy(
             .decrypt(nonce, payload)
             .map_err(|_| QuantaCipherError::DecryptionFailed)?;
 
-        return String::from_utf8(plaintext_bytes).map_err(QuantaCipherError::Utf8Error);
+        return Ok((Zeroizing::new(plaintext_bytes), alg, false));
     }
 
     // Branch 2: Legacy V1 Format (Implicit ML-KEM-1024, no AAD)
@@ -171,7 +182,6 @@ pub fn open_secure_with_policy(
             return Err(QuantaCipherError::InvalidPayloadFormat);
         }
 
-        let alg = KemAlgorithm::MlKem1024;
         let kem_ct_bytes = general_purpose::STANDARD.decode(parts[1]).map_err(QuantaCipherError::DecodeError)?;
         let nonce_bytes = general_purpose::STANDARD.decode(parts[2]).map_err(QuantaCipherError::DecodeError)?;
         let aes_ct_bytes = general_purpose::STANDARD.decode(parts[3]).map_err(QuantaCipherError::DecodeError)?;
@@ -198,8 +208,9 @@ pub fn open_secure_with_policy(
             .decrypt(nonce, aes_ct_bytes.as_ref())
             .map_err(|_| QuantaCipherError::DecryptionFailed)?;
 
-        return String::from_utf8(plaintext_bytes).map_err(QuantaCipherError::Utf8Error);
+        return Ok((Zeroizing::new(plaintext_bytes), alg, true));
     }
 
     Err(QuantaCipherError::InvalidPayloadFormat)
 }
+

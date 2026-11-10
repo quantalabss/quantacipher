@@ -12,6 +12,11 @@ use quantacipher_core::{
     get_version as core_get_version,
     get_algorithm as core_get_algorithm,
     get_scheme as core_get_scheme,
+    rewrap_secure as core_rewrap_secure,
+    rewrap_secure_with_policy as core_rewrap_secure_with_policy,
+    rewrap_secure_report as core_rewrap_secure_report,
+    rewrap_vault as core_rewrap_vault,
+    rewrap_vault_for_profile as core_rewrap_vault_for_profile,
     KemAlgorithm,
     SecurityProfile,
     SecurityPolicy,
@@ -139,6 +144,81 @@ pub fn secure_decrypt_with_policy(
 ) -> Result<String, JsValue> {
     let policy = SecurityPolicy::new(min_level, reject_legacy);
     core_secure_decrypt_with_policy(ciphertext_payload, private_key_b64, &policy)
+        .map_err(|e| JsValue::from_str(&format!("QuantaCipher Error: {}", e)))
+}
+
+// ============================================================
+// MODE 3: RE-WRAP UTILITY (MIGRATION & SUPER-ENCRYPTION)
+// ============================================================
+
+#[wasm_bindgen]
+pub fn rewrap_secure(
+    ciphertext_payload: &str,
+    current_private_key_b64: &str,
+    target_public_key_b64: &str,
+) -> Result<String, JsValue> {
+    core_rewrap_secure(ciphertext_payload, current_private_key_b64, target_public_key_b64)
+        .map_err(|e| JsValue::from_str(&format!("QuantaCipher Error: {}", e)))
+}
+
+#[wasm_bindgen]
+pub fn rewrap_secure_with_policy(
+    ciphertext_payload: &str,
+    current_private_key_b64: &str,
+    target_public_key_b64: &str,
+    min_level: u8,
+    reject_legacy: bool,
+) -> Result<String, JsValue> {
+    let policy = SecurityPolicy::new(min_level, reject_legacy);
+    core_rewrap_secure_with_policy(
+        ciphertext_payload,
+        current_private_key_b64,
+        target_public_key_b64,
+        &policy,
+    )
+    .map_err(|e| JsValue::from_str(&format!("QuantaCipher Error: {}", e)))
+}
+
+#[wasm_bindgen]
+pub fn rewrap_secure_report(
+    ciphertext_payload: &str,
+    current_private_key_b64: &str,
+    target_public_key_b64: &str,
+    min_level: u8,
+    reject_legacy: bool,
+) -> Result<String, JsValue> {
+    let policy = SecurityPolicy::new(min_level, reject_legacy);
+    let report = core_rewrap_secure_report(
+        ciphertext_payload,
+        current_private_key_b64,
+        target_public_key_b64,
+        &policy,
+    )
+    .map_err(|e| JsValue::from_str(&format!("QuantaCipher Error: {}", e)))?;
+
+    serde_json::to_string(&report)
+        .map_err(|e| JsValue::from_str(&format!("QuantaCipher Error: {}", e)))
+}
+
+#[wasm_bindgen]
+pub fn rewrap_vault(
+    ciphertext: &str,
+    target_algorithm: &str,
+) -> Result<String, JsValue> {
+    let alg = KemAlgorithm::from_id(target_algorithm)
+        .map_err(|e| JsValue::from_str(&format!("QuantaCipher Error: {}", e)))?;
+    core_rewrap_vault(ciphertext, alg)
+        .map_err(|e| JsValue::from_str(&format!("QuantaCipher Error: {}", e)))
+}
+
+#[wasm_bindgen]
+pub fn rewrap_vault_for_profile(
+    ciphertext: &str,
+    target_profile: &str,
+) -> Result<String, JsValue> {
+    let profile = SecurityProfile::from_name(target_profile)
+        .map_err(|e| JsValue::from_str(&format!("QuantaCipher Error: {}", e)))?;
+    core_rewrap_vault_for_profile(ciphertext, profile)
         .map_err(|e| JsValue::from_str(&format!("QuantaCipher Error: {}", e)))
 }
 

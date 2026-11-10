@@ -8,9 +8,13 @@ use quantacipher_core::{
     vault_encrypt_for_profile as core_vault_encrypt_for_profile,
     secure_encrypt as core_secure_encrypt,
     secure_decrypt as core_secure_decrypt,
+    rewrap_secure as core_rewrap_secure,
+    rewrap_secure_with_policy as core_rewrap_secure_with_policy,
+    rewrap_vault_for_profile as core_rewrap_vault_for_profile,
     get_version as core_get_version,
     get_algorithm as core_get_algorithm,
     SecurityProfile,
+    SecurityPolicy,
     KEM_ALGORITHM_LABEL,
 };
 use quantacipher_core::sign::registry::{self, AlgorithmId};
@@ -96,6 +100,50 @@ fn get_algorithm() -> PyResult<&'static str> {
     Ok(core_get_algorithm())
 }
 
+/// Re-wraps a secure ciphertext to a target public key.
+#[pyfunction]
+#[pyo3(signature = (ciphertext_payload, current_private_key_b64, target_public_key_b64, min_level=None, reject_legacy=None))]
+fn rewrap_secure(
+    ciphertext_payload: &str,
+    current_private_key_b64: &str,
+    target_public_key_b64: &str,
+    min_level: Option<u8>,
+    reject_legacy: Option<bool>,
+) -> PyResult<String> {
+    if min_level.is_some() || reject_legacy.is_some() {
+        let policy = SecurityPolicy::new(min_level.unwrap_or(1), reject_legacy.unwrap_or(false));
+        core_rewrap_secure_with_policy(
+            ciphertext_payload,
+            current_private_key_b64,
+            target_public_key_b64,
+            &policy,
+        )
+        .map_err(|e| PyValueError::new_err(format!("QuantaCipher Error: {}", e)))
+    } else {
+        core_rewrap_secure(ciphertext_payload, current_private_key_b64, target_public_key_b64)
+            .map_err(|e| PyValueError::new_err(format!("QuantaCipher Error: {}", e)))
+    }
+}
+
+/// Re-wraps a vault ciphertext.
+#[pyfunction]
+#[pyo3(signature = (ciphertext, profile=None))]
+fn rewrap_vault(ciphertext: &str, profile: Option<String>) -> PyResult<String> {
+    match profile {
+        Some(ref p_str) => {
+            let p = SecurityProfile::from_name(p_str)
+                .map_err(|e| PyValueError::new_err(format!("QuantaCipher Error: {}", e)))?;
+            core_rewrap_vault_for_profile(ciphertext, p)
+                .map_err(|e| PyValueError::new_err(format!("QuantaCipher Error: {}", e)))
+        }
+        None => {
+            let default_profile = SecurityProfile::High;
+            core_rewrap_vault_for_profile(ciphertext, default_profile)
+                .map_err(|e| PyValueError::new_err(format!("QuantaCipher Error: {}", e)))
+        }
+    }
+}
+
 #[pymodule]
 fn _quantacipher_core(_py: Python, m: &PyModule) -> PyResult<()> {
     // Encryption functions (existing)
@@ -105,6 +153,9 @@ fn _quantacipher_core(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(secure_decrypt, m)?)?;
     m.add_function(wrap_pyfunction!(get_version, m)?)?;
     m.add_function(wrap_pyfunction!(get_algorithm, m)?)?;
+    // Re-wrap functions (v2.0)
+    m.add_function(wrap_pyfunction!(rewrap_secure, m)?)?;
+    m.add_function(wrap_pyfunction!(rewrap_vault, m)?)?;
     // Signing functions (v2.0)
     m.add_function(wrap_pyfunction!(generate_signing_keypair, m)?)?;
     m.add_function(wrap_pyfunction!(sign_payload, m)?)?;
