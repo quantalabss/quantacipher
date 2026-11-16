@@ -44,9 +44,7 @@ jobs:
       - name: Publish WASM to npm
         run: |
           cd quantacipher-wasm/pkg
-          npm publish --access public || echo "WASM already published, skipping."
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          npm publish --provenance --access public || echo "WASM already published, skipping."
 
       - name: Build JS SDK
         run: |
@@ -61,9 +59,7 @@ jobs:
       - name: Publish JS SDK to npm
         run: |
           cd quantacipher-sdk-js
-          npm publish --access public || echo "JS SDK already published, skipping."
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          npm publish --provenance --access public || echo "JS SDK already published, skipping."
 
   # ─────────────────────────────────────────────────────────────
   # Python wheels
