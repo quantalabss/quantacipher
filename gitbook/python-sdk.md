@@ -4,79 +4,41 @@ The QuantaCipher Python SDK provides native Rust bindings to execute NIST-standa
 
 Built using **PyO3**, the Python library acts as a lightweight wrapper over the `quantacipher-core` Rust engine. This ensures enterprise-grade performance, memory safety, and Zero-Trust execution without the overhead of traditional Python cryptography implementations.
 
-## Installation
+---
 
-Install the SDK via pip. Pre-compiled wheels are provided for major operating systems and architectures.
+## Detailed SDK Guides
+
+* [Installation & Native Core Setup](python-sdk/overview.md) — Pre-compiled wheels, verification, framework support.
+* [Mode 1: Vault Mode (Python)](python-sdk/vault-mode.md) — Ephemeral key generation, zeroization, custom logging handler.
+* [Mode 2: Secure Mode (Python)](python-sdk/secure-mode.md) — Persistent keypairs, encryption, FastAPI middleware.
+* [Complete Python API Reference](python-sdk/api-reference.md) — Full function signatures and exceptions.
+
+---
+
+## Installation
 
 ```bash
 pip install quantacipher
 ```
 
-## Initialization & Verification
+---
 
-You can import the module and verify the native Rust bindings are hooked correctly by checking the core version.
+## 30-Second Example
 
 ```python
 import quantacipher
 
-print("Rust Core Version:", quantacipher.get_version())
-```
+# Check Rust engine version
+print("Engine Version:", quantacipher.get_version())
 
----
+# 1. Vault Mode: Irreversibly seal compliance events
+sealed_event = quantacipher.vault_encrypt('{"action": "ADMIN_OVERRIDE"}')
+print("Sealed:", sealed_event[:60] + "...")
 
-## Mode 1: Vault Mode (Permanent Sealing)
-
-Vault Mode is designed for high-throughput immutable logging (e.g., audit trails, compliance records). An ephemeral ML-KEM-1024 keypair is generated entirely in memory (in Rust), the payload is encrypted, and the private key is permanently destroyed before the function even returns to Python.
-
-```python
-import json
-
-sensitive_log = json.dumps({
-    "userId": "user_987",
-    "action": "FUNDS_TRANSFER",
-    "amount": 50000.00
-})
-
-# The private key is mathematically obliterated after this executes
-vault_ciphertext = quantacipher.vault_encrypt(sensitive_log)
-
-print("Sealed Ciphertext:", vault_ciphertext)
-```
-
----
-
-## Mode 2: Secure Mode (End-to-End Encryption)
-
-Secure Mode utilizes persistent keypairs, allowing you to establish true end-to-end post-quantum encryption where your backend or clients retain the ability to decrypt the data.
-
-### Key Generation
-
-Generate a post-quantum keypair locally. This operation executes in the native Rust runtime.
-
-```python
+# 2. Secure Mode: End-to-end encryption
 keys = quantacipher.generate_keypair()
-
-print("Public Key (ML-KEM-1024):", keys["publicKey"])
-print("Private Key (Secret):", keys["privateKey"])
-```
-
-### Encrypting Data
-
-Secure your plaintext payloads by encrypting them with the generated public key. The Rust core securely encapsulates the shared secret and encrypts the data using AES-256-GCM.
-
-```python
-message = "Highly Confidential Enterprise Data"
-ciphertext = quantacipher.secure_encrypt(message, keys["publicKey"])
-
-print("Quantum-Safe Ciphertext:", ciphertext)
-```
-
-### Decrypting Data
-
-Decrypt the sealed payload securely by supplying the ciphertext and your private key.
-
-```python
+ciphertext = quantacipher.secure_encrypt("Confidential patient diagnosis", keys["publicKey"])
 plaintext = quantacipher.secure_decrypt(ciphertext, keys["privateKey"])
 
-print("Recovered Plaintext:", plaintext)
+print("Decrypted:", plaintext)
 ```
