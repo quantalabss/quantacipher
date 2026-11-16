@@ -28,11 +28,12 @@ falcon-rs = { version = "0.2.5", features = ["std"] }
 # Hybrid KEM dependencies (X-Wing / draft-connolly-cfrg-xwing-kem: X25519 + ML-KEM-768)
 x25519-dalek = { version = "2.0", default-features = false, features = ["static_secrets"] }
 sha3 = "0.10"
+# Classical ECC for Hybrid Signatures (TEC 910018:2025 Fig 3: ECDSA P-256 + FIPS 204 ML-DSA-65)
+p256 = { version = "0.13", features = ["ecdsa"] }
 
 [dev-dependencies]
 criterion = "0.5"
 rsa = { version = "0.9", features = ["sha2"] }
-p256 = { version = "0.13", features = ["ecdsa", "ecdh"] }
 signature = "2.2"
 hex = "0.4"
 

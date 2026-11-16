@@ -425,7 +425,6 @@ dependencies = [
  "ff",
  "generic-array",
  "group",
- "hkdf",
  "pem-rfc7468",
  "pkcs8 0.10.2",
  "rand_core 0.6.4",
@@ -931,7 +930,7 @@ dependencies = [
 
 [[package]]
 name = "quantacipher-core"
-version = "2.0.6"
+version = "2.1.0"
 dependencies = [
  "aes-gcm",
  "base64",

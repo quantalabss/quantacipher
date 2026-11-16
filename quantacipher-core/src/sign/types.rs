@@ -57,4 +57,7 @@ pub mod alg_ids {
 
     /// ML-DSA-87 implementing the finalized NIST FIPS 204 standard.
     pub const ML_DSA_87: &str = "ml-dsa-87";
+
+    /// Non-separable hybrid signature: FIPS 204 ML-DSA-65 + Classical ECDSA P-256 (TEC 910018:2025 Figure 3).
+    pub const HYBRID_ML_DSA_65_P256: &str = "hybrid-mldsa65-p256";
 }

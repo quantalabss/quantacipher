@@ -278,3 +278,64 @@ fn test_malformed_json_fails() {
         "Malformed JSON must return InvalidSignatureFormat"
     );
 }
+
+// =============================================================================
+// 14. TEC 910018:2025 Figure 3: Hybrid ML-DSA-65 + ECDSA P-256 Tests
+// =============================================================================
+
+#[test]
+fn test_hybrid_mldsa65_p256_roundtrip() {
+    let kp = registry::generate_keypair(Some(AlgorithmId::HybridMlDsa65P256))
+        .expect("Hybrid keygen should succeed");
+    assert_eq!(kp.algorithm, alg_ids::HYBRID_ML_DSA_65_P256);
+
+    let envelope = registry::sign(TEST_PAYLOAD, &kp.private_key, Some(AlgorithmId::HybridMlDsa65P256))
+        .expect("Hybrid sign should succeed");
+    assert_eq!(envelope.alg, alg_ids::HYBRID_ML_DSA_65_P256);
+    assert_eq!(envelope.ver, 2);
+
+    let valid = registry::verify(TEST_PAYLOAD, &envelope, &kp.public_key)
+        .expect("Hybrid verify should succeed");
+    assert!(valid, "Valid hybrid signature must verify correctly");
+}
+
+#[test]
+fn test_hybrid_mldsa65_p256_corrupt_payload_fails() {
+    let kp = registry::generate_keypair(Some(AlgorithmId::HybridMlDsa65P256)).unwrap();
+    let envelope = registry::sign(TEST_PAYLOAD, &kp.private_key, Some(AlgorithmId::HybridMlDsa65P256)).unwrap();
+
+    let valid = registry::verify(b"corrupted payload", &envelope, &kp.public_key).unwrap();
+    assert!(!valid, "Verification with modified payload must return false");
+}
+
+#[test]
+fn test_hybrid_mldsa65_p256_tamper_classical_fails() {
+    use base64::{engine::general_purpose, Engine as _};
+    let kp = registry::generate_keypair(Some(AlgorithmId::HybridMlDsa65P256)).unwrap();
+    let mut envelope = registry::sign(TEST_PAYLOAD, &kp.private_key, Some(AlgorithmId::HybridMlDsa65P256)).unwrap();
+
+    // Tamper with the classical ECDSA signature portion (last 64 bytes)
+    let mut sig_bytes = general_purpose::STANDARD.decode(&envelope.sig).unwrap();
+    let len = sig_bytes.len();
+    sig_bytes[len - 1] ^= 0xFF;
+    envelope.sig = general_purpose::STANDARD.encode(&sig_bytes);
+
+    let valid = registry::verify(TEST_PAYLOAD, &envelope, &kp.public_key).unwrap();
+    assert!(!valid, "Tampering with classical ECDSA component must fail verification (non-separability)");
+}
+
+#[test]
+fn test_hybrid_mldsa65_p256_tamper_pqc_fails() {
+    use base64::{engine::general_purpose, Engine as _};
+    let kp = registry::generate_keypair(Some(AlgorithmId::HybridMlDsa65P256)).unwrap();
+    let mut envelope = registry::sign(TEST_PAYLOAD, &kp.private_key, Some(AlgorithmId::HybridMlDsa65P256)).unwrap();
+
+    // Tamper with the ML-DSA-65 signature portion (first 3309 bytes)
+    let mut sig_bytes = general_purpose::STANDARD.decode(&envelope.sig).unwrap();
+    sig_bytes[0] ^= 0xFF;
+    envelope.sig = general_purpose::STANDARD.encode(&sig_bytes);
+
+    let valid = registry::verify(TEST_PAYLOAD, &envelope, &kp.public_key).unwrap();
+    assert!(!valid, "Tampering with PQC ML-DSA-65 component must fail verification");
+}
+

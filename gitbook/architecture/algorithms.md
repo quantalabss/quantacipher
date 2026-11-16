@@ -71,6 +71,15 @@ Derived from CRYSTALS-Dilithium, ML-DSA is built upon the hardness of Module Sho
 Based on the Fast-Fourier lattice problem over NTRU lattices:
 * **Falcon-512:** Produces extremely compact signatures (~666 bytes), significantly smaller than Dilithium. Ideal for bandwidth-constrained telecom signaling and embedded environments.
 
+### TEC 910018:2025 (Figure 3): Hybrid Composite Signature
+Per the Indian Telecommunication Engineering Centre (TEC) Technical Report on PQC Migration (**TEC 910018:2025 Section 3.4 & Figure 3**), QuantaCipher implements non-separable dual signatures:
+* **Post-Quantum Layer (Sign1):** FIPS 204 ML-DSA-65 over message payload $M$.
+* **Classical Layer (Sign2):** Classical ECDSA P-256 over $[\text{Sign1} \parallel \text{SHA-256}(M)]$.
+* **Security Properties:**
+  * **Unforgeability:** An attacker must simultaneously break both the discrete logarithm problem over NIST P-256 AND the lattice problem over ML-DSA-65.
+  * **Non-Separability:** The classical signature binds directly to the PQC signature, preventing downgrade attacks.
+  * **Backward Compatibility:** Legacy verifiers can validate Sign2 using standard ECDSA.
+
 ---
 
 ## 4. Primitives Comparison Table
@@ -83,3 +92,5 @@ Based on the Fast-Fourier lattice problem over NTRU lattices:
 | **ML-DSA-44** | NIST FIPS 204 | Digital Signature | NIST Level 2 | 1,312 bytes | 2,420 bytes |
 | **ML-DSA-65** | NIST FIPS 204 | Digital Signature | NIST Level 3 | 1,952 bytes | 3,293 bytes |
 | **Falcon-512** | FIPS 206 Draft | Digital Signature | NIST Level 1 | 897 bytes | 666 bytes |
+| **Hybrid DSA** | TEC 910018 Fig 3 | Non-Separable Composite | Level 3 + Classic | 1,985 bytes | 3,373 bytes |
+

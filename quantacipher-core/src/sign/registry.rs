@@ -1,6 +1,6 @@
 use crate::error::QuantaCipherError;
 use crate::sign::types::{SignatureEnvelope, SigningKeyPair, alg_ids};
-use crate::sign::algorithms::{falcon512, mldsa44, mldsa65, mldsa87};
+use crate::sign::algorithms::{falcon512, mldsa44, mldsa65, mldsa87, hybrid_mldsa65_p256};
 use serde_json;
 
 /// The set of algorithm IDs supported by the signing registry.
@@ -14,6 +14,8 @@ pub enum AlgorithmId {
     MlDsa65,
     /// ML-DSA-87 implementing FIPS 204 (finalized, NIST Level 5).
     MlDsa87,
+    /// Non-separable hybrid signature: FIPS 204 ML-DSA-65 + Classical ECDSA P-256 (TEC 910018:2025 Figure 3).
+    HybridMlDsa65P256,
 }
 
 impl AlgorithmId {
@@ -24,6 +26,7 @@ impl AlgorithmId {
             Self::MlDsa44 => alg_ids::ML_DSA_44,
             Self::MlDsa65 => alg_ids::ML_DSA_65,
             Self::MlDsa87 => alg_ids::ML_DSA_87,
+            Self::HybridMlDsa65P256 => alg_ids::HYBRID_ML_DSA_65_P256,
         }
     }
 
@@ -38,6 +41,9 @@ impl AlgorithmId {
             alg_ids::ML_DSA_44 => Ok(Self::MlDsa44),
             alg_ids::ML_DSA_65 => Ok(Self::MlDsa65),
             alg_ids::ML_DSA_87 => Ok(Self::MlDsa87),
+            alg_ids::HYBRID_ML_DSA_65_P256 | "hybrid-sign" | "composite-mldsa65-p256" => {
+                Ok(Self::HybridMlDsa65P256)
+            }
             other => Err(QuantaCipherError::UnknownAlgorithm(other.to_string())),
         }
     }
@@ -49,6 +55,7 @@ impl AlgorithmId {
             Self::MlDsa44 => 2,
             Self::MlDsa65 => 3,
             Self::MlDsa87 => 5,
+            Self::HybridMlDsa65P256 => 3, // Bound by post-quantum component ML-DSA-65 (NIST Level 3) + Classical P-256
         }
     }
 }
@@ -66,6 +73,7 @@ pub fn generate_keypair(algorithm: Option<AlgorithmId>) -> Result<SigningKeyPair
         AlgorithmId::MlDsa44 => mldsa44::generate_keypair(),
         AlgorithmId::MlDsa65 => mldsa65::generate_keypair(),
         AlgorithmId::MlDsa87 => mldsa87::generate_keypair(),
+        AlgorithmId::HybridMlDsa65P256 => hybrid_mldsa65_p256::generate_keypair(),
     }
 }
 
@@ -82,6 +90,7 @@ pub fn sign(
         AlgorithmId::MlDsa44 => mldsa44::sign(payload, private_key_b64),
         AlgorithmId::MlDsa65 => mldsa65::sign(payload, private_key_b64),
         AlgorithmId::MlDsa87 => mldsa87::sign(payload, private_key_b64),
+        AlgorithmId::HybridMlDsa65P256 => hybrid_mldsa65_p256::sign(payload, private_key_b64),
     }
 }
 
@@ -111,6 +120,7 @@ pub fn verify_with_policy(
         AlgorithmId::MlDsa44 => mldsa44::verify(payload, envelope, public_key_b64),
         AlgorithmId::MlDsa65 => mldsa65::verify(payload, envelope, public_key_b64),
         AlgorithmId::MlDsa87 => mldsa87::verify(payload, envelope, public_key_b64),
+        AlgorithmId::HybridMlDsa65P256 => hybrid_mldsa65_p256::verify(payload, envelope, public_key_b64),
     }
 }
 
