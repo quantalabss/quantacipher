@@ -1,3 +1,14 @@
+//! # 5G Telecom Security Engine (3GPP TS 33.501 & TEC 910028:2025)
+//!
+//! Copyright (c) 2026 QuantaLabs Private Limited. All rights reserved.
+//!
+//! Dual-Licensed under:
+//! 1. Open Source Evaluation License (AGPLv3 / MIT for non-commercial research & testbeds).
+//! 2. Commercial Enterprise & Carrier License for production 5G Core deployment,
+//!    closed-source embedding in NEM equipment, and carrier SLAs.
+//!
+//! Commercial inquiries: contact@quantalabs.cc | https://quantalabs.cc
+
 pub mod types;
 pub mod pq_ies;
 pub mod sba_token;
