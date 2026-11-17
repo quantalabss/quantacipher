@@ -361,8 +361,14 @@ use quantacipher_core::telecom::{
         issue_sba_token as core_issue_sba_token,
         verify_sba_token as core_verify_sba_token,
     },
+    sepp_n32::{
+        N32fMessage,
+        protect_n32f_payload as core_protect_n32f_payload,
+        unprotect_n32f_payload as core_unprotect_n32f_payload,
+    },
 };
 use quantacipher_core::sign::registry::{AlgorithmId as CoreAlgorithmId, generate_keypair as core_sign_generate_keypair};
+
 
 
 /// Generate 5G Home Network (UDM) keypair for Profile C (ML-KEM-768) and Profile D (Hybrid ML-KEM + X25519).
@@ -516,5 +522,75 @@ pub fn telecom_verify_sba_token(
         .map_err(|e| JsValue::from_str(&format!("Verify SBA Token Error: {}", e)))?;
     serde_json::to_string(&claims).map_err(|e| JsValue::from_str(&e.to_string()))
 }
+
+/// Generate a Keypair for 5G SEPP (Security Edge Protection Proxy) Roaming Interconnect.
+/// Supports "hybrid-xwing" (default) or "ml-kem-768".
+#[wasm_bindgen]
+pub fn telecom_generate_sepp_keypair(algorithm: Option<String>) -> Result<String, JsValue> {
+    let kem_alg = match algorithm.as_deref() {
+        Some("ml-kem-768") => KemAlgorithm::MlKem768,
+        _ => KemAlgorithm::HybridXWing,
+    };
+    let (public, private) = core_generate_keypair_for_alg(kem_alg)
+        .map_err(|e| JsValue::from_str(&format!("SEPP Keygen Error: {}", e)))?;
+
+    let res = serde_json::json!({
+        "publicKey": public,
+        "privateKey": private,
+        "algorithm": kem_alg.id(),
+    });
+    serde_json::to_string(&res).map_err(|e| JsValue::from_str(&e.to_string()))
+}
+
+/// Protect an N32-f roaming message from a Visiting SEPP to a Home SEPP using Post-Quantum JWE.
+#[wasm_bindgen]
+pub fn telecom_protect_n32f_message(
+    message_id: &str,
+    sender_plmn: &str,
+    receiver_plmn: &str,
+    routing_headers_json: &str,
+    sensitive_payload_json: &str,
+    receiver_sepp_public_key_b64: &str,
+    algorithm: Option<String>,
+) -> Result<String, JsValue> {
+    let routing_headers: serde_json::Value = serde_json::from_str(routing_headers_json)
+        .map_err(|e| JsValue::from_str(&format!("Invalid routing headers JSON: {}", e)))?;
+    let sensitive_payload: serde_json::Value = serde_json::from_str(sensitive_payload_json)
+        .map_err(|e| JsValue::from_str(&format!("Invalid sensitive payload JSON: {}", e)))?;
+
+    let kem_alg = match algorithm.as_deref() {
+        Some("ml-kem-768") => KemAlgorithm::MlKem768,
+        _ => KemAlgorithm::HybridXWing,
+    };
+
+    let msg = core_protect_n32f_payload(
+        message_id,
+        sender_plmn,
+        receiver_plmn,
+        &routing_headers,
+        &sensitive_payload,
+        receiver_sepp_public_key_b64,
+        kem_alg,
+    )
+    .map_err(|e| JsValue::from_str(&format!("N32 Protect Error: {}", e)))?;
+
+    serde_json::to_string(&msg).map_err(|e| JsValue::from_str(&e.to_string()))
+}
+
+/// Unprotect and authenticate an N32-f roaming message at the receiving SEPP.
+#[wasm_bindgen]
+pub fn telecom_unprotect_n32f_message(
+    n32f_message_json: &str,
+    receiver_sepp_private_key_b64: &str,
+) -> Result<String, JsValue> {
+    let msg: N32fMessage = serde_json::from_str(n32f_message_json)
+        .map_err(|e| JsValue::from_str(&format!("Invalid N32fMessage JSON: {}", e)))?;
+
+    let payload = core_unprotect_n32f_payload(&msg, receiver_sepp_private_key_b64)
+        .map_err(|e| JsValue::from_str(&format!("N32 Unprotect Error: {}", e)))?;
+
+    serde_json::to_string(&payload).map_err(|e| JsValue::from_str(&e.to_string()))
+}
+
 
 

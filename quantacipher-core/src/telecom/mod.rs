@@ -12,6 +12,7 @@
 pub mod types;
 pub mod pq_ies;
 pub mod sba_token;
+pub mod sepp_n32;
 
 #[cfg(test)]
 mod tests;
@@ -24,4 +25,6 @@ pub use pq_ies::{
     ansi_x963_kdf,
 };
 pub use sba_token::{SbaTokenClaims, PqJwtHeader, issue_sba_token, verify_sba_token};
+pub use sepp_n32::{N32fMessage, PqJweHeader, protect_n32f_payload, unprotect_n32f_payload};
+
 

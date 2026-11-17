@@ -277,4 +277,100 @@ fn test_sba_token_audience_mismatch_fails() {
     assert!(res.is_err(), "Audience mismatch must be rejected");
 }
 
+#[test]
+fn test_sepp_n32_xwing_roundtrip() {
+    use crate::registry::KemAlgorithm;
+    use crate::telecom::sepp_n32::{protect_n32f_payload, unprotect_n32f_payload};
+
+    // 1. Generate Home SEPP (h-SEPP) X-Wing Keypair
+    let (h_sepp_pk, h_sepp_sk) = KemAlgorithm::HybridXWing.generate_keypair().unwrap();
+
+    let routing_headers = serde_json::json!({
+        "method": "POST",
+        "uri": "/nudm-sdm/v2/404019876543210/amf-3gpp-access-registration",
+        "ipx_transit_nodes": ["ipx.airtel.in", "ipx.tata.in", "ipx.bsnl.in"]
+    });
+
+    let sensitive_payload = serde_json::json!({
+        "supi": "404019876543210",
+        "gpsi": "msisdn-919876543210",
+        "roaming_country": "IN",
+        "current_cell_id": "TAC-045-ENODEB-88912",
+        "auth_status": "AUTHENTICATED"
+    });
+
+    // 2. Visited SEPP (v-SEPP) seals payload in Post-Quantum JWE
+    let msg = protect_n32f_payload(
+        "n32f-tx-99018",
+        "404-45", // Airtel
+        "404-01", // BSNL
+        &routing_headers,
+        &sensitive_payload,
+        &h_sepp_pk,
+        KemAlgorithm::HybridXWing,
+    ).unwrap();
+
+    // Verify JWE structure: 5 dot-separated segments
+    assert_eq!(msg.protected_payload_jwe.split('.').count(), 5);
+    assert_eq!(msg.routing_headers["method"], "POST");
+
+    // 3. Home SEPP (h-SEPP) unprotects payload
+    let recovered = unprotect_n32f_payload(&msg, &h_sepp_sk).unwrap();
+    assert_eq!(recovered["supi"], "404019876543210");
+    assert_eq!(recovered["current_cell_id"], "TAC-045-ENODEB-88912");
+}
+
+#[test]
+fn test_sepp_n32_mlkem768_roundtrip() {
+    use crate::registry::KemAlgorithm;
+    use crate::telecom::sepp_n32::{protect_n32f_payload, unprotect_n32f_payload};
+
+    let (h_sepp_pk, h_sepp_sk) = KemAlgorithm::MlKem768.generate_keypair().unwrap();
+
+    let routing = serde_json::json!({ "route": "/nausf-auth/v1/ue-authentications" });
+    let sensitive = serde_json::json!({ "rand": "0123456789abcdef", "autn": "fedcba9876543210" });
+
+    let msg = protect_n32f_payload(
+        "n32f-auth-001",
+        "404-86", // Jio
+        "404-01", // BSNL
+        &routing,
+        &sensitive,
+        &h_sepp_pk,
+        KemAlgorithm::MlKem768,
+    ).unwrap();
+
+    let recovered = unprotect_n32f_payload(&msg, &h_sepp_sk).unwrap();
+    assert_eq!(recovered["rand"], "0123456789abcdef");
+}
+
+#[test]
+fn test_sepp_n32_tamper_fails() {
+    use crate::registry::KemAlgorithm;
+    use crate::telecom::sepp_n32::{protect_n32f_payload, unprotect_n32f_payload};
+
+    let (h_sepp_pk, h_sepp_sk) = KemAlgorithm::HybridXWing.generate_keypair().unwrap();
+    let routing = serde_json::json!({ "route": "/test" });
+    let sensitive = serde_json::json!({ "secret": "confidential_data" });
+
+    let mut msg = protect_n32f_payload(
+        "n32f-tamper-01",
+        "404-45",
+        "404-01",
+        &routing,
+        &sensitive,
+        &h_sepp_pk,
+        KemAlgorithm::HybridXWing,
+    ).unwrap();
+
+    // Corrupt JWE tag segment
+    let mut parts: Vec<String> = msg.protected_payload_jwe.split('.').map(String::from).collect();
+    parts[4] = "AAAA".to_string();
+    msg.protected_payload_jwe = parts.join(".");
+
+    let res = unprotect_n32f_payload(&msg, &h_sepp_sk);
+    assert!(res.is_err(), "Tampered JWE tag must fail decryption");
+}
+
+
 

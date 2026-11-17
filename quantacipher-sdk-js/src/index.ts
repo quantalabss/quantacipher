@@ -761,6 +761,60 @@ export class QuantaCipherTelecom {
         );
         return JSON.parse(raw) as SbaTokenClaims;
     }
+
+    // ============================================================
+    // 5G N32 / SEPP PRINS JWE Roaming Interconnect Engine
+    // 3GPP TS 33.501 §5.9.3 & Annex H
+    // ============================================================
+
+    /**
+     * Generate SEPP (Security Edge Protection Proxy) Keypair.
+     * Supports "hybrid-xwing" (default: X25519 + ML-KEM-768) or "ml-kem-768".
+     */
+    public generateSeppKeyPair(algorithm: 'hybrid-xwing' | 'ml-kem-768' = 'hybrid-xwing'): SeppKeyPair {
+        const raw = wasm.telecom_generate_sepp_keypair(algorithm);
+        return JSON.parse(raw) as SeppKeyPair;
+    }
+
+    /**
+     * Protect an N32-f roaming message from a Visiting SEPP to a Home SEPP using Post-Quantum JWE.
+     * Encapsulates a random 256-bit CEK via X-Wing or ML-KEM-768 and encrypts payload with AES-256-GCM.
+     */
+    public protectN32fMessage(
+        messageId: string,
+        senderPlmn: string,
+        receiverPlmn: string,
+        routingHeaders: Record<string, any>,
+        sensitivePayload: Record<string, any>,
+        receiverSeppPublicKeyB64: string,
+        algorithm: 'hybrid-xwing' | 'ml-kem-768' = 'hybrid-xwing',
+    ): N32fMessage {
+        const raw = wasm.telecom_protect_n32f_message(
+            messageId,
+            senderPlmn,
+            receiverPlmn,
+            JSON.stringify(routingHeaders),
+            JSON.stringify(sensitivePayload),
+            receiverSeppPublicKeyB64,
+            algorithm,
+        );
+        return JSON.parse(raw) as N32fMessage;
+    }
+
+    /**
+     * Unprotect and authenticate an N32-f roaming message at the receiving SEPP.
+     * Decapsulates the CEK using the receiver's private key, verifies the JWE tag, and returns the payload.
+     */
+    public unprotectN32fMessage<T = Record<string, any>>(
+        message: N32fMessage,
+        receiverSeppPrivateKeyB64: string,
+    ): T {
+        const raw = wasm.telecom_unprotect_n32f_message(
+            JSON.stringify(message),
+            receiverSeppPrivateKeyB64,
+        );
+        return JSON.parse(raw) as T;
+    }
 }
 
 /**
@@ -783,6 +837,32 @@ export interface SbaTokenClaims {
     plmn_mcc?: string;
     /** Mobile Network Code of Serving PLMN (optional) */
     plmn_mnc?: string;
+}
+
+/**
+ * 3GPP TS 33.501 Annex H N32-f Roaming Interconnect Message.
+ * Protects cross-carrier roaming communication traversing intermediate IPX transit networks.
+ */
+export interface N32fMessage {
+    /** Unique 3GPP transaction identifier */
+    message_id: string;
+    /** Originating Serving Network PLMN ID (e.g. "404-45" for Airtel India) */
+    sender_plmn: string;
+    /** Destination Home Network PLMN ID (e.g. "404-01" for BSNL India) */
+    receiver_plmn: string;
+    /** Cleartext routing headers visible to IPX transit carriers (e.g. HTTP method, API path) */
+    routing_headers: Record<string, any>;
+    /** RFC 7516 Post-Quantum JWE compact serialization: ProtectedHeader.EncryptedKey.IV.Ciphertext.Tag */
+    protected_payload_jwe: string;
+}
+
+/**
+ * Keypair for 5G SEPP Roaming Interconnect.
+ */
+export interface SeppKeyPair {
+    publicKey: string;
+    privateKey: string;
+    algorithm: string;
 }
 
 
