@@ -1,3 +1,4 @@
+declare const process: any;
 import { QuantaCipher, QuantaCipherTelecom, ProtectionScheme } from './src/index';
 
 async function testTelecom() {
