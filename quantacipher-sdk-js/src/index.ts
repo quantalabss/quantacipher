@@ -815,6 +815,28 @@ export class QuantaCipherTelecom {
         );
         return JSON.parse(raw) as T;
     }
+
+    // ============================================================
+    // 5G Telecom-CBOM & MTCTE Compliance Scanner Engine
+    // TEC 910018:2025 §5 & TEC 910028:2025
+    // ============================================================
+
+    /**
+     * Audit a 5G Core deployment configuration against TEC 910028:2025 and TEC 910018:2025 standards.
+     * Generates a quantum risk score, detailed compliance findings, and CycloneDX 1.6 Telecom-CBOM.
+     */
+    public audit5gCore(config: TelecomAuditConfig): TelecomAuditReport {
+        const raw = wasm.telecom_audit_5g_core(JSON.stringify(config));
+        return JSON.parse(raw) as TelecomAuditReport;
+    }
+
+    /**
+     * Get pre-configured audit presets for testing (C-DOT, Legacy Commercial Telco, QuantaCipher Native).
+     */
+    public getAuditPresets(): Record<string, { name: string } & TelecomAuditConfig> {
+        const raw = wasm.telecom_get_audit_presets();
+        return JSON.parse(raw);
+    }
 }
 
 /**
@@ -863,6 +885,60 @@ export interface SeppKeyPair {
     publicKey: string;
     privateKey: string;
     algorithm: string;
+}
+
+export type FindingSeverity = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW' | 'PASS';
+
+/**
+ * A cryptographic asset discovered in the 5G telecom deployment.
+ */
+export interface TelecomCryptoAsset {
+    network_function: string;
+    interface_name: string;
+    primitive: string;
+    algorithm: string;
+    key_size: string;
+    crypto_type: string;
+    quantum_safe: boolean;
+    standard_ref: string;
+}
+
+/**
+ * An audit finding detailing compliance or vulnerability status.
+ */
+export interface TelecomAuditFinding {
+    severity: FindingSeverity;
+    title: string;
+    network_function: string;
+    description: string;
+    compliance_clause: string;
+    remediation: string;
+}
+
+/**
+ * Complete 5G Telecom Post-Quantum Audit & Readiness Report.
+ */
+export interface TelecomAuditReport {
+    overall_score: number;
+    quantum_risk_level: string;
+    mtcte_certified: boolean;
+    critical_count: number;
+    high_count: number;
+    evaluated_nfs: string[];
+    assets: TelecomCryptoAsset[];
+    findings: TelecomAuditFinding[];
+    cyclonedx_cbom_json: string;
+}
+
+/**
+ * Configurable parameters for auditing a 5G Core deployment.
+ */
+export interface TelecomAuditConfig {
+    suci_profile: 'profile_a' | 'profile_b' | 'profile_c' | 'profile_d';
+    sba_token_alg: 'rsa_2048' | 'ecdsa_p256' | 'mldsa_65' | 'hybrid_mldsa65_p256';
+    sepp_roaming_kem: 'none' | 'classical_ecdh' | 'mlkem_768' | 'hybrid_xwing';
+    nas_cipher: 'nea0' | 'nea1_snow3g' | 'nea2_aes128' | 'nea4_aes256';
+    up_cipher: 'nea0' | 'nea2_aes128' | 'nea4_aes256';
 }
 
 

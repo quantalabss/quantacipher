@@ -372,5 +372,49 @@ fn test_sepp_n32_tamper_fails() {
     assert!(res.is_err(), "Tampered JWE tag must fail decryption");
 }
 
+#[test]
+fn test_telecom_audit_legacy_commercial_telco_critical_risk() {
+    use crate::telecom::cbom_scanner::{audit_telecom_deployment, TelecomAuditConfig};
+
+    // Legacy commercial telco deployment: Profile A (Curve25519), RSA-2048 SBA, Classical ECDH SEPP, NEA2 AES-128
+    let legacy_config = TelecomAuditConfig {
+        suci_profile: "profile_a".to_string(),
+        sba_token_alg: "rsa_2048".to_string(),
+        sepp_roaming_kem: "classical_ecdh".to_string(),
+        nas_cipher: "nea2_aes128".to_string(),
+        up_cipher: "nea2_aes128".to_string(),
+    };
+
+    let report = audit_telecom_deployment(&legacy_config);
+    assert!(report.overall_score < 60, "Legacy telco must score below 60, got {}", report.overall_score);
+    assert!(!report.mtcte_certified, "Legacy telco cannot be MTCTE PQC certified");
+    assert!(report.critical_count >= 1, "Must detect critical vulnerability on Profile A SUCI");
+    assert!(report.high_count >= 2, "Must detect high vulnerability on RSA SBA and ECDH SEPP");
+    assert!(report.cyclonedx_cbom_json.contains("CycloneDX"), "Must generate CycloneDX 1.6 CBOM");
+}
+
+#[test]
+fn test_telecom_audit_quantum_native_pass() {
+    use crate::telecom::cbom_scanner::{audit_telecom_deployment, TelecomAuditConfig};
+
+    // QuantaCipher Quantum-Native 5G Core: Profile D, Hybrid ML-DSA-65, Hybrid X-Wing SEPP, NEA4 AES-256
+    let quantum_config = TelecomAuditConfig {
+        suci_profile: "profile_d".to_string(),
+        sba_token_alg: "hybrid_mldsa65_p256".to_string(),
+        sepp_roaming_kem: "hybrid_xwing".to_string(),
+        nas_cipher: "nea4_aes256".to_string(),
+        up_cipher: "nea4_aes256".to_string(),
+    };
+
+    let report = audit_telecom_deployment(&quantum_config);
+    assert_eq!(report.overall_score, 100, "Quantum-native deployment must score 100");
+    assert!(report.mtcte_certified, "Must achieve MTCTE PQC certification");
+    assert_eq!(report.critical_count, 0, "Must have zero critical vulnerabilities");
+    assert_eq!(report.high_count, 0, "Must have zero high vulnerabilities");
+    assert_eq!(report.quantum_risk_level, "Quantum-Resilient");
+    assert!(report.cyclonedx_cbom_json.contains("ML-KEM-768"));
+    assert!(report.cyclonedx_cbom_json.contains("Hybrid ML-DSA-65"));
+}
+
 
 

@@ -366,6 +366,10 @@ use quantacipher_core::telecom::{
         protect_n32f_payload as core_protect_n32f_payload,
         unprotect_n32f_payload as core_unprotect_n32f_payload,
     },
+    cbom_scanner::{
+        TelecomAuditConfig, TelecomAuditReport,
+        audit_telecom_deployment as core_audit_telecom_deployment,
+    },
 };
 use quantacipher_core::sign::registry::{AlgorithmId as CoreAlgorithmId, generate_keypair as core_sign_generate_keypair};
 
@@ -591,6 +595,53 @@ pub fn telecom_unprotect_n32f_message(
 
     serde_json::to_string(&payload).map_err(|e| JsValue::from_str(&e.to_string()))
 }
+
+/// Audit a 5G Core deployment configuration against TEC 910028:2025 and TEC 910018:2025 standards.
+/// Accepts JSON configuration for SUCI, SBA token, SEPP KEM, and NAS cipher suites.
+/// Returns JSON report with overall score, quantum risk level, findings, and CycloneDX 1.6 CBOM.
+#[wasm_bindgen]
+pub fn telecom_audit_5g_core(config_json: &str) -> Result<String, JsValue> {
+    let config: TelecomAuditConfig = serde_json::from_str(config_json)
+        .map_err(|e| JsValue::from_str(&format!("Invalid TelecomAuditConfig JSON: {}", e)))?;
+    let report = core_audit_telecom_deployment(&config);
+    serde_json::to_string(&report).map_err(|e| JsValue::from_str(&e.to_string()))
+}
+
+/// Returns sample pre-configured audit profiles:
+/// - "cdot_evaluating": C-DOT 5G Core Transition Profile
+/// - "legacy_commercial": Legacy 3GPP Rel-16 Commercial Core (High Risk)
+/// - "quantum_native": QuantaCipher Quantum-Native 5G Core (100% TEC Compliant)
+#[wasm_bindgen]
+pub fn telecom_get_audit_presets() -> Result<String, JsValue> {
+    let presets = serde_json::json!({
+        "cdot_evaluating": {
+            "name": "C-DOT 5G Core (Pilot / Transition Profile)",
+            "suci_profile": "profile_c",
+            "sba_token_alg": "mldsa_65",
+            "sepp_roaming_kem": "hybrid_xwing",
+            "nas_cipher": "nea2_aes128",
+            "up_cipher": "nea2_aes128"
+        },
+        "legacy_commercial": {
+            "name": "Commercial Telco Deployment (Legacy Rel-16)",
+            "suci_profile": "profile_a",
+            "sba_token_alg": "rsa_2048",
+            "sepp_roaming_kem": "classical_ecdh",
+            "nas_cipher": "nea2_aes128",
+            "up_cipher": "nea2_aes128"
+        },
+        "quantum_native": {
+            "name": "QuantaCipher 5G Quantum-Native Core",
+            "suci_profile": "profile_d",
+            "sba_token_alg": "hybrid_mldsa65_p256",
+            "sepp_roaming_kem": "hybrid_xwing",
+            "nas_cipher": "nea4_aes256",
+            "up_cipher": "nea4_aes256"
+        }
+    });
+    serde_json::to_string(&presets).map_err(|e| JsValue::from_str(&e.to_string()))
+}
+
 
 
 

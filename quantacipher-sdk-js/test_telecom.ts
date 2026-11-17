@@ -233,9 +233,45 @@ async function testTelecom() {
     }
     console.log("       [✔] Homogeneous ML-KEM-768 SEPP roaming round-trip PASSED!");
 
+    // 7. 5G Telecom-CBOM & MTCTE Compliance Scanner Engine (TEC 910018:2025 §5 & TEC 910028:2025)
+    console.log("\n[+] 7. 5G Telecom-CBOM & MTCTE Compliance Audit Scanner (TEC 910018:2025)...");
+    console.log("    a) Fetching sample audit presets...");
+    const presets = telecom.getAuditPresets();
+    console.log("       Presets available:", Object.keys(presets));
+
+    console.log("    b) Auditing Legacy Commercial Telco Deployment (Rel-16 Profile A + RSA SBA)...");
+    const tScan0 = performance.now();
+    const legacyReport = telecom.audit5gCore(presets.legacy_commercial);
+    const tScan = (performance.now() - tScan0).toFixed(2);
+    console.log(`       Audited in ${tScan} ms:`);
+    console.log(`       - Readiness Score: ${legacyReport.overall_score}/100`);
+    console.log(`       - Risk Classification: ${legacyReport.quantum_risk_level}`);
+    console.log(`       - MTCTE PQC Certified: ${legacyReport.mtcte_certified ? "APPROVED" : "FAILED / NON-COMPLIANT"}`);
+    console.log(`       - Critical Vulnerabilities: ${legacyReport.critical_count}`);
+    console.log(`       - High-Risk Items: ${legacyReport.high_count}`);
+    if (legacyReport.mtcte_certified || legacyReport.critical_count === 0) {
+        throw new Error("Legacy telco deployment should have failed MTCTE certification!");
+    }
+    console.log("       [✔] Legacy vulnerabilities correctly detected!");
+
+    console.log("    c) Auditing QuantaCipher Quantum-Native 5G Core Deployment...");
+    const nativeReport = telecom.audit5gCore(presets.quantum_native);
+    console.log(`       - Readiness Score: ${nativeReport.overall_score}/100`);
+    console.log(`       - Risk Classification: ${nativeReport.quantum_risk_level}`);
+    console.log(`       - MTCTE PQC Certified: ${nativeReport.mtcte_certified ? "APPROVED [PASS]" : "FAILED"}`);
+    console.log(`       - Assets Discovered: ${nativeReport.assets.length}`);
+    if (!nativeReport.mtcte_certified || nativeReport.overall_score !== 100) {
+        throw new Error("Quantum-native deployment should pass with score 100!");
+    }
+    console.log("       - CycloneDX 1.6 CBOM generated:", nativeReport.cyclonedx_cbom_json.substring(0, 80) + "...");
+    console.log("       [✔] Quantum-Native MTCTE Certification PASSED!");
+
     console.log("\n==================================================================");
-    console.log("   ✅ ALL 5G TELECOM PRODUCTS (PQ-IES, SBA OAUTH, SEPP PRINS) PASSED!");
-    console.log("   100% 3GPP TS 33.501 / TS 23.003 & TEC 910028:2025 / 910018:2025");
+    console.log("   ✅ ALL 4 5G TELECOM PRODUCTS VERIFIED & READY FOR CARRIER DEPLOYMENT");
+    console.log("   1. PQ-IES SUCI Concealment (Profiles C & D)");
+    console.log("   2. SBA Core PQ-OAuth2 Token Gateway (ML-DSA-65 / Hybrid)");
+    console.log("   3. SEPP PRINS JWE Roaming Interconnect (X-Wing / ML-KEM-768)");
+    console.log("   4. 5G Telecom-CBOM & MTCTE Compliance Audit Scanner");
     console.log("==================================================================");
 }
 
