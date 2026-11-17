@@ -81,6 +81,8 @@ export const AlgorithmId = {
     ML_DSA_65: 'ml-dsa-65',
     /** ML-DSA-87 implementing FIPS 204 (finalized, NIST Level 5). */
     ML_DSA_87: 'ml-dsa-87',
+    /** Hybrid Dual Signature: Classical ECDSA P-256 + Post-Quantum ML-DSA-65 (TEC 910018:2025 Figure 3). */
+    HYBRID_MLDSA65_P256: 'hybrid-mldsa65-p256',
 } as const;
 
 export type AlgorithmId = typeof AlgorithmId[keyof typeof AlgorithmId];
@@ -134,6 +136,7 @@ export class QuantaCipher {
     private gatewayUrl: string;
     private profile: SecurityProfile;
     private policy?: SecurityPolicy;
+    public telecom: QuantaCipherTelecom = new QuantaCipherTelecom();
 
     constructor(config: QuantaCipherConfig) {
         this.apiKey = config.apiKey;
@@ -569,3 +572,135 @@ export class QuantaCipherSign {
         return parsed as SignatureEnvelope;
     }
 }
+
+// ============================================================
+//  TELECOM MODULE (3GPP TS 33.501 & TEC 910028:2025)
+// ============================================================
+
+/**
+ * 3GPP 5G Protection Scheme Identifier per 3GPP TS 33.501 and TEC 910028:2025 Section 6.4.
+ */
+export const ProtectionScheme = {
+    /** Null Scheme (unencrypted plain MSIN) */
+    NULL: 0,
+    /** Profile A: Classical Curve25519 + AES-128-CTR + HMAC-SHA256 */
+    PROFILE_A: 1,
+    /** Profile B: Classical secp256r1 + AES-128-CTR + HMAC-SHA256 */
+    PROFILE_B: 2,
+    /** Profile C: TEC 910028:2025 Homogeneous Post-Quantum ML-KEM-768 + AES-256-CTR + HMAC-SHA256 */
+    PROFILE_C: 3,
+    /** Profile D: TEC 910028:2025 Hybrid Post-Quantum ML-KEM-768 + X25519 + AES-256-CTR + HMAC-SHA256 */
+    PROFILE_D: 4,
+} as const;
+
+export type ProtectionScheme = typeof ProtectionScheme[keyof typeof ProtectionScheme];
+
+/**
+ * 5G Home Network (UDM) keypair holding both Post-Quantum (ML-KEM-768) and Classical (X25519) keys.
+ */
+export interface HnKeyPair {
+    mlkem_public_key: string;   // base64
+    mlkem_private_key: string;  // base64
+    x25519_public_key: string;  // base64
+    x25519_private_key: string; // base64
+}
+
+/**
+ * 5G Subscription Permanent Identifier (SUPI) / IMSI components.
+ */
+export interface Supi {
+    mcc: string;  // e.g. "404" for India
+    mnc: string;  // e.g. "45" for Airtel, "86" for Jio
+    msin: string; // e.g. "9876543210"
+    imsi: string; // e.g. "404459876543210"
+}
+
+/**
+ * 5G Telecom Post-Quantum Security Engine
+ * Implements 3GPP TS 33.501 Annex C, TS 23.003 Section 2.2B, and TEC 910028:2025 Section 6.4 (PQ-IES).
+ */
+export class QuantaCipherTelecom {
+    /**
+     * Generate 5G Home Network (UDM) keypair containing both ML-KEM-768 and X25519 keys.
+     */
+    public generateHnKeyPair(): HnKeyPair {
+        const raw = wasm.telecom_generate_hn_keypair();
+        return JSON.parse(raw) as HnKeyPair;
+    }
+
+    /**
+     * Conceal a 5G SUPI/IMSI into a SUCI using TEC 910028:2025 Profile C (Homogeneous ML-KEM-768 + AES-256-CTR).
+     * @returns 3GPP TS 23.003 standard SUCI string (`suci-0-MCC-MNC-RoutingIndicator-3-KeyId-HexOutput`).
+     */
+    public concealProfileC(
+        mcc: string,
+        mnc: string,
+        msin: string,
+        routingIndicator: string = "0000",
+        hnPublicKeyId: number = 1,
+        hnMlkemPublicKeyB64: string,
+    ): string {
+        return wasm.telecom_conceal_profile_c(
+            mcc,
+            mnc,
+            msin,
+            routingIndicator,
+            hnPublicKeyId,
+            hnMlkemPublicKeyB64,
+        );
+    }
+
+    /**
+     * De-conceal a Profile C SUCI back into a SUPI/IMSI at the Home Network UDM / SIDF.
+     */
+    public deconcealProfileC(
+        suciNai: string,
+        hnMlkemPrivateKeyB64: string,
+    ): Supi {
+        const raw = wasm.telecom_deconceal_profile_c(suciNai, hnMlkemPrivateKeyB64);
+        return JSON.parse(raw) as Supi;
+    }
+
+    /**
+     * Conceal a 5G SUPI/IMSI into a SUCI using TEC 910028:2025 Profile D (Hybrid ML-KEM-768 + X25519 + AES-256-CTR).
+     * @returns 3GPP TS 23.003 standard SUCI string (`suci-0-MCC-MNC-RoutingIndicator-4-KeyId-HexOutput`).
+     */
+    public concealProfileD(
+        mcc: string,
+        mnc: string,
+        msin: string,
+        routingIndicator: string = "0000",
+        hnPublicKeyId: number = 1,
+        hnMlkemPublicKeyB64: string,
+        hnX25519PublicKeyB64: string,
+    ): string {
+        return wasm.telecom_conceal_profile_d(
+            mcc,
+            mnc,
+            msin,
+            routingIndicator,
+            hnPublicKeyId,
+            hnMlkemPublicKeyB64,
+            hnX25519PublicKeyB64,
+        );
+    }
+
+    /**
+     * De-conceal a Profile D SUCI back into a SUPI/IMSI at the Home Network UDM / SIDF.
+     */
+    public deconcealProfileD(
+        suciNai: string,
+        hnMlkemPrivateKeyB64: string,
+        hnX25519PrivateKeyB64: string,
+        hnMlkemPublicKeyB64: string,
+    ): Supi {
+        const raw = wasm.telecom_deconceal_profile_d(
+            suciNai,
+            hnMlkemPrivateKeyB64,
+            hnX25519PrivateKeyB64,
+            hnMlkemPublicKeyB64,
+        );
+        return JSON.parse(raw) as Supi;
+    }
+}
+

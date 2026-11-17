@@ -932,12 +932,14 @@ dependencies = [
 name = "quantacipher-core"
 version = "2.1.0"
 dependencies = [
+ "aes",
  "aes-gcm",
  "base64",
  "criterion",
  "falcon-rs",
  "hex",
  "hkdf",
+ "hmac",
  "ml-dsa",
  "ml-kem",
  "p256",

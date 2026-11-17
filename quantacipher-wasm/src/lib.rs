@@ -342,3 +342,124 @@ fn parse_alg_opt(algorithm: Option<String>) -> Result<Option<AlgorithmId>, JsVal
             .map_err(|e| JsValue::from_str(&format!("QuantaCipher AlgorithmId Error: {}", e))),
     }
 }
+
+// ============================================================
+// MODE 4: 5G TELECOM — 3GPP TS 33.501 & TEC 910028:2025
+// ============================================================
+
+use quantacipher_core::telecom::{
+    types::{Suci, Supi},
+    pq_ies::{
+        generate_hn_keypair as core_generate_hn_keypair,
+        conceal_profile_c as core_conceal_profile_c,
+        deconceal_profile_c as core_deconceal_profile_c,
+        conceal_profile_d as core_conceal_profile_d,
+        deconceal_profile_d as core_deconceal_profile_d,
+    },
+};
+
+/// Generate 5G Home Network (UDM) keypair for Profile C (ML-KEM-768) and Profile D (Hybrid ML-KEM + X25519).
+/// Returns a JSON object with base64 encoded keys.
+#[wasm_bindgen]
+pub fn telecom_generate_hn_keypair() -> Result<String, JsValue> {
+    let keypair = core_generate_hn_keypair()
+        .map_err(|e| JsValue::from_str(&format!("Key generation error: {}", e)))?;
+    serde_json::to_string(&keypair).map_err(|e| JsValue::from_str(&e.to_string()))
+}
+
+/// Conceal a 5G SUPI into a SUCI using TEC 910028:2025 Profile C (Homogeneous ML-KEM-768 + AES-256-CTR).
+/// Returns standard 3GPP NAI formatted SUCI string (`suci:0:MCC:MNC:RoutingIndicator:3:KeyId:hexOutput`).
+#[wasm_bindgen]
+pub fn telecom_conceal_profile_c(
+    mcc: &str,
+    mnc: &str,
+    msin: &str,
+    routing_indicator: &str,
+    hn_public_key_id: u8,
+    hn_mlkem_public_key_b64: &str,
+) -> Result<String, JsValue> {
+    let pk_bytes = decode_b64(hn_mlkem_public_key_b64)?;
+    let supi = Supi::new(mcc, mnc, msin);
+    let suci = core_conceal_profile_c(&supi, routing_indicator, hn_public_key_id, &pk_bytes)
+        .map_err(|e| JsValue::from_str(&format!("5G Conceal Error: {}", e)))?;
+    Ok(suci.to_nai_string())
+}
+
+/// De-conceal a Profile C SUCI back to SUPI at 5G UDM / SIDF.
+/// Returns JSON `{ "mcc": "404", "mnc": "45", "msin": "...", "imsi": "..." }`.
+#[wasm_bindgen]
+pub fn telecom_deconceal_profile_c(
+    suci_nai: &str,
+    hn_mlkem_private_key_b64: &str,
+) -> Result<String, JsValue> {
+    let sk_bytes = decode_b64(hn_mlkem_private_key_b64)?;
+    let suci = Suci::from_nai_string(suci_nai)
+        .map_err(|e| JsValue::from_str(&format!("Invalid SUCI NAI: {}", e)))?;
+    let supi = core_deconceal_profile_c(&suci, &sk_bytes)
+        .map_err(|e| JsValue::from_str(&format!("5G De-conceal Error: {}", e)))?;
+
+    let res = serde_json::json!({
+        "mcc": supi.mcc,
+        "mnc": supi.mnc,
+        "msin": supi.msin,
+        "imsi": supi.to_imsi(),
+    });
+    serde_json::to_string(&res).map_err(|e| JsValue::from_str(&e.to_string()))
+}
+
+/// Conceal a 5G SUPI into a SUCI using TEC 910028:2025 Profile D (Hybrid ML-KEM-768 + X25519 + AES-256-CTR).
+/// Returns standard 3GPP NAI formatted SUCI string (`suci:0:MCC:MNC:RoutingIndicator:4:KeyId:hexOutput`).
+#[wasm_bindgen]
+pub fn telecom_conceal_profile_d(
+    mcc: &str,
+    mnc: &str,
+    msin: &str,
+    routing_indicator: &str,
+    hn_public_key_id: u8,
+    hn_mlkem_public_key_b64: &str,
+    hn_x25519_public_key_b64: &str,
+) -> Result<String, JsValue> {
+    let pk_mlkem_bytes = decode_b64(hn_mlkem_public_key_b64)?;
+    let pk_x25519_bytes = decode_b64(hn_x25519_public_key_b64)?;
+    let supi = Supi::new(mcc, mnc, msin);
+    let suci = core_conceal_profile_d(
+        &supi,
+        routing_indicator,
+        hn_public_key_id,
+        &pk_mlkem_bytes,
+        &pk_x25519_bytes,
+    ).map_err(|e| JsValue::from_str(&format!("5G Hybrid Conceal Error: {}", e)))?;
+    Ok(suci.to_nai_string())
+}
+
+/// De-conceal a Profile D SUCI back to SUPI at 5G UDM / SIDF.
+/// Returns JSON `{ "mcc": "404", "mnc": "45", "msin": "...", "imsi": "..." }`.
+#[wasm_bindgen]
+pub fn telecom_deconceal_profile_d(
+    suci_nai: &str,
+    hn_mlkem_private_key_b64: &str,
+    hn_x25519_private_key_b64: &str,
+    hn_mlkem_public_key_b64: &str,
+) -> Result<String, JsValue> {
+    let sk_mlkem_bytes = decode_b64(hn_mlkem_private_key_b64)?;
+    let sk_x25519_bytes = decode_b64(hn_x25519_private_key_b64)?;
+    let pk_mlkem_bytes = decode_b64(hn_mlkem_public_key_b64)?;
+
+    let suci = Suci::from_nai_string(suci_nai)
+        .map_err(|e| JsValue::from_str(&format!("Invalid SUCI NAI: {}", e)))?;
+    let supi = core_deconceal_profile_d(
+        &suci,
+        &sk_mlkem_bytes,
+        &sk_x25519_bytes,
+        &pk_mlkem_bytes,
+    ).map_err(|e| JsValue::from_str(&format!("5G Hybrid De-conceal Error: {}", e)))?;
+
+    let res = serde_json::json!({
+        "mcc": supi.mcc,
+        "mnc": supi.mnc,
+        "msin": supi.msin,
+        "imsi": supi.to_imsi(),
+    });
+    serde_json::to_string(&res).map_err(|e| JsValue::from_str(&e.to_string()))
+}
+

@@ -5,6 +5,7 @@ pub mod profile;
 pub mod policy;
 pub mod sign;
 pub mod rewrap;
+pub mod telecom;
 
 use base64::{engine::general_purpose, Engine as _};
 pub use error::QuantaCipherError;
