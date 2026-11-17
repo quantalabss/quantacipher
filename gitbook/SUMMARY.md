@@ -32,6 +32,7 @@
 * [QuantaCipher Insight (CBOM & Risk Discovery)](products/insight-cbom.md)
 * [QuantaCipher Encrypt & Ingest Gateway](products/encrypt-gateway.md)
 * [QuantaCipher Sign & Zero-Trust Verification](products/sign-verify.md)
+* [QuantaCipher 5G Telecom Post-Quantum Suite](products/telecom-5g-suite.md)
 
 ## Enterprise & Telecom Use Cases
 * [5G SEPP Core & Carrier Interconnects](use-cases/telecom-5g-sepp.md)
