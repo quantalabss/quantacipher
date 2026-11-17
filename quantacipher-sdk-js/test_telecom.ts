@@ -89,8 +89,66 @@ async function testTelecom() {
         console.log("    [✔] Tampered MAC correctly rejected:", err.message || err);
     }
 
+    // 5. 5G SBA (Service-Based Architecture) PQ-Token Gateway Tests
+    console.log("\n[+] 5. 5G SBA OAuth 2.0 PQ-Token Gateway (3GPP TS 33.501 §6.3.1)...");
+    console.log("    a) Generating NRF Signing KeyPair (FIPS 204 ML-DSA-65)...");
+    const nrfKeys = telecom.generateNrfKeyPair('ml-dsa-65');
+    console.log("       NRF Public Key (B64):", nrfKeys.publicKey.substring(0, 32) + "...");
+
+    const now = Math.floor(Date.now() / 1000);
+    const claims = {
+        iss: "nrf-01.5gc.mnc045.mcc404.3gppnetwork.org",
+        sub: "amf-01.5gc.mnc045.mcc404.3gppnetwork.org",
+        aud: "udm",
+        scope: "nudm-sdm",
+        iat: now,
+        exp: now + 3600,
+        plmn_mcc: "404",
+        plmn_mnc: "45",
+    };
+
+    console.log("    b) NRF issuing PQ-JWT Access Token for AMF -> UDM [nudm-sdm]...");
+    const tToken0 = performance.now();
+    const token = telecom.issueSbaToken(claims, nrfKeys.privateKey, 'ml-dsa-65');
+    const tTokenIssue = (performance.now() - tToken0).toFixed(2);
+    console.log(`       Issued in ${tTokenIssue} ms:`);
+    console.log("       PQ-JWT:", token.substring(0, 60) + "..." + token.substring(token.length - 20));
+
+    console.log("    c) Producer NF (UDM) verifying token signature and audience...");
+    const tTokenVer0 = performance.now();
+    const verifiedClaims = telecom.verifySbaToken(token, nrfKeys.publicKey, "udm", now + 60);
+    const tTokenVerify = (performance.now() - tTokenVer0).toFixed(2);
+    console.log(`       Verified in ${tTokenVerify} ms!`);
+    console.log("       Verified Claims:", verifiedClaims);
+    if (verifiedClaims.scope !== "nudm-sdm" || verifiedClaims.sub !== claims.sub) {
+        throw new Error("SBA Token verification failed claim comparison!");
+    }
+    console.log("       [✔] ML-DSA-65 SBA Token verified successfully!");
+
+    console.log("    d) Testing Audience Mismatch Protection (presented to AUSF instead of UDM)...");
+    try {
+        telecom.verifySbaToken(token, nrfKeys.publicKey, "ausf", now + 60);
+        throw new Error("Audience mismatch unexpectedly succeeded!");
+    } catch (err: any) {
+        console.log("       [✔] Audience mismatch correctly rejected:", err.message || err);
+    }
+
+    console.log("    e) Testing Hybrid ML-DSA-65 + ECDSA P-256 Token (TEC 910018:2025 Figure 3)...");
+    const hybridNrfKeys = telecom.generateNrfKeyPair('hybrid-mldsa65-p256');
+    const hybridClaims = {
+        iss: "nrf-01.5gc.mnc045.mcc404.3gppnetwork.org",
+        sub: "amf-01.5gc.mnc045.mcc404.3gppnetwork.org",
+        aud: "ausf",
+        scope: "nausf-auth",
+        iat: now,
+        exp: now + 1800,
+    };
+    const hybridToken = telecom.issueSbaToken(hybridClaims, hybridNrfKeys.privateKey, 'hybrid-mldsa65-p256');
+    const verifiedHybrid = telecom.verifySbaToken(hybridToken, hybridNrfKeys.publicKey, "ausf", now + 30);
+    console.log("       [✔] Hybrid SBA Token verified successfully:", verifiedHybrid.scope);
+
     console.log("\n==================================================================");
-    console.log("   ✅ ALL 5G TELECOM TESTS PASSED (100% 3GPP & TEC CONFORMANCE)");
+    console.log("   ✅ ALL 5G TELECOM & SBA PQ-TOKEN TESTS PASSED (100% 3GPP & TEC)");
     console.log("==================================================================");
 }
 

@@ -702,5 +702,87 @@ export class QuantaCipherTelecom {
         );
         return JSON.parse(raw) as Supi;
     }
+
+    // ============================================================
+    // 5G SBA (Service-Based Architecture) PQ-Token Gateway
+    // 3GPP TS 33.501 §6.3.1 & TEC 910028:2025 §6.3.1
+    // ============================================================
+
+    /**
+     * Generate NRF Signing Keypair using ML-DSA-65 (default) or Hybrid ML-DSA-65 + ECDSA P-256.
+     */
+    public generateNrfKeyPair(algorithm: 'ml-dsa-65' | 'hybrid-mldsa65-p256' = 'ml-dsa-65'): {
+        publicKey: string;
+        privateKey: string;
+        algorithm: string;
+    } {
+        const raw = wasm.telecom_generate_nrf_keypair(algorithm);
+        const parsed = JSON.parse(raw);
+        return {
+            publicKey: parsed.public_key,
+            privateKey: parsed.private_key,
+            algorithm: parsed.algorithm,
+        };
+    }
+
+    /**
+     * Issue a 5G SBA Post-Quantum OAuth 2.0 Access Token (PQ-JWT).
+     * Signed by NRF using FIPS 204 ML-DSA-65 or Hybrid ML-DSA-65 + ECDSA P-256.
+     *
+     * @returns 3-segment dot-separated standard JWT string: `BASE64URL(Header).BASE64URL(Claims).BASE64URL(Sig)`
+     */
+    public issueSbaToken(
+        claims: SbaTokenClaims,
+        nrfPrivateKeyB64: string,
+        algorithm: 'ml-dsa-65' | 'hybrid-mldsa65-p256' = 'ml-dsa-65',
+    ): string {
+        return wasm.telecom_issue_sba_token(
+            JSON.stringify(claims),
+            nrfPrivateKeyB64,
+            algorithm,
+        );
+    }
+
+    /**
+     * Verify a 5G SBA PQ-JWT Access Token at a Producer NF (UDM, AUSF, SMF).
+     * Validates cryptographic signature authenticity, token expiration, and audience.
+     */
+    public verifySbaToken(
+        tokenStr: string,
+        nrfPublicKeyB64: string,
+        expectedAud: string = "",
+        currentTimeUnix: number = Math.floor(Date.now() / 1000),
+    ): SbaTokenClaims {
+        const raw = wasm.telecom_verify_sba_token(
+            tokenStr,
+            nrfPublicKeyB64,
+            expectedAud,
+            BigInt(currentTimeUnix),
+        );
+        return JSON.parse(raw) as SbaTokenClaims;
+    }
 }
+
+/**
+ * 3GPP TS 33.501 §6.3.1 OAuth 2.0 Access Token Claims for Service-Based Architecture (SBA).
+ */
+export interface SbaTokenClaims {
+    /** Issuer: NRF FQDN or Instance ID */
+    iss: string;
+    /** Subject: Consumer NF Instance ID (e.g., AMF) */
+    sub: string;
+    /** Audience: Target Producer NF Type or Instance ID (e.g., "udm", "ausf", "pcf") */
+    aud: string;
+    /** Scope: 3GPP Service Name (e.g., "nudm-sdm", "nausf-auth") */
+    scope: string;
+    /** Expiration time (Unix timestamp in seconds) */
+    exp: number;
+    /** Issued-at time (Unix timestamp in seconds) */
+    iat: number;
+    /** Mobile Country Code of Serving PLMN (optional) */
+    plmn_mcc?: string;
+    /** Mobile Network Code of Serving PLMN (optional) */
+    plmn_mnc?: string;
+}
+
 

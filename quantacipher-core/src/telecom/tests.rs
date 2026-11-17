@@ -169,3 +169,112 @@ fn test_profile_d_corrupted_classical_fails() {
     assert!(result.is_err(), "Tampered ephemeral classical key must fail verification");
 }
 
+#[test]
+fn test_sba_token_mldsa65_roundtrip() {
+    use crate::sign::registry::{generate_keypair, AlgorithmId};
+    use crate::telecom::sba_token::{issue_sba_token, verify_sba_token, SbaTokenClaims};
+
+    // 1. Generate NRF signing keypair using FIPS 204 ML-DSA-65
+    let nrf_kp = generate_keypair(Some(AlgorithmId::MlDsa65)).unwrap();
+
+    let now = 1794913200; // Reference timestamp
+    let claims = SbaTokenClaims {
+        iss: "nrf-01.5gc.mnc045.mcc404.3gppnetwork.org".to_string(),
+        sub: "amf-01.5gc.mnc045.mcc404.3gppnetwork.org".to_string(),
+        aud: "udm".to_string(),
+        scope: "nudm-sdm".to_string(),
+        iat: now,
+        exp: now + 3600, // 1 hour validity
+        plmn_mcc: Some("404".to_string()),
+        plmn_mnc: Some("45".to_string()),
+    };
+
+    // 2. NRF issues PQ-JWT Access Token
+    let token = issue_sba_token(&claims, &nrf_kp.private_key, AlgorithmId::MlDsa65).unwrap();
+    assert_eq!(token.split('.').count(), 3, "JWT must consist of 3 dot-separated segments");
+
+    // 3. Producer NF (UDM) verifies the token
+    let verified = verify_sba_token(&token, &nrf_kp.public_key, "udm", now + 120).unwrap();
+    assert_eq!(verified.iss, claims.iss);
+    assert_eq!(verified.sub, claims.sub);
+    assert_eq!(verified.aud, "udm");
+    assert_eq!(verified.scope, "nudm-sdm");
+}
+
+#[test]
+fn test_sba_token_hybrid_mldsa65_p256_roundtrip() {
+    use crate::sign::registry::{generate_keypair, AlgorithmId};
+    use crate::telecom::sba_token::{issue_sba_token, verify_sba_token, SbaTokenClaims};
+
+    // 1. Generate NRF signing keypair using Hybrid ML-DSA-65 + ECDSA P-256 (TEC 910018:2025 Figure 3)
+    let nrf_kp = generate_keypair(Some(AlgorithmId::HybridMlDsa65P256)).unwrap();
+
+    let now = 1794913200;
+    let claims = SbaTokenClaims {
+        iss: "nrf-01.5gc.mnc045.mcc404.3gppnetwork.org".to_string(),
+        sub: "amf-01.5gc.mnc045.mcc404.3gppnetwork.org".to_string(),
+        aud: "ausf".to_string(),
+        scope: "nausf-auth".to_string(),
+        iat: now,
+        exp: now + 1800,
+        plmn_mcc: Some("404".to_string()),
+        plmn_mnc: Some("45".to_string()),
+    };
+
+    // 2. Issue Hybrid Token
+    let token = issue_sba_token(&claims, &nrf_kp.private_key, AlgorithmId::HybridMlDsa65P256).unwrap();
+
+    // 3. Producer NF (AUSF) verifies the token
+    let verified = verify_sba_token(&token, &nrf_kp.public_key, "ausf", now + 60).unwrap();
+    assert_eq!(verified.aud, "ausf");
+    assert_eq!(verified.scope, "nausf-auth");
+}
+
+#[test]
+fn test_sba_token_expired_fails() {
+    use crate::sign::registry::{generate_keypair, AlgorithmId};
+    use crate::telecom::sba_token::{issue_sba_token, verify_sba_token, SbaTokenClaims};
+
+    let nrf_kp = generate_keypair(Some(AlgorithmId::MlDsa65)).unwrap();
+    let now = 1794913200;
+    let claims = SbaTokenClaims {
+        iss: "nrf-01".to_string(),
+        sub: "amf-01".to_string(),
+        aud: "udm".to_string(),
+        scope: "nudm-sdm".to_string(),
+        iat: now - 3600,
+        exp: now - 10, // Expired 10 seconds ago
+        plmn_mcc: None,
+        plmn_mnc: None,
+    };
+
+    let token = issue_sba_token(&claims, &nrf_kp.private_key, AlgorithmId::MlDsa65).unwrap();
+    let res = verify_sba_token(&token, &nrf_kp.public_key, "udm", now);
+    assert!(res.is_err(), "Expired token must be rejected");
+}
+
+#[test]
+fn test_sba_token_audience_mismatch_fails() {
+    use crate::sign::registry::{generate_keypair, AlgorithmId};
+    use crate::telecom::sba_token::{issue_sba_token, verify_sba_token, SbaTokenClaims};
+
+    let nrf_kp = generate_keypair(Some(AlgorithmId::MlDsa65)).unwrap();
+    let now = 1794913200;
+    let claims = SbaTokenClaims {
+        iss: "nrf-01".to_string(),
+        sub: "amf-01".to_string(),
+        aud: "udm".to_string(), // Issued for UDM
+        scope: "nudm-sdm".to_string(),
+        iat: now,
+        exp: now + 3600,
+        plmn_mcc: None,
+        plmn_mnc: None,
+    };
+
+    let token = issue_sba_token(&claims, &nrf_kp.private_key, AlgorithmId::MlDsa65).unwrap();
+    // Presented to AUSF instead of UDM
+    let res = verify_sba_token(&token, &nrf_kp.public_key, "ausf", now + 10);
+    assert!(res.is_err(), "Audience mismatch must be rejected");
+}
+
+

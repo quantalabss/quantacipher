@@ -356,7 +356,14 @@ use quantacipher_core::telecom::{
         conceal_profile_d as core_conceal_profile_d,
         deconceal_profile_d as core_deconceal_profile_d,
     },
+    sba_token::{
+        SbaTokenClaims,
+        issue_sba_token as core_issue_sba_token,
+        verify_sba_token as core_verify_sba_token,
+    },
 };
+use quantacipher_core::sign::registry::{AlgorithmId as CoreAlgorithmId, generate_keypair as core_sign_generate_keypair};
+
 
 /// Generate 5G Home Network (UDM) keypair for Profile C (ML-KEM-768) and Profile D (Hybrid ML-KEM + X25519).
 /// Returns a JSON object with base64 encoded keys.
@@ -462,4 +469,52 @@ pub fn telecom_deconceal_profile_d(
     });
     serde_json::to_string(&res).map_err(|e| JsValue::from_str(&e.to_string()))
 }
+
+/// Generate NRF Signing Keypair using ML-DSA-65 (default) or Hybrid ML-DSA-65 + ECDSA P-256.
+#[wasm_bindgen]
+pub fn telecom_generate_nrf_keypair(algorithm: Option<String>) -> Result<String, JsValue> {
+    let alg = match algorithm.as_deref() {
+        Some("hybrid-mldsa65-p256") => CoreAlgorithmId::HybridMlDsa65P256,
+        _ => CoreAlgorithmId::MlDsa65,
+    };
+    let kp = core_sign_generate_keypair(Some(alg))
+        .map_err(|e| JsValue::from_str(&format!("NRF Keygen Error: {}", e)))?;
+    let res = serde_json::json!({
+        "public_key": kp.public_key,
+        "private_key": kp.private_key,
+        "algorithm": kp.algorithm,
+    });
+    serde_json::to_string(&res).map_err(|e| JsValue::from_str(&e.to_string()))
+}
+
+/// Issue a Post-Quantum OAuth 2.0 Access Token (PQ-JWT) for 5G SBA inter-NF requests.
+#[wasm_bindgen]
+pub fn telecom_issue_sba_token(
+    claims_json: &str,
+    nrf_private_key_b64: &str,
+    algorithm: Option<String>,
+) -> Result<String, JsValue> {
+    let claims: SbaTokenClaims = serde_json::from_str(claims_json)
+        .map_err(|e| JsValue::from_str(&format!("Invalid SbaTokenClaims JSON: {}", e)))?;
+    let alg = match algorithm.as_deref() {
+        Some("hybrid-mldsa65-p256") => CoreAlgorithmId::HybridMlDsa65P256,
+        _ => CoreAlgorithmId::MlDsa65,
+    };
+    core_issue_sba_token(&claims, nrf_private_key_b64, alg)
+        .map_err(|e| JsValue::from_str(&format!("Issue SBA Token Error: {}", e)))
+}
+
+/// Verify a 5G SBA PQ-JWT Access Token at a Producer Network Function (UDM, AUSF, SMF).
+#[wasm_bindgen]
+pub fn telecom_verify_sba_token(
+    token_str: &str,
+    nrf_public_key_b64: &str,
+    expected_aud: &str,
+    current_time_unix: u64,
+) -> Result<String, JsValue> {
+    let claims = core_verify_sba_token(token_str, nrf_public_key_b64, expected_aud, current_time_unix)
+        .map_err(|e| JsValue::from_str(&format!("Verify SBA Token Error: {}", e)))?;
+    serde_json::to_string(&claims).map_err(|e| JsValue::from_str(&e.to_string()))
+}
+
 
