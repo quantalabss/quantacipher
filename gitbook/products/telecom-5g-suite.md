@@ -16,9 +16,9 @@ The QuantaCipher 5G Telecom Suite delivers end-to-end post-quantum cryptographic
        ┌──────────────────────┬──────────────────────┴──────────────────────┬──────────────────────┐
        ▼                      ▼                                             ▼                      ▼
 ┌──────────────┐       ┌──────────────┐                              ┌──────────────┐       ┌──────────────┐
-│  Product 1   │       │  Product 2   │                              │  Product 3   │       │  Product 4   │
-│  5G PQ-IES   │       │  5G SBA PQ-  │                              │  5G N32/SEPP │       │Telecom-CBOM &│
-│ SUCI Privacy │       │Token Gateway │                              │ PRINS Roaming│       │ MTCTE Audit  │
+│  QC-PQ-SUCI  │       │  QC-PQ-SBA   │                              │  QC-PQ-SEPP  │       │  QC-PQ-CBOM  │
+│  Subscriber  │       │  SBA Token   │                              │  N32 Roaming │       │ Telecom-CBOM │
+│  Concealment │       │   Gateway    │                              │  Interconnect│       │ & MTCTE Audit│
 └──────┬───────┘       └──────┬───────┘                              └──────┬───────┘       └──────┬───────┘
        │                      │                                             │                      │
   3GPP TS 33.501         3GPP TS 33.501 §6.3.1                          3GPP TS 33.501 §5.9.3    TEC 910018:2025 §5
@@ -28,7 +28,7 @@ The QuantaCipher 5G Telecom Suite delivers end-to-end post-quantum cryptographic
 
 ---
 
-## Product 1: 5G PQ-IES SUCI Subscriber Identity Concealment
+## Product 1: QC-PQ-SUCI (5G Subscriber Identity Concealment)
 
 ### Standard Conformance
 - **3GPP TS 33.501 Annex C** (Subscription Concealed Identifier - SUCI)
@@ -52,7 +52,7 @@ suci-0-<MCC>-<MNC>-<RoutingIndicator>-<ProtectionScheme>-<HomeNetworkPublicKeyId
 
 ---
 
-## Product 2: 5G SBA PQ-OAuth2 Token Gateway
+## Product 2: QC-PQ-SBA (5G SBA PQ-Token Gateway)
 
 ### Standard Conformance
 - **3GPP TS 33.501 §6.3.1** (Network Function Service Authorization via OAuth 2.0)
@@ -69,7 +69,7 @@ The QuantaCipher SBA PQ-Token Gateway issues compact, quantum-resilient access t
 
 ---
 
-## Product 3: 5G N32 / SEPP PRINS Quantum Roaming Interconnect Engine
+## Product 3: QC-PQ-SEPP (5G N32 Roaming Interconnect Engine)
 
 ### Standard Conformance
 - **3GPP TS 33.501 §5.9.3 & Annex H** (PRINS - PRotocol for N32 Interconnect Security)
@@ -83,7 +83,7 @@ When subscribers roam internationally, inter-PLMN signaling travels between Secu
 
 ---
 
-## Product 4: 5G Telecom-CBOM & MTCTE Compliance Scanner Engine
+## Product 4: QC-PQ-CBOM (5G Telecom-CBOM & MTCTE Compliance Scanner)
 
 ### Standard Conformance
 - **TEC 910018:2025 §5** (Cryptographic Inventory & Bill of Materials for Indian Telecom Equipment)
