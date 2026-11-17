@@ -15,13 +15,13 @@ THE PATENTS RULES, 2003
 > | Jurisdiction | Chennai Patent Office |
 > | Type of Application | Ordinary Application |
 > | **Type of Specification** | **Provisional** |
-> | Title of the Invention | **METHOD AND SYSTEM FOR 5G SUBSCRIBER IDENTITY CONCEALMENT (PQ-IES) AND QUANTUM-RESILIENT SERVICE-BASED ARCHITECTURE (SBA) TOKEN AUTHENTICATION IN TELECOMMUNICATION NETWORKS** |
+> | Title of the Invention | **METHOD AND SYSTEM FOR 5G SUBSCRIBER IDENTITY CONCEALMENT (PQ-IES), QUANTUM-RESILIENT SERVICE-BASED ARCHITECTURE (SBA) TOKEN AUTHENTICATION, AND QUANTUM-SAFE ROAMING INTERCONNECT (SEPP PRINS) IN TELECOMMUNICATION NETWORKS** |
 > | Applicant Name | **QUANTALABS PRIVATE LIMITED** |
 > | Category of Applicant | Startup (DPIIT Certificate No. **DIPP273930**) |
 > | Bundled Forms | Form 28 (Startup Concession), Form 1, Form 2 |
 > | Official Email for Correspondence | **`contact@quantalabs.cc`** |
-> | Description — No. of pages | **12** |
-> | Claims — No. of pages | **4** |
+> | Description — No. of pages | **14** |
+> | Claims — No. of pages | **5** |
 > | Claims — No. of Claims | **16** |
 > | Abstract — No. of pages | **1** |
 > | Drawings — No. of pages | **4** |
@@ -29,7 +29,7 @@ THE PATENTS RULES, 2003
 ---
 
 ### 1. TITLE OF THE INVENTION
-**METHOD AND SYSTEM FOR 5G SUBSCRIBER IDENTITY CONCEALMENT (PQ-IES) AND QUANTUM-RESILIENT SERVICE-BASED ARCHITECTURE (SBA) TOKEN AUTHENTICATION IN TELECOMMUNICATION NETWORKS**
+**METHOD AND SYSTEM FOR 5G SUBSCRIBER IDENTITY CONCEALMENT (PQ-IES), QUANTUM-RESILIENT SERVICE-BASED ARCHITECTURE (SBA) TOKEN AUTHENTICATION, AND QUANTUM-SAFE ROAMING INTERCONNECT (SEPP PRINS) IN TELECOMMUNICATION NETWORKS**
 
 ---
 
@@ -257,12 +257,28 @@ Referring to **Figure 4**, inter-NF microservice calls are protected against qua
     - a Unified Data Management (UDM) function comprising a Subscription Identifier De-concealing Function (SIDF) configured to de-conceal said SUCI into a permanent SUPI using an ML-KEM private key; and
     - a Network Repository Function (NRF) configured to issue post-quantum OAuth 2.0 tokens (PQ-JWT) authorizing inter-NF communication between said AMF and said UDM.
 
-12. A non-transitory computer-readable storage medium storing instructions which, when executed by one or more processors, cause the one or more processors to perform the method of any one of claims 1 to 10.
+12. The system as claimed in claim 11, further comprising:
+    - a Visiting Security Edge Protection Proxy (v-SEPP) and a Home Security Edge Protection Proxy (h-SEPP) communicating across an N32-f interface per 3GPP TS 33.501 Annex H, configured to protect cross-carrier roaming messages using post-quantum JSON Web Encryption (JWE); and
+    - intermediate IP eXchange (IPX) transit proxies configured to inspect cleartext routing headers while sensitive subscriber authentication payloads remain cryptographically sealed within said JWE.
+
+13. A computer-implemented method for quantum-safe roaming interconnect across an N32 interface in a 5G telecommunication network, comprising:
+    - receiving an outbound cross-network roaming message at a Visiting Security Edge Protection Proxy (v-SEPP) destined for a Home Security Edge Protection Proxy (h-SEPP);
+    - separating cleartext routing headers required for intermediate IP eXchange (IPX) transit from sensitive subscriber authentication payloads;
+    - encapsulating a random Content Encryption Key (CEK) against an h-SEPP public key using a post-quantum Key Encapsulation Mechanism (KEM) selected from Hybrid X-Wing (X25519 + ML-KEM-768) and pure ML-KEM-768;
+    - encrypting said sensitive subscriber payload using AES-256-GCM under said CEK using an RFC 7516 JWE protected header as Additional Authenticated Data (AAD);
+    - serializing a 5-segment Compact JSON Web Encryption (JWE) token comprising base64url-encoded Header, Encrypted Key, IV, Ciphertext, and Authentication Tag; and
+    - transmitting said protected N32-f message across intermediate IPX roaming proxies with cleartext routing headers and post-quantum sealed JWE payload.
+
+14. The method as claimed in claim 13, wherein said h-SEPP decapsulates said CEK using an h-SEPP private key, decrypts said payload, verifies said AES-256-GCM authentication tag against said JWE protected header, and fails closed upon detecting bit tampering or tag alteration by an intermediary transit proxy.
+
+15. An application-specific integrated circuit (ASIC), baseband chipset, or core telecommunication server programmed to perform the method of any of claims 1 to 14.
+
+16. A non-transitory computer-readable storage medium storing instructions which, when executed by one or more processors, cause the one or more processors to perform the method of any one of claims 1 to 14.
 
 ---
 
 ### 6. ABSTRACT
-A computer-implemented method, telecommunications system, and cryptographic engine are disclosed for quantum-resilient mobile subscriber privacy protection and core network access control. A User Equipment (UE) conceals a permanent 5G subscriber identifier (SUPI) into a Subscription Concealed Identifier (SUCI) using Post-Quantum Integrated Encryption Schemes (PQ-IES): Profile C (Homogeneous ML-KEM-768) or Profile D (Hybrid ML-KEM-768 + X25519). An ANSI X9.63 KDF derives an AES-256-CTR encryption key, a 16-byte initial counter, and an HMAC-SHA256 key to produce an encrypted MSIN and an 8-octet truncated MAC tag. The resulting SUCI conforms to 3GPP TS 23.003 and TEC 910028:2025 NAI wire formatting, executing in sub-3 milliseconds without gNodeB modifications. In the 5G Core, a Network Repository Function (NRF) issues OAuth 2.0 Post-Quantum JSON Web Tokens (PQ-JWT) signed with FIPS 204 ML-DSA-65 or non-separable Hybrid ML-DSA-65 + ECDSA P-256 to authorize inter-NF service requests, completely neutralizing Harvest-Now-Decrypt-Later eavesdropping and quantum token forgery across 5G telecommunication networks.
+A computer-implemented method, telecommunications system, and cryptographic engine are disclosed for quantum-resilient mobile subscriber privacy protection, core network access control, and roaming interconnect security. A User Equipment (UE) conceals a permanent 5G subscriber identifier (SUPI) into a Subscription Concealed Identifier (SUCI) using Post-Quantum Integrated Encryption Schemes (PQ-IES): Profile C (Homogeneous ML-KEM-768) or Profile D (Hybrid ML-KEM-768 + X25519). An ANSI X9.63 KDF derives an AES-256-CTR encryption key, a 16-byte initial counter, and an HMAC-SHA256 key to produce an encrypted MSIN and an 8-octet truncated MAC tag conforming to 3GPP TS 23.003 and TEC 910028:2025. In the 5G Core, a Network Repository Function (NRF) issues OAuth 2.0 Post-Quantum JSON Web Tokens (PQ-JWT) signed with FIPS 204 ML-DSA-65 or non-separable Hybrid ML-DSA-65 + ECDSA P-256 to authorize inter-NF service requests. Across the N32 roaming interface, Security Edge Protection Proxies (v-SEPP and h-SEPP) encapsulate Content Encryption Keys via Hybrid X-Wing (X25519 + ML-KEM-768) and seal cross-carrier subscriber credentials in RFC 7516 Post-Quantum JWE envelopes, preserving IPX transit routing transparency while completely neutralizing Harvest-Now-Decrypt-Later eavesdropping and quantum token forgery across 5G telecommunication networks.
 
 *(Dated this 17th day of November, 2026)*  
 **For QUANTALABS PRIVATE LIMITED**  
