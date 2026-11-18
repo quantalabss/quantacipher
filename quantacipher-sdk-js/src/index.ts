@@ -817,8 +817,8 @@ export class QuantaCipherTelecom {
     }
 
     // ============================================================
-    // 5G Telecom-CBOM & MTCTE Compliance Scanner Engine
-    // TEC 910018:2025 §5 & TEC 910028:2025
+    // 5G Telecom-CBOM & Cryptographic Readiness Analyzer Engine
+    // TEC 910018:2025 §§2.6 & 4.1.2 · TEC 910028:2025
     // ============================================================
 
     /**

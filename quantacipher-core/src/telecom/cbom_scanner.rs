@@ -1,9 +1,7 @@
-//! 5G Telecom-CBOM & MTCTE Compliance Scanner Engine
-//! Implements TEC 910018:2025 §5 (Cryptographic Inventory & CBOM) and
-//! TEC 910028:2025 (5G PQC Requirements) compliance auditing.
-//!
+//! 5G Telecom-CBOM & Cryptographic Readiness Analyzer
 //! Evaluates 5G Core Network Functions (AMF, UDM, AUSF, NRF, SEPP) and O-RAN
-//! configurations to detect quantum vulnerabilities and generate CycloneDX 1.6 CBOM.
+//! configurations against TEC 910018:2025 (Sections 2.6 & 4.1.2 Cryptographic Inventory)
+//! and TEC 910028:2025 (5G PQC Guidelines), generating CycloneDX 1.6 CBOM.
 
 use serde::{Deserialize, Serialize};
 
@@ -35,7 +33,7 @@ pub struct TelecomCryptoAsset {
     pub crypto_type: String,
     /// Quantum resistance status
     pub quantum_safe: bool,
-    /// Standard reference (e.g. "3GPP TS 33.501 Profile A", "TEC 910028:2025 Profile D")
+    /// Standard reference (e.g. "3GPP TS 33.501 Annex C", "TEC 910028:2025 §6.4 Profile D")
     pub standard_ref: String,
 }
 
@@ -50,7 +48,7 @@ pub struct TelecomAuditFinding {
     pub network_function: String,
     /// Detailed technical explanation
     pub description: String,
-    /// Violated standard clause
+    /// Standard or guideline clause
     pub compliance_clause: String,
     /// Recommended migration remediation
     pub remediation: String,
@@ -63,7 +61,8 @@ pub struct TelecomAuditReport {
     pub overall_score: u32,
     /// Overall quantum risk classification
     pub quantum_risk_level: String,
-    /// Whether the configuration satisfies DoT MTCTE PQC Certification
+    /// Whether the configuration satisfies TEC 910018/910028 Quantum Readiness criteria
+    #[serde(alias = "readiness_pass")]
     pub mtcte_certified: bool,
     /// Number of critical quantum vulnerabilities found
     pub critical_count: u32,
@@ -128,15 +127,15 @@ pub fn audit_telecom_deployment(config: &TelecomAuditConfig) -> TelecomAuditRepo
                 key_size: "1184 bytes".to_string(),
                 crypto_type: "Pure Post-Quantum".to_string(),
                 quantum_safe: true,
-                standard_ref: "TEC 910028:2025 §6.4 Profile C".to_string(),
+                standard_ref: "TEC 910028:2025 §6.4.1 Profile C (Proposed PQ Extension)".to_string(),
             });
             findings.push(TelecomAuditFinding {
                 severity: FindingSeverity::Pass,
-                title: "Quantum-Resilient Subscriber Identity Concealment (Profile C)".to_string(),
+                title: "Quantum-Resilient Subscriber Identity Concealment (Profile C Proposal)".to_string(),
                 network_function: "UDM / SIDF".to_string(),
-                description: "Module-Lattice KEM (ML-KEM-768) protects subscriber IMSI/SUPI over the air.".to_string(),
-                compliance_clause: "TEC 910028:2025 Clause 6.4".to_string(),
-                remediation: "Compliant. Maintain regular key rotation schedule.".to_string(),
+                description: "Module-Lattice KEM (ML-KEM-768) protects subscriber IMSI/SUPI over the air against passive eavesdropping and HNDL decryption.".to_string(),
+                compliance_clause: "TEC 910028:2025 Clause 6.4.1".to_string(),
+                remediation: "Compliant proposed design. Note: USIM requires Extended Length APDU (ISO 7816-4) or ME baseband calculation.".to_string(),
             });
         }
         "profile_d" => {
@@ -148,15 +147,15 @@ pub fn audit_telecom_deployment(config: &TelecomAuditConfig) -> TelecomAuditRepo
                 key_size: "1216 bytes (Hybrid)".to_string(),
                 crypto_type: "Hybrid Post-Quantum".to_string(),
                 quantum_safe: true,
-                standard_ref: "TEC 910028:2025 §6.4 Profile D (Recommended)".to_string(),
+                standard_ref: "TEC 910028:2025 §6.4.2 Profile D (Proposed Hybrid Extension)".to_string(),
             });
             findings.push(TelecomAuditFinding {
                 severity: FindingSeverity::Pass,
-                title: "Hybrid Post-Quantum Identity Concealment (Profile D)".to_string(),
+                title: "Hybrid Post-Quantum Identity Concealment (Profile D Proposal)".to_string(),
                 network_function: "UDM / SIDF".to_string(),
                 description: "Combines classical X25519 with ML-KEM-768 for dual defense per DoT recommendations.".to_string(),
-                compliance_clause: "TEC 910028:2025 Clause 6.4 (Profile D)".to_string(),
-                remediation: "Compliant. Recommended benchmark for Indian telecom operators.".to_string(),
+                compliance_clause: "TEC 910028:2025 Clause 6.4.2".to_string(),
+                remediation: "Compliant proposed design. Provides classical fallback security alongside quantum resilience.".to_string(),
             });
         }
         "profile_a" => {
@@ -170,15 +169,15 @@ pub fn audit_telecom_deployment(config: &TelecomAuditConfig) -> TelecomAuditRepo
                 key_size: "256 bits".to_string(),
                 crypto_type: "Classical".to_string(),
                 quantum_safe: false,
-                standard_ref: "3GPP TS 33.501 Profile A (Deprecated for PQC)".to_string(),
+                standard_ref: "3GPP TS 33.501 Annex C Profile A (Vulnerable to Quantum Decryption)".to_string(),
             });
             findings.push(TelecomAuditFinding {
                 severity: FindingSeverity::Critical,
                 title: "Vulnerable Classical SUCI Concealment (Profile A Curve25519)".to_string(),
                 network_function: "UDM / SIDF".to_string(),
-                description: "Shor's algorithm breaks discrete logarithm on Curve25519. Eavesdropped SUCI ciphertexts can be stored and decrypted post-quantum to reveal permanent subscriber IMSI.".to_string(),
-                compliance_clause: "TEC 910028:2025 Section 6.4 (Mandates Profile C/D)".to_string(),
-                remediation: "Upgrade UDM/SIDF and USIM profiles to QuantaCipher Profile D (Hybrid ML-KEM-768 + X25519).".to_string(),
+                description: "Shor's algorithm breaks discrete logarithm on Curve25519. Eavesdropped SUCI ciphertexts can be stored and decrypted post-quantum to reveal permanent subscriber IMSI (HNDL).".to_string(),
+                compliance_clause: "TEC 910028:2025 Section 6.4 (Recommends PQ-IES Profile C/D)".to_string(),
+                remediation: "Upgrade UDM/SIDF and USIM profiles to Profile D (Hybrid ML-KEM-768 + X25519).".to_string(),
             });
         }
         _ => {
@@ -267,8 +266,8 @@ pub fn audit_telecom_deployment(config: &TelecomAuditConfig) -> TelecomAuditRepo
                 title: "Quantum-Vulnerable SBA Token Signing (RSA-2048)".to_string(),
                 network_function: "NRF".to_string(),
                 description: "Quantum computers running Shor's algorithm can factor 2048-bit RSA keys, allowing attackers to forge NRF access tokens and hijack core NFs.".to_string(),
-                compliance_clause: "TEC 910018:2025 Section 5".to_string(),
-                remediation: "Deploy QuantaCipher SBA Token Gateway with ML-DSA-65 signing.".to_string(),
+                compliance_clause: "TEC 910018:2025 Section 2.6 & Section 4.1.2".to_string(),
+                remediation: "Deploy QuantaCipher SBA Token Gateway with ML-DSA-65 or Hybrid signing.".to_string(),
             });
         }
         _ => {
@@ -289,8 +288,8 @@ pub fn audit_telecom_deployment(config: &TelecomAuditConfig) -> TelecomAuditRepo
                 title: "Vulnerable Classical ECDSA Token Gateway".to_string(),
                 network_function: "NRF".to_string(),
                 description: "Elliptic curve discrete log is broken by quantum computers. Rogue NFs can forge authorization grants.".to_string(),
-                compliance_clause: "TEC 910018:2025 Figure 3".to_string(),
-                remediation: "Migrate to Hybrid ML-DSA-65 + ECDSA P-256.".to_string(),
+                compliance_clause: "TEC 910018:2025 Section 2.6 & Section 4.1.2".to_string(),
+                remediation: "Migrate to Hybrid ML-DSA-65 + ECDSA P-256 (pending final IETF JOSE RFC).".to_string(),
             });
         }
     }
@@ -308,15 +307,15 @@ pub fn audit_telecom_deployment(config: &TelecomAuditConfig) -> TelecomAuditRepo
                 key_size: "256-bit CEK (PQC-Encapped)".to_string(),
                 crypto_type: "Post-Quantum".to_string(),
                 quantum_safe: true,
-                standard_ref: "3GPP TS 33.501 Annex H & TEC 910018".to_string(),
+                standard_ref: "3GPP TS 33.501 Annex H & TEC 910018:2025 §3.4".to_string(),
             });
             findings.push(TelecomAuditFinding {
                 severity: FindingSeverity::Pass,
-                title: "Quantum-Resilient Roaming Interconnect (PRINS JWE)".to_string(),
+                title: "Quantum-Resilient Roaming Interconnect (PRINS JWE Design)".to_string(),
                 network_function: "SEPP".to_string(),
-                description: "Content Encryption Keys across N32-f roaming interfaces are protected by post-quantum KEMs against IPX eavesdropping.".to_string(),
-                compliance_clause: "3GPP TS 33.501 Annex H".to_string(),
-                remediation: "Compliant.".to_string(),
+                description: "Content Encryption Keys across N32-f roaming interfaces are protected by post-quantum KEMs against IPX eavesdropping (requires bilateral carrier adoption).".to_string(),
+                compliance_clause: "3GPP TS 33.501 Annex H (Bilateral Design)".to_string(),
+                remediation: "Compliant design. Coordinate bilateral deployment with roaming partner PLMNs.".to_string(),
             });
         }
         "classical_ecdh" => {
@@ -337,8 +336,8 @@ pub fn audit_telecom_deployment(config: &TelecomAuditConfig) -> TelecomAuditRepo
                 title: "Vulnerable Classical Roaming Interconnect (ECDH JWE)".to_string(),
                 network_function: "SEPP".to_string(),
                 description: "Inter-carrier roaming traffic traversing IPX providers can be recorded by adversaries and decrypted retroactively using quantum computers.".to_string(),
-                compliance_clause: "TEC 910018:2025 Section 5".to_string(),
-                remediation: "Deploy QuantaCipher SEPP PRINS Engine with Hybrid X-Wing KEM.".to_string(),
+                compliance_clause: "TEC 910018:2025 Section 2.6 & Section 4.1.2".to_string(),
+                remediation: "Deploy QuantaCipher SEPP PRINS Engine with Hybrid X-Wing KEM bilaterally.".to_string(),
             });
         }
         _ => {
@@ -395,7 +394,7 @@ pub fn audit_telecom_deployment(config: &TelecomAuditConfig) -> TelecomAuditRepo
             title: "Quantum-Safe 256-bit Symmetric Ciphering (NEA4)".to_string(),
             network_function: "AMF / gNodeB".to_string(),
             description: "256-bit symmetric cipher keys provide 128-bit post-quantum security against Grover's algorithm.".to_string(),
-            compliance_clause: "TEC 910028:2025 Section 5".to_string(),
+            compliance_clause: "TEC 910028:2025 Section 5.2 & Section 6.2".to_string(),
             remediation: "Compliant.".to_string(),
         });
     } else {
@@ -415,7 +414,7 @@ pub fn audit_telecom_deployment(config: &TelecomAuditConfig) -> TelecomAuditRepo
             title: "128-bit Symmetric Cipher Strength Degradation".to_string(),
             network_function: "AMF / gNodeB".to_string(),
             description: "Grover's algorithm halves effective symmetric key security to 64 bits. 3GPP Rel-18 and TEC recommend 256-bit ciphers.".to_string(),
-            compliance_clause: "TEC 910018:2025 Section 4".to_string(),
+            compliance_clause: "TEC 910018:2025 Section 4.1.2".to_string(),
             remediation: "Enable 256-bit ciphering algorithms (NEA4 / EEA4).".to_string(),
         });
     }
@@ -463,13 +462,13 @@ pub fn audit_telecom_deployment(config: &TelecomAuditConfig) -> TelecomAuditRepo
             "tools": {
                 "components": [{
                     "type": "application",
-                    "name": "QuantaCipher Telecom-CBOM Audit Scanner",
+                    "name": "QuantaCipher 5G Telecom-CBOM Analyzer",
                     "version": "2.1.0",
                     "vendor": "Quantalabs Private Limited"
                 }]
             },
             "manufacture": {
-                "name": "Telecommunications Standards Compliance Engine (TEC 910028:2025)"
+                "name": "Telecommunications Standards Readiness Engine (TEC 910018 / TEC 910028)"
             }
         },
         "components": cbom_components

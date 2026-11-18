@@ -49,7 +49,7 @@ pub fn ansi_x963_kdf(z: &[u8], shared_info: &[u8], key_len: usize) -> Vec<u8> {
 }
 
 /// Splits the 80-byte KDF output into (K_enc [32B], IV [16B], K_mac [32B]).
-fn split_kdf_keys(kdf_out: &[u8]) -> Result<(&[u8], &[u8], &[u8]), QuantaCipherError> {
+pub(crate) fn split_kdf_keys(kdf_out: &[u8]) -> Result<(&[u8], &[u8], &[u8]), QuantaCipherError> {
     if kdf_out.len() < TOTAL_KDF_KEY_LEN {
         return Err(QuantaCipherError::DecryptionFailed);
     }
@@ -88,7 +88,7 @@ pub fn aes_256_ctr_crypt(key: &[u8], iv: &[u8], data: &[u8]) -> Result<Vec<u8>, 
 }
 
 /// Computes truncated 8-octet HMAC-SHA256 over data.
-fn compute_mac(mac_key: &[u8], data: &[u8]) -> Result<[u8; MAC_TAG_LEN], QuantaCipherError> {
+pub(crate) fn compute_mac(mac_key: &[u8], data: &[u8]) -> Result<[u8; MAC_TAG_LEN], QuantaCipherError> {
     let mut mac = <HmacSha256 as Mac>::new_from_slice(mac_key).map_err(|_| QuantaCipherError::EncryptionFailed)?;
     mac.update(data);
     let full_mac = mac.finalize().into_bytes();

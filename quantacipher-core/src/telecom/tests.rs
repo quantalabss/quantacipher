@@ -408,12 +408,134 @@ fn test_telecom_audit_quantum_native_pass() {
 
     let report = audit_telecom_deployment(&quantum_config);
     assert_eq!(report.overall_score, 100, "Quantum-native deployment must score 100");
-    assert!(report.mtcte_certified, "Must achieve MTCTE PQC certification");
+    assert!(report.mtcte_certified, "Must satisfy quantum readiness criteria");
     assert_eq!(report.critical_count, 0, "Must have zero critical vulnerabilities");
     assert_eq!(report.high_count, 0, "Must have zero high vulnerabilities");
     assert_eq!(report.quantum_risk_level, "Quantum-Resilient");
     assert!(report.cyclonedx_cbom_json.contains("ML-KEM-768"));
     assert!(report.cyclonedx_cbom_json.contains("Hybrid ML-DSA-65"));
+}
+
+#[test]
+fn test_telecom_audit_open5gs_default_core() {
+    use crate::telecom::cbom_scanner::{audit_telecom_deployment, TelecomAuditConfig};
+
+    // Open5GS v2.7.x standard configuration:
+    // - UDM: Scheme 1 Profile A (Curve25519)
+    // - NRF: Classical RS256 OAuth2
+    // - SEPP: Classical ECDH JWE / TLS
+    // - NAS & UP: NEA2 (AES-128-CTR)
+    let open5gs_config = TelecomAuditConfig {
+        suci_profile: "profile_a".to_string(),
+        sba_token_alg: "rsa_2048".to_string(),
+        sepp_roaming_kem: "classical_ecdh".to_string(),
+        nas_cipher: "nea2_aes128".to_string(),
+        up_cipher: "nea2_aes128".to_string(),
+    };
+
+    let report = audit_telecom_deployment(&open5gs_config);
+    assert_eq!(report.critical_count, 1, "Open5GS default has critical Profile A quantum vulnerability");
+    assert_eq!(report.high_count, 2, "Open5GS default has high vulnerabilities on RSA SBA and ECDH SEPP");
+    assert!(report.overall_score < 50, "Open5GS default must score < 50 (got {})", report.overall_score);
+    assert_eq!(report.quantum_risk_level, "Critical Quantum Risk");
+    assert!(!report.mtcte_certified);
+}
+
+#[test]
+fn test_telecom_audit_free5gc_default_core() {
+    use crate::telecom::cbom_scanner::{audit_telecom_deployment, TelecomAuditConfig};
+
+    // free5GC v3.4.x standard configuration:
+    // - UDM: Scheme 1 Profile A (Curve25519)
+    // - NRF: Classical RSA
+    // - SEPP: Classical ECDH
+    // - User Plane: NEA0 (Cleartext default in basic lab setup)
+    let free5gc_config = TelecomAuditConfig {
+        suci_profile: "profile_a".to_string(),
+        sba_token_alg: "rsa_2048".to_string(),
+        sepp_roaming_kem: "classical_ecdh".to_string(),
+        nas_cipher: "nea2_aes128".to_string(),
+        up_cipher: "nea0".to_string(),
+    };
+
+    let report = audit_telecom_deployment(&free5gc_config);
+    assert!(report.critical_count >= 2, "free5GC with NEA0 UP has at least 2 critical findings");
+    assert!(report.overall_score < 40, "free5GC default must score < 40 (got {})", report.overall_score);
+    assert!(!report.mtcte_certified);
+}
+
+#[test]
+fn test_3gpp_ts33501_annex_c_unchanged_primitives() {
+    // Verifies the unchanged cryptographic primitives defined in 3GPP TS 33.501 Annex C:
+    // 1. ANSI X9.63 KDF with SHA-256
+    // 2. Truncated 8-octet HMAC-SHA-256 MAC tag
+    // 3. 128-bit big-endian AES counter mode encryption
+    // 4. 3GPP TS 23.003 §2.2B SUCI NAI wire string serialization
+
+    // Official 3GPP TS 33.501 Annex C.4.1 Profile A Test Vector Keys
+    let hn_private_hex = "c53c22208b61860b06c62e5406a7b330c2b577aa5558981510d128247d38bd1d";
+    let hn_public_hex = "5a8d38864820197c3394b92613b20b91633cbd897119273bf8e4a6f4eec0a650";
+
+    let hn_sk_bytes = hex::decode(hn_private_hex).unwrap();
+    let hn_pk_bytes = hex::decode(hn_public_hex).unwrap();
+
+    let hn_sk = StaticSecret::from(<[u8; 32]>::try_from(hn_sk_bytes.as_slice()).unwrap());
+    let hn_pk = X25519PublicKey::from(&hn_sk);
+    assert_eq!(hn_pk.as_bytes(), hn_pk_bytes.as_slice(), "Home network keypair must match Annex C.4.1");
+
+    // Perform ECDH key exchange to produce shared secret Z
+    let eph_sk = StaticSecret::from([0x42u8; 32]);
+    let eph_pk = X25519PublicKey::from(&eph_sk);
+    let ss_ue = eph_sk.diffie_hellman(&hn_pk);
+    let ss_hn = hn_sk.diffie_hellman(&eph_pk);
+    assert_eq!(ss_ue.as_bytes(), ss_hn.as_bytes(), "ECDH shared secret Z must be symmetric");
+
+    // ANSI X9.63 KDF per TS 33.501 Annex C:
+    // Derives 80 bytes (K_enc [32B], IV [16B], K_mac [32B])
+    let derived_keys = ansi_x963_kdf(ss_ue.as_bytes(), eph_pk.as_bytes(), 80);
+    assert_eq!(derived_keys.len(), 80);
+
+    let (k_enc, iv, k_mac) = split_kdf_keys(&derived_keys).unwrap();
+    assert_eq!(k_enc.len(), 32);
+    assert_eq!(iv.len(), 16);
+    assert_eq!(k_mac.len(), 32);
+
+    // Encrypt test MSIN
+    let msin = "001002086";
+    let ciphertext = aes_256_ctr_crypt(k_enc, iv, msin.as_bytes()).unwrap();
+    assert_eq!(ciphertext.len(), msin.len());
+
+    // MAC calculation: truncated to 8 octets
+    let mac = compute_mac(k_mac, &ciphertext).unwrap();
+    assert_eq!(mac.len(), 8, "MAC tag must be exactly 8 octets per Annex C.3.4");
+
+    // Decrypt and verify
+    let decrypted = aes_256_ctr_crypt(k_enc, iv, &ciphertext).unwrap();
+    assert_eq!(String::from_utf8(decrypted).unwrap(), msin);
+
+    // Verify SUCI NAI wire format matches 3GPP TS 23.003 §2.2B:
+    // suci-0-<MCC>-<MNC>-<Routing>-<Scheme>-<KeyId>-<SchemeOutput>
+    let mut scheme_output = Vec::new();
+    scheme_output.extend_from_slice(eph_pk.as_bytes());
+    scheme_output.extend_from_slice(&ciphertext);
+    scheme_output.extend_from_slice(&mac);
+
+    let suci = Suci {
+        supi_type: 0,
+        mcc: "001".to_string(),
+        mnc: "01".to_string(),
+        routing_indicator: "0000".to_string(),
+        protection_scheme: ProtectionScheme::ProfileA,
+        hn_public_key_id: 1,
+        scheme_output,
+    };
+
+    let nai = suci.to_nai_string();
+    assert!(nai.starts_with("suci-0-001-01-0000-1-1-"));
+    let parsed = Suci::from_nai_string(&nai).unwrap();
+    assert_eq!(parsed.mcc, "001");
+    assert_eq!(parsed.mnc, "01");
+    assert_eq!(parsed.protection_scheme, ProtectionScheme::ProfileA);
 }
 
 

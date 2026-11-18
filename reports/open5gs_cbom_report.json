@@ -1,0 +1,91 @@
+{
+  "overall_score": 15,
+  "quantum_risk_level": "Critical Quantum Risk",
+  "mtcte_certified": false,
+  "critical_count": 1,
+  "high_count": 2,
+  "evaluated_nfs": [
+    "UDM / SIDF",
+    "NRF (OAuth2)",
+    "SEPP (N32-f)",
+    "AMF",
+    "gNodeB"
+  ],
+  "assets": [
+    {
+      "network_function": "UDM / SIDF",
+      "interface_name": "Radio N1/N2 (SUCI)",
+      "primitive": "Key Agreement (ECIES)",
+      "algorithm": "Curve25519",
+      "key_size": "256 bits",
+      "crypto_type": "Classical",
+      "quantum_safe": false,
+      "standard_ref": "3GPP TS 33.501 Annex C Profile A (Vulnerable to Quantum Decryption)"
+    },
+    {
+      "network_function": "NRF",
+      "interface_name": "Service-Based Architecture (SBA)",
+      "primitive": "Digital Signature",
+      "algorithm": "RSA-2048 (RS256)",
+      "key_size": "2048 bits",
+      "crypto_type": "Classical",
+      "quantum_safe": false,
+      "standard_ref": "RFC 7515 RS256 (Deprecated for PQC)"
+    },
+    {
+      "network_function": "SEPP",
+      "interface_name": "N32-f Roaming Interconnect",
+      "primitive": "Key Agreement (Classical JWE)",
+      "algorithm": "ECDH-ES (X25519/P-256)",
+      "key_size": "256 bits",
+      "crypto_type": "Classical",
+      "quantum_safe": false,
+      "standard_ref": "3GPP TS 33.501 Annex H (Classical)"
+    },
+    {
+      "network_function": "AMF / gNodeB",
+      "interface_name": "N1 NAS Signaling",
+      "primitive": "Symmetric Cipher",
+      "algorithm": "NEA2 (AES-128-CTR)",
+      "key_size": "128 bits",
+      "crypto_type": "Classical Symmetric",
+      "quantum_safe": false,
+      "standard_ref": "3GPP TS 33.501 NEA2"
+    }
+  ],
+  "findings": [
+    {
+      "severity": "CRITICAL",
+      "title": "Vulnerable Classical SUCI Concealment (Profile A Curve25519)",
+      "network_function": "UDM / SIDF",
+      "description": "Shor's algorithm breaks discrete logarithm on Curve25519. Eavesdropped SUCI ciphertexts can be stored and decrypted post-quantum to reveal permanent subscriber IMSI (HNDL).",
+      "compliance_clause": "TEC 910028:2025 Section 6.4 (Recommends PQ-IES Profile C/D)",
+      "remediation": "Upgrade UDM/SIDF and USIM profiles to Profile D (Hybrid ML-KEM-768 + X25519)."
+    },
+    {
+      "severity": "HIGH",
+      "title": "Quantum-Vulnerable SBA Token Signing (RSA-2048)",
+      "network_function": "NRF",
+      "description": "Quantum computers running Shor's algorithm can factor 2048-bit RSA keys, allowing attackers to forge NRF access tokens and hijack core NFs.",
+      "compliance_clause": "TEC 910018:2025 Section 2.6 & Section 4.1.2",
+      "remediation": "Deploy QuantaCipher SBA Token Gateway with ML-DSA-65 or Hybrid signing."
+    },
+    {
+      "severity": "HIGH",
+      "title": "Vulnerable Classical Roaming Interconnect (ECDH JWE)",
+      "network_function": "SEPP",
+      "description": "Inter-carrier roaming traffic traversing IPX providers can be recorded by adversaries and decrypted retroactively using quantum computers.",
+      "compliance_clause": "TEC 910018:2025 Section 2.6 & Section 4.1.2",
+      "remediation": "Deploy QuantaCipher SEPP PRINS Engine with Hybrid X-Wing KEM bilaterally."
+    },
+    {
+      "severity": "MEDIUM",
+      "title": "128-bit Symmetric Cipher Strength Degradation",
+      "network_function": "AMF / gNodeB",
+      "description": "Grover's algorithm halves effective symmetric key security to 64 bits. 3GPP Rel-18 and TEC recommend 256-bit ciphers.",
+      "compliance_clause": "TEC 910018:2025 Section 4.1.2",
+      "remediation": "Enable 256-bit ciphering algorithms (NEA4 / EEA4)."
+    }
+  ],
+  "cyclonedx_cbom_json": "{\n  \"bomFormat\": \"CycloneDX\",\n  \"components\": [\n    {\n      \"cryptoProperties\": {\n        \"algorithmProperties\": {\n          \"classicalSecurityLevel\": 128,\n          \"nistQuantumSecurityLevel\": 0,\n          \"parameterSetIdentifier\": \"256 bits\",\n          \"primitive\": \"Key Agreement (ECIES)\"\n        },\n        \"assetType\": \"algorithm\",\n        \"oid\": \"3GPP TS 33.501 Annex C Profile A (Vulnerable to Quantum Decryption)\"\n      },\n      \"name\": \"UDM / SIDF: Curve25519\",\n      \"type\": \"cryptographic-asset\",\n      \"version\": \"1.0\"\n    },\n    {\n      \"cryptoProperties\": {\n        \"algorithmProperties\": {\n          \"classicalSecurityLevel\": 128,\n          \"nistQuantumSecurityLevel\": 0,\n          \"parameterSetIdentifier\": \"2048 bits\",\n          \"primitive\": \"Digital Signature\"\n        },\n        \"assetType\": \"algorithm\",\n        \"oid\": \"RFC 7515 RS256 (Deprecated for PQC)\"\n      },\n      \"name\": \"NRF: RSA-2048 (RS256)\",\n      \"type\": \"cryptographic-asset\",\n      \"version\": \"1.0\"\n    },\n    {\n      \"cryptoProperties\": {\n        \"algorithmProperties\": {\n          \"classicalSecurityLevel\": 128,\n          \"nistQuantumSecurityLevel\": 0,\n          \"parameterSetIdentifier\": \"256 bits\",\n          \"primitive\": \"Key Agreement (Classical JWE)\"\n        },\n        \"assetType\": \"algorithm\",\n        \"oid\": \"3GPP TS 33.501 Annex H (Classical)\"\n      },\n      \"name\": \"SEPP: ECDH-ES (X25519/P-256)\",\n      \"type\": \"cryptographic-asset\",\n      \"version\": \"1.0\"\n    },\n    {\n      \"cryptoProperties\": {\n        \"algorithmProperties\": {\n          \"classicalSecurityLevel\": 128,\n          \"nistQuantumSecurityLevel\": 0,\n          \"parameterSetIdentifier\": \"128 bits\",\n          \"primitive\": \"Symmetric Cipher\"\n        },\n        \"assetType\": \"algorithm\",\n        \"oid\": \"3GPP TS 33.501 NEA2\"\n      },\n      \"name\": \"AMF / gNodeB: NEA2 (AES-128-CTR)\",\n      \"type\": \"cryptographic-asset\",\n      \"version\": \"1.0\"\n    }\n  ],\n  \"metadata\": {\n    \"manufacture\": {\n      \"name\": \"Telecommunications Standards Readiness Engine (TEC 910018 / TEC 910028)\"\n    },\n    \"timestamp\": \"2026-11-17T00:00:00Z\",\n    \"tools\": {\n      \"components\": [\n        {\n          \"name\": \"QuantaCipher 5G Telecom-CBOM Analyzer\",\n          \"type\": \"application\",\n          \"vendor\": \"Quantalabs Private Limited\",\n          \"version\": \"2.1.0\"\n        }\n      ]\n    }\n  },\n  \"serialNumber\": \"urn:uuid:5g-telecom-cbom-quantacipher\",\n  \"specVersion\": \"1.6\",\n  \"version\": 1\n}"
+}

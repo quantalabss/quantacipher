@@ -23,8 +23,10 @@ pub use pq_ies::{
     conceal_profile_c, deconceal_profile_c,
     conceal_profile_d, deconceal_profile_d,
     generate_hn_keypair,
-    ansi_x963_kdf,
+    ansi_x963_kdf, aes_256_ctr_crypt,
 };
+#[cfg(test)]
+pub(crate) use pq_ies::{split_kdf_keys, compute_mac};
 pub use sba_token::{SbaTokenClaims, PqJwtHeader, issue_sba_token, verify_sba_token};
 pub use sepp_n32::{N32fMessage, PqJweHeader, protect_n32f_payload, unprotect_n32f_payload};
 pub use cbom_scanner::{

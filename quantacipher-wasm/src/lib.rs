@@ -609,6 +609,8 @@ pub fn telecom_audit_5g_core(config_json: &str) -> Result<String, JsValue> {
 
 /// Returns sample pre-configured audit profiles:
 /// - "cdot_evaluating": C-DOT 5G Core Transition Profile
+/// - "open5gs_default": Open5GS v2.7.x Default Core (Profile A + RS256)
+/// - "free5gc_default": free5GC v3.4.x Default Core (Profile A + Cleartext UP)
 /// - "legacy_commercial": Legacy 3GPP Rel-16 Commercial Core (High Risk)
 /// - "quantum_native": QuantaCipher Quantum-Native 5G Core (100% TEC Compliant)
 #[wasm_bindgen]
@@ -621,6 +623,22 @@ pub fn telecom_get_audit_presets() -> Result<String, JsValue> {
             "sepp_roaming_kem": "hybrid_xwing",
             "nas_cipher": "nea2_aes128",
             "up_cipher": "nea2_aes128"
+        },
+        "open5gs_default": {
+            "name": "Open5GS v2.7.x Core (Default Configuration)",
+            "suci_profile": "profile_a",
+            "sba_token_alg": "rsa_2048",
+            "sepp_roaming_kem": "classical_ecdh",
+            "nas_cipher": "nea2_aes128",
+            "up_cipher": "nea2_aes128"
+        },
+        "free5gc_default": {
+            "name": "free5GC v3.4.x Core (Default Configuration)",
+            "suci_profile": "profile_a",
+            "sba_token_alg": "rsa_2048",
+            "sepp_roaming_kem": "classical_ecdh",
+            "nas_cipher": "nea2_aes128",
+            "up_cipher": "nea0"
         },
         "legacy_commercial": {
             "name": "Commercial Telco Deployment (Legacy Rel-16)",
